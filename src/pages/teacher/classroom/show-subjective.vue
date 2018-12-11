@@ -147,6 +147,8 @@
                         this.getImg();
                         this.pageShow = true;
                         this.loading = false;
+                        console.log(this.subjectiveMsg)
+                        console.log(this.subjectiveAnswer)
                     })
                     .catch(err => {
                         console.log(err);
@@ -168,6 +170,7 @@
                 try {
                     let res = await getSubjectPic(stubForSubjective.result === 'PASS' ? stubForSubjective.reviseForSubjective : stubForSubjective.stubForSubjective);
                     self.answerId = stubForSubjective.answerId;
+                    console.log(res.data.data)
                     if (res.data.data) {
                         self.picUrl = res.data.data.content;
                         self.subjectiveAnswer.push({id: self.topicId, answer: self.picUrl});

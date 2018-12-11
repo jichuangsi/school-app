@@ -96,6 +96,7 @@
                     this.loading = false;
                     this.classList = this.classroomList;
                     this.time()
+                    console.log(this.classList)
                 }).catch((err) => {
                     console.log("err", err);
                 });

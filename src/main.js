@@ -10,8 +10,11 @@ import '@/assets/styles/reset.css'
 import '@/assets/styles/iconfont/iconfont.css'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import 'swiper/dist/css/swiper.css'
+import '@/assets/style/index.scss'
 /* eslint-disable no-unused-vars */
 // import vConsole from './utils/log'
+import Print from 'vue-print-nb'
+　　Vue.use(Print) //注册打印功能
 
 Vue.use(VueAwesomeSwiper);
 Vue.prototype.$echarts = echarts

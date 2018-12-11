@@ -64,6 +64,24 @@ export default new Router({
                 keepAlive: false,
                 isBack: false
             }
+        },
+        {
+            path: '/studentenquiry',
+            name: 'studentenquiry',
+            component: () => import('@/pages/student/statistics/studentenquiry'), //学生端我的成绩详情
+            meta: {
+                keepAlive: false,
+                isBack: false
+            }
+        }, 
+        {
+            path: '/studenthomework',
+            name: 'studenthomework',
+            component: () => import('@/pages/student/statistics/studenthomework'), //学生端作业详情
+            meta: {
+                keepAlive: false,
+                isBack: false
+            }
         }, {
             path: '/teacherIndex',
             name: 'teacherIndex',
@@ -132,6 +150,30 @@ export default new Router({
             path: '/teacherInformation',
             name: 'teacherInformation',
             component: () => import('@/pages/teacher/teacherInformation'), //老师端我的详情
+            meta: {
+                keepAlive: false,
+                isBack: false
+            }
+        }, {
+            path: '/teacherenquiry',
+            name: 'teacherenquiry',
+            component: () => import('@/pages/teacher/statistics/teacherenquiry'), //老师端成绩详情
+            meta: {
+                keepAlive: false,
+                isBack: false
+            }
+        }, {
+            path: '/teacherhomework',
+            name: 'teacherhomework',
+            component: () => import('@/pages/teacher/statistics/teacherhomework'), //老师端作业详情
+            meta: {
+                keepAlive: false,
+                isBack: false
+            }
+        }, {
+            path: '/principal',
+            name: 'principal',
+            component: () => import('@/pages/teacher/statistics/principal/principal'), //校长数据
             meta: {
                 keepAlive: false,
                 isBack: false
