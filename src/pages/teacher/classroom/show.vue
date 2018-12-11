@@ -6,9 +6,9 @@
             <div class="subjectName">{{courseName}}</div>
             <div class="msg">
                 <div class="left">
-                    <div class="row">班级&nbsp;<span>{{classMsg.className}}</span></div>
-                    <div class="row">上课时间 &nbsp;<span>{{time(classMsg.courseEndTime)}}</span></div>
-                    <div class="row">在线人数 &nbsp;<span class="people">{{studentCount}}</span></div>
+                    <div class="row">班级 &nbsp;<span>{{classMsg.className}}</span></div>
+                    <div class="row">上课时间 &nbsp;<span>{{time(classMsg.courseStartTime)}}</span></div>
+                    <div class="row">在线人数 &nbsp;<span class="people">{{studentCount}}</span> / {{studentTotal}}</div>
                 </div>
                 <div class="right started" @click.stop.passive="updateState"
                      v-if="classMsg.courseStatus === 'NOTSTART'">上课
@@ -62,6 +62,8 @@
         },
         data() {
             return {
+                //当前班总人数
+                studentTotal: 0,
                 //课堂人数
                 studentCount: 0,
                 //课堂状态
@@ -109,6 +111,8 @@
                         let objective = 0;
                         let subjective = 0;
                         _this.courseStatus = this.classMsg.courseStatus;
+                        _this.studentTotal = this.classMsg.students.length;
+                        sessionStorage.setItem("curClassStudentsList", JSON.stringify(this.classMsg.students));
                         for (let i = 0; i < this.classMsg.questions.length; i++) {
                             if (this.classMsg.questions[i].quesetionType === 'objective') {
                                 objective++;
@@ -393,5 +397,30 @@
                 }
             }
         }
+    }
+    .MathJye table{
+        border-collapse: collapse;
+        margin: 0;
+        padding: 0;
+        text-align: center;
+        vertical-align: middle;
+        line-height: normal;
+        font-size: inherit;
+        _font-size: 100%;
+        font-style: normal;
+        font-weight: normal;
+        border: 0;
+        float: none;
+        display: inline-block;
+        zoom: 0;
+    }
+    .mathjye-underpoint2 {
+        border-bottom: 2px dotted #000;
+        padding-bottom: 3px;
+    }
+    #q_answer{display:none;}
+    table.edittable{border-collapse:collapse;text-align:center;margin:2px}table.edittable td,table.edittable th{line-height:30px;padding:5px;white-space:normal;word-break:break-all;border:1px solid #000;vertical-align:middle}table.composition{border-collapse:collapse;text-align:left;margin:2px;width:98%}table.composition td,table.composition th{line-height:30px;white-space:normal;word-break:break-all;border-width:0;vertical-align:middle}table.composition2{border-collapse:collapse;width:auto}table.composition2 td,table.composition2 th{text-align:left;line-height:30px;white-space:normal;word-break:break-all;border:none;border-width:0;vertical-align:middle}
+    sup {
+        vertical-align: super;
     }
 </style>

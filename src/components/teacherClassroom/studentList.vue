@@ -2,37 +2,38 @@
     <div class="studentList">
         <div class="studentList_warp" v-for="(item,index) in studentList.answerForStudent" :key="index">
             <div class="left">
-                <div class="avatar">
+                <!--<div class="avatar">
                     <div class="checkbox" @click="select(index,item.id)" v-if="allShow">
                         <div class="point" v-if="arr[index]"></div>
                     </div>
                     <div class="avatar_warps">
                         <img :src="item.avatar" alt="头像">
                     </div>
-                </div>
+                </div>-->
                 <div class="studentName">{{item.studentName}}</div>
             </div>
             <div class="right" v-if="studentList.quesetionType ==='objective'">
                 <div class="studentSelect">{{item.answerForObjective}}</div>
                 <div class="state correct" v-if="item.result === 'CORRECT'">正确</div>
-                <div class="state look" v-if="item.result !== 'CORRECT'">错误</div>
-                <!--<div class="state unsubmitted" v-if="item.result == 3">未提交</div>-->
+                <div class="state look" v-if="item.result === 'WRONG'">错误</div>
+                <div class="state unsubmitted" v-if="item.result === 'NONE'">未提交</div>
             </div>
             <div class="right" v-if="studentList.quesetionType ==='subjective'">
                 <div class="studentSelect">{{item.subjectiveScore}}</div>
+                <div class="state unsubmitted" v-if="item.result === 'NONE'">未提交</div>
                 <div
                         @click="correct(item.studentId)"
                         class="state correct"
-                        v-if="item.result !== 'PASS'"
+                        v-if="item.result !== 'NONE'&&item.result !== 'PASS'"
                 >
                     批改
                 </div>
                 <div @click="correct(item.studentId)" class="state look" v-if="item.result === 'PASS'">查看
                 </div>
-                <!--<div class="state unsubmitted" v-if="item.state == 3">未提交</div>-->
+
             </div>
         </div>
-        <div class="footer" v-if="allShow">
+        <!--<div class="footer" v-if="allShow">
             <div class="selectAll" @click="allSelect">
                 <div class="checkbox">
                     <div class="point" v-if="allState"></div>
@@ -42,7 +43,7 @@
             <div class="share">
                 分享
             </div>
-        </div>
+        </div>-->
     </div>
 </template>
 

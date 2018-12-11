@@ -1,8 +1,8 @@
 <template>
     <div class="teacherTopic" @click="goTopic(topic.quesetionType,topic.questionId,topic.title)">
         <div class="title">{{topic.title}}</div>
-        <div class="topic">{{topic.questionContent}}</div>
-        <div class="correct_rate" v-if="topic.questionStatus !== 'NOTSTART'">
+        <div class="topic" v-html="topic.questionContent">{{topic.questionContent}}</div>
+        <div class="correct_rate" v-if="topic.quesetionType === 'objective'&&topic.questionStatus !== 'NOTSTART'">
             正确率{{topicAcc*100}}%
         </div>
         <div class="state" :class="{release_warp:topic.questionStatus=='NOTSTART'}">
@@ -72,7 +72,7 @@
         methods: {
             percent: function (submited, total) {
                 if (total == 0) return 0;
-                else return submited / total * 100;
+                else return (submited / total).toFixed(4) * 100;
             },
             //进入题目
             goTopic(type, id, title) {
