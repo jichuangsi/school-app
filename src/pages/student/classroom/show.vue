@@ -43,6 +43,7 @@
         </scroll-content>
         <div class="AnswerShare" v-show="AnswerShareshow">
             <span class="btnout" @click="btnout">x</span>
+            
         </div>
         <loading v-if="loading" />
     </div>
@@ -515,6 +516,7 @@ export default {
           //   this.addTopicanswer(classData.data.questionId);
           //   this.btnshow = true;
           this.btn = 0;
+          console.log(classData.data)
         }
       }
     }

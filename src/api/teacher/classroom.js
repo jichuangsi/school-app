@@ -202,3 +202,20 @@ export function sendAnswer(questionId, studentAnswerId, answerId, score, stubFor
         headers: {'accessToken': localStorage.getItem('token')}
     });
 }
+//课堂主观题共享
+export function shareAnswer(questionId, studentAnswerId, answerId, score, stubForSubjective, teacherId, teacherName) {
+    let picForSubjective = null;
+    return axios({
+        method: 'post',
+        url: `${apiUrl}sendAnswer/${questionId}/${studentAnswerId}`,
+        data: {
+            answerId,
+            picForSubjective,
+            score,
+            stubForSubjective,
+            teacherId,
+            teacherName
+        },
+        headers: {'accessToken': localStorage.getItem('token')}
+    });
+}

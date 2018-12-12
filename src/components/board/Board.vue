@@ -5,6 +5,7 @@
                :data-med="answer" data-med-size="1024x1024">
                 <img :src="answer" alt=""/>
             </a>
+            <div id="answer" class="answer"></div>
         </div>
     </div>
 </template>
@@ -38,7 +39,7 @@
         },
         data() {
             return {
-                answer: ''
+                answer: '',
             }
         },
         mounted() {
@@ -323,8 +324,23 @@
         width: 386px;
         height: 500px;
         margin: 0 auto;
+        position: relative;
         img {
             max-width: 100%;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+        #answer {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 12;
         }
     }
 </style>

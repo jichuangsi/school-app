@@ -11,6 +11,9 @@ import '@/assets/styles/iconfont/iconfont.css'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import 'swiper/dist/css/swiper.css'
 import '@/assets/style/index.scss'
+import $ from "jquery";
+import "@/assets/jquery-2.2.2.min.js";
+import "@/assets/jSignature.js";
 /* eslint-disable no-unused-vars */
 // import vConsole from './utils/log'
 import Print from 'vue-print-nb'
