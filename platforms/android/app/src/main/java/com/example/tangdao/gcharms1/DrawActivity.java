@@ -145,7 +145,7 @@ public class DrawActivity extends AppCompatActivity implements View.OnClickListe
     private void connectBle() {
         if (null == mRyDrawingManager) {
             try {
-                mRyDrawingManager = android.HandwrittenBoard.HandwrittenBoard.getRyDrawingManager();
+                mRyDrawingManager = handwritten.board.HandwrittenBoard.getRyDrawingManager();
             } catch (Exception e) {
                 mRyDrawingManager = RyDrawingManager.getInstance();
                 mRyDrawingManager.init(this);
@@ -165,19 +165,25 @@ public class DrawActivity extends AppCompatActivity implements View.OnClickListe
         if (v == btnMainCancel) {
             finish();
         } else if (v == ivMainUndo) {
-            drawView.undoLast();
+            Toast.makeText(DrawActivity.this, "暂不可用", Toast.LENGTH_SHORT).show();
+            //drawView.undoLast();
         } else if (v == ivMainRedo) {
-            drawView.redoLast();
+            Toast.makeText(DrawActivity.this, "暂不可用", Toast.LENGTH_SHORT).show();
+            //drawView.redoLast();
         } else if (v == ivMainClear) {
-            selectEraser();
+            Toast.makeText(DrawActivity.this, "暂不可用", Toast.LENGTH_SHORT).show();
+            //selectEraser();
         } else if (v == ivMainClearAll) {
-            drawView.clearDraw();
+            Toast.makeText(DrawActivity.this, "暂不可用", Toast.LENGTH_SHORT).show();
+            //drawView.clearDraw();
         } else if (v == ivMainRight) {
             drawView.getDrawScreenshot(new MyDrawScreenshot());
         } else if (v == ivColorBalck) {
-            setPaintColor(0);
+            Toast.makeText(DrawActivity.this, "暂不可用", Toast.LENGTH_SHORT).show();
+            //setPaintColor(0);
         } else if (v == ivColorRed) {
-            setPaintColor(1);
+            Toast.makeText(DrawActivity.this, "暂不可用", Toast.LENGTH_SHORT).show();
+            //setPaintColor(1);
         }
     }
 
