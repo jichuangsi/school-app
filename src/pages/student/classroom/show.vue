@@ -1,52 +1,55 @@
 <template>
-    <div class="classroom">
-        <public-header :header="header" />
-        <scroll-content ref="myscrollfull" :mescrollValue="mescrollValue" v-if="pageShow">
-            <!--时间-->
-            <div class="time">{{hours}}:{{minutes}}</div>
-            <!--预习要点-->
-            <preview-points :preview="preview" v-if="preview" />
-            <div class="class_topic_warp" v-for="(item,index) in showTopicList" :key="index">
-                <!--客观题-->
-                <div class="objective_warp" v-if="item.quesetionType==='objective'">
-                    <class-objective :objective="item" @selectAnswer="selectAnswer" />
-                    <div class="submit_warp" v-if="item.questionStatus !== 'FINISH'">
-                        <div class="objective_submit" @click="objective_submit(item.questionId)">
-                            提交
-                        </div>
-                    </div>
-                    <reply :reply="reply" :type="item.type" :id="item.questionId" />
-                    <!--老师关闭回答-->
-                    <div class="closeReply" v-if="item.questionStatus === 'FINISH'">
-                        <span class="text">老师已终止{{item.title}}的作答</span>
-                    </div>
-                </div>
-                <!--主观题-->
-                <div class="subjective_warp" v-if="item.quesetionType ==='subjective'">
-                    <subjective :subjectiveTopic="item" />
-                    <div class="button_warp" v-if="item.questionStatus !=='FINISH'">
-                        <div class="subjective_submit" v-show="!objectiveAnswer[index].answer" @click="answerQuestions(item.questionId)">开始答题
-                        </div>
-                        <div class="subjective_submit" v-show="objectiveAnswer[index].answer" @click="modifyAnswer(item.questionId)">修改答案
-                        </div>
-                    </div>
-                    <board :subjectiveAnswer="objectiveAnswer" :id="item.questionId" v-show="isAnswer(objectiveAnswer[index].answer)" />
-                    <!--老师关闭回答-->
-                    <div class="closeReply" v-if="item.questionStatus === 'FINISH'">
-                        <span class="text">老师已终止{{item.title}}的作答</span>
-                    </div>
-                </div>
+  <div class="classroom">
+    <public-header :header="header" />
+    <scroll-content ref="myscrollfull" :mescrollValue="mescrollValue" v-if="pageShow">
+      <!--时间-->
+      <div class="time">{{hours}}:{{minutes}}</div>
+      <!--预习要点-->
+      <preview-points :preview="preview" v-if="preview" />
+      <div class="class_topic_warp" v-for="(item,index) in showTopicList" :key="index">
+        <!--客观题-->
+        <div class="objective_warp" v-if="item.quesetionType==='objective'">
+          <class-objective :objective="item" @selectAnswer="selectAnswer" />
+          <div class="submit_warp" v-if="item.questionStatus !== 'FINISH'">
+            <div class="objective_submit" @click="objective_submit(item.questionId)">
+              提交
             </div>
-            <div id="btn" :class="{'awbtn':btn===current}" @click="AnswerShareshow=!AnswerShareshow">
-                答案
-            </div>
-        </scroll-content>
-        <div class="AnswerShare" v-show="AnswerShareshow">
-            <span class="btnout" @click="btnout">x</span>
-            
+          </div>
+          <reply :reply="reply" :type="item.type" :id="item.questionId" />
+          <!--老师关闭回答-->
+          <div class="closeReply" v-if="item.questionStatus === 'FINISH'">
+            <span class="text">老师已终止{{item.title}}的作答</span>
+          </div>
         </div>
-        <loading v-if="loading" />
+        <!--主观题-->
+        <div class="subjective_warp" v-if="item.quesetionType ==='subjective'">
+          <subjective :subjectiveTopic="item" />
+          <div class="button_warp" v-if="item.questionStatus !=='FINISH'">
+            <div class="subjective_submit" v-show="!objectiveAnswer[index].answer" @click="answerQuestions(item.questionId)">开始答题
+            </div>
+            <div class="subjective_submit" v-show="objectiveAnswer[index].answer" @click="modifyAnswer(item.questionId)">修改答案
+            </div>
+          </div>
+          <board :subjectiveAnswer="objectiveAnswer" :id="item.questionId" v-show="isAnswer(objectiveAnswer[index].answer)" />
+          <!--老师关闭回答-->
+          <div class="closeReply" v-if="item.questionStatus === 'FINISH'">
+            <span class="text">老师已终止{{item.title}}的作答</span>
+          </div>
+        </div>
+      </div>
+      <div id="btn" :class="{'awbtn':btn===current}" @click="AnswerShareshow=!AnswerShareshow">
+        答案
+      </div>
+    </scroll-content>
+    <div class="AnswerShare" v-show="AnswerShareshow">
+      <span class="btnout" @click="btnout">x</span>
+        <div class="AnswerShareList" v-for="(item,index) in AnswerShareList" :key="index">
+          <div :id="item.id" class="question">{{item.title}}</div>
+          <div class="answerimg"><img :src="item.img" alt=""></div>
+        </div>
     </div>
+    <loading v-if="loading" />
+  </div>
 </template>
 
 <!--课堂详情-->
@@ -87,8 +90,9 @@ export default {
   },
   data() {
     return {
+      AnswerShareList: [],
       AnswerShareshow: false,
-      btn: 1,
+      btn: 0,
       current: 0,
       //计算现在是第几个客观题
       objectiveCount: 0,
@@ -511,12 +515,13 @@ export default {
           });
         }
         if (classData.data.wsType === "AnswerShare") {
-          //共享答案
-          //   alert("这是共享答案");
-          //   this.addTopicanswer(classData.data.questionId);
-          //   this.btnshow = true;
-          this.btn = 0;
-          console.log(classData.data)
+          let self = this
+          self.btn = 0;
+          self.topicList.forEach(val => {
+            if(val.questionId == classData.data.questionId){
+              self.AnswerShareList.push({id:val.questionId,title:val.questionContent,img:this.getSubjectPic(classData.data.picPath)})
+            }
+          });
         }
       }
     }
@@ -552,6 +557,9 @@ export default {
       position: absolute;
       right: 2rem;
       top: 1rem;
+    }
+    .AnswerShareList {
+      padding: 3rem 1rem;
     }
   }
   #btn {
