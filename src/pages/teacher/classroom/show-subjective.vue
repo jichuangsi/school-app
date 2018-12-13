@@ -1,46 +1,47 @@
 <template>
-    <div class="subjectiveShow">
-        <classroom-header :header="header" />
-        <div class="content" v-if="pageShow">
-            <div class="subjective_warp">
-                <subjective :subjectiveTopic="subjectiveMsg" @subjectiveId="subjectiveId" />
-                <div class="button_warp">
-                    <!-- @click="modifyAnswer(subjectiveMsg.questionId)" -->
-                    <div class="subjective_submit" @click="zz">批改答案
-                    </div>
-                </div>
-                <board :id="this.topicId" :subjectiveAnswer="subjectiveAnswer"/>
-                <!-- <div id="div" class="ass"></div> -->
-            </div>
+  <div class="subjectiveShow">
+    <classroom-header :header="header" />
+    <div class="content" v-if="pageShow">
+      <div class="subjective_warp">
+        <subjective :subjectiveTopic="subjectiveMsg" @subjectiveId="subjectiveId" />
+        <div class="button_warp">
+          <!-- @click="modifyAnswer(subjectiveMsg.questionId)" -->
+          <div class="subjective_submit" @click="zz(subjectiveMsg.questionId)">批改答案
+          </div>
+          <div class="subjective_submit_box" v-if="cover_box==1">批改答案</div>
         </div>
-        <div class="footer" v-if="pageShow">
-            <div class="score">
-                得分:&nbsp;{{scores}}&nbsp;
-                <span class="iconfont edit" @click="score">&#xe60c;</span>
-                <mt-popup v-model="popupVisible">
-                    <div class="popup_warp" v-if="inputState">
-                        <div class="title">请输入分数</div>
-                        <input class="inputScore" type="text" v-model="fraction" />
-                        <div class="operation">
-                            <div @click="determine">是</div>
-                            <div @click="signOut">否</div>
-                        </div>
-                    </div>
-                    <div class="warning_warp" v-if="warningState">
-                        <div class="img_warp">
-                            <img src="../../../../public/images/warning.png">
-                        </div>
-                        <div class="title">警告</div>
-                        <div class="text">您输入的分数有误</div>
-                        <div class="close" @click="upperLevel">知道了</div>
-                    </div>
-                </mt-popup>
-            </div>
-            <div class="share" @click="share">共享</div>
-            <div class="submit" @click="submited" v-show="buttonSate">提交</div>
-        </div>
-        <loading v-if="loading" />
+        <board :id="this.topicId" :subjectiveAnswer="subjectiveAnswer" />
+        <!-- <div id="div" class="ass"></div> -->
+      </div>
     </div>
+    <div class="footer" v-if="pageShow">
+      <div class="score">
+        得分:&nbsp;{{scores}}&nbsp;
+        <span class="iconfont edit" @click="score">&#xe60c;</span>
+        <mt-popup v-model="popupVisible">
+          <div class="popup_warp" v-if="inputState">
+            <div class="title">请输入分数</div>
+            <input class="inputScore" type="text" v-model="fraction" />
+            <div class="operation">
+              <div @click="determine">是</div>
+              <div @click="signOut">否</div>
+            </div>
+          </div>
+          <div class="warning_warp" v-if="warningState">
+            <div class="img_warp">
+              <img src="../../../../public/images/warning.png">
+            </div>
+            <div class="title">警告</div>
+            <div class="text">您输入的分数有误</div>
+            <div class="close" @click="upperLevel">知道了</div>
+          </div>
+        </mt-popup>
+      </div>
+      <div class="share" @click="share">共享</div>
+      <div class="submit" @click="submited" v-show="buttonSate">提交</div>
+    </div>
+    <loading v-if="loading" />
+  </div>
 </template>
 
 <!--课堂主观题-->
@@ -61,9 +62,6 @@ import { Toast } from "mint-ui";
 import { mapGetters } from "vuex";
 import store from "@/store";
 import html2canvas from "html2canvas";
-// import $ from "jquery";
-// import "@/assets/jquery-2.2.2.min.js";
-// import "@/assets/jSignature.js";
 
 export default {
   components: {
@@ -74,6 +72,8 @@ export default {
   },
   data() {
     return {
+      bseimg: "",
+      cover_box: 0,
       //图片URL
       picUrl: "",
       subjectiveId: "",
@@ -106,33 +106,33 @@ export default {
       buttonSate: false //控制button显示
     };
   },
-  watch: {
-    boardImg(val) {
-      this.buttonSate = false;
-      for (let i = 0; i < this.subjectiveAnswer.length; i++) {
-        if (this.subjectiveAnswer[i].id === this.subjectiveId) {
-          this.subjectiveAnswer[i].answer = val.data;
-          sendSubjectPicByString(val.data)
-            .then(res => {
-              this.picForSubjective = res.data.data.stubForSubjective;
-              Toast({
-                message: "储存图片成功",
-                position: "bottom"
-              });
-              this.buttonSate = true;
-            })
-            .catch(err => {
-              console.log(err);
-              Toast({
-                message: "储存图片失败",
-                position: "bottom"
-              });
-              this.buttonSate = true;
-            });
-        }
-      }
-    }
-  },
+  // watch: {
+  //   boardImg(val) {
+  //     this.buttonSate = false;
+  //     for (let i = 0; i < this.subjectiveAnswer.length; i++) {
+  //       if (this.subjectiveAnswer[i].id === this.subjectiveId) {
+  //         this.subjectiveAnswer[i].answer = val.data;
+  //         sendSubjectPicByString(val.data)
+  //           .then(res => {
+  //             this.picForSubjective = res.data.data.stubForSubjective;
+  //             Toast({
+  //               message: "储存图片成功",
+  //               position: "bottom"
+  //             });
+  //             this.buttonSate = true;
+  //           })
+  //           .catch(err => {
+  //             console.log(err);
+  //             Toast({
+  //               message: "储存图片失败",
+  //               position: "bottom"
+  //             });
+  //             this.buttonSate = true;
+  //           });
+  //       }
+  //     }
+  //   }
+  // },
   mounted() {
     // this.getSubjectiveShow();
     this.getCourseId();
@@ -151,13 +151,15 @@ export default {
     ])
   },
   methods: {
-    zz() {
-      $('.answer').jSignature({
-      width: "100%",
-      height: "100%",
-      color: "red",
-      lineWidth: 1
-    })
+    zz(id) {
+      this.subjectiveId = id;
+      this.cover_box = 1;
+      $(".answer").jSignature({
+        width: "100%",
+        height: "100%",
+        color: "red",
+        lineWidth: 1
+      });
     },
     //获取课堂列表穿过来的数据
     getCourseId() {
@@ -167,6 +169,7 @@ export default {
       //获取题目基本信息
       getQuestion(this.topicId)
         .then(res => {
+          console.log(res);
           this.subjectiveMsg = res.data.data;
           this.subjectiveMsg.title = this.title;
           this.getImg();
@@ -276,37 +279,69 @@ export default {
     },
     //提交
     async submited() {
+      console.log(1)
       let self = this;
-      try {
-        await sendAnswer(
-          self.topicId,
-          self.answerId,
-          null,
-          self.scores,
-          self.picForSubjective,
-          self.teacherId,
-          self.teacherName
-        );
-        Toast({
-          message: "提交成功",
-          position: "bottom"
-        });
-        self.$router.push({
-          path: "@/pages/teacher/classroom/subjective",
-          name: "subjectiveDetails"
-        });
-      } catch (e) {
-        Toast({
-          message: "提交失敗",
-          position: "bottom"
-        });
+      self.bse();
+      console.log(2)
+      console.log(self.subjectiveAnswer)
+      console.log(self.subjectiveId)
+      for (let i = 0; i < self.subjectiveAnswer.length; i++) {
+        if (self.subjectiveAnswer[i].id === self.subjectiveId) {
+          console.log(self.baseimg)
+          sendSubjectPicByString(self.baseimg)
+            .then(res => {
+              self.picForSubjective = res.data.data.stubForSubjective; 
+      console.log(3)
+              Toast({
+                message: "储存图片成功",
+                position: "bottom"
+              });
+              self.buttonSate = true;
+            })
+            .catch(err => {
+              console.log(err);
+              Toast({
+                message: "储存图片失败",
+                position: "bottom"
+              });
+              self.buttonSate = true;
+            });
+        }
+      }
+      
+      console.log(4)
+      if (self.picForSubjective) {
+      console.log(5)
+        try {
+          await sendAnswer(
+            self.topicId,
+            self.answerId,
+            null,
+            self.scores,
+            self.picForSubjective,
+            self.teacherId,
+            self.teacherName
+          );
+          Toast({
+            message: "提交成功",
+            position: "bottom"
+          });
+          self.$router.push({
+            path: "@/pages/teacher/classroom/subjective",
+            name: "subjectiveDetails"
+          });
+        } catch (e) {
+          Toast({
+            message: "提交失敗",
+            position: "bottom"
+          });
+        }
       }
     },
-    //共享
-    async share() {
+    // bse
+    bse() {
       let self = this;
       let asd = document.getElementById("demo-test-gallery"); // 要转化的div
-      console.log(asd)
       let width = asd.offsetWidth;
       let height = asd.offsetHeight;
       let offsetTop = asd.offsetTop;
@@ -330,8 +365,14 @@ export default {
         canvas.style.height = height + "px";
         // var image = new Image()
         // $('#grow-img').attr('src', canvas.toDataURL());
-        console.log(canvas.toDataURL());
+        // console.log(canvas.toDataURL());
+        self.bseimg = canvas.toDataURL();
       });
+    },
+    //共享
+    async share() {
+      console.log(self.topicId, self.answerId);
+      console.log(Boolean(self.picForSubjective));
       // try {
       //     await shareAnswer(self.topicId, self.answerId, null, self.scores, self.picForSubjective, self.teacherId, self.teacherName);
       //     Toast({
@@ -389,6 +430,19 @@ export default {
           color: #9a84ff;
           font-size: 18px;
           z-index: 100;
+        }
+        .subjective_submit_box {
+          position: absolute;
+          right: 3.71rem;
+          padding: 0 20px;
+          height: 2.29rem;
+          border: 2px solid #9a84ff;
+          line-height: 2.29rem;
+          text-align: center;
+          border-radius: 1.145rem;
+          color: #9a84ff;
+          font-size: 18px;
+          z-index: 101;
         }
         .subjective_submit:active {
           background-color: #b4b4b4;

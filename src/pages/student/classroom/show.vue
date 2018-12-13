@@ -43,10 +43,11 @@
     </scroll-content>
     <div class="AnswerShare" v-show="AnswerShareshow">
       <span class="btnout" @click="btnout">x</span>
-        <div class="AnswerShareList" v-for="(item,index) in AnswerShareList" :key="index">
-          <div :id="item.id" class="question">{{item.title}}</div>
-          <div class="answerimg"><img :src="item.img" alt=""></div>
-        </div>
+      <div class="AnswerShareList" v-for="(item,index) in AnswerShareList" :key="index">
+        <div :id="item.id" class="question">{{item.title}}</div>
+        <div class="answerimg" @click="bingimg=!bingimg"><img :src="item.img" alt=""></div>
+      </div>
+      <div class="bingimg" v-show="bingimg" @click="bingimg!=bingimg"><img :src="AnswerShareList.img" alt=""></div>
     </div>
     <loading v-if="loading" />
   </div>
@@ -90,9 +91,10 @@ export default {
   },
   data() {
     return {
+      bingimg:false,
       AnswerShareList: [],
       AnswerShareshow: false,
-      btn: 0,
+      btn: 1,
       current: 0,
       //计算现在是第几个客观题
       objectiveCount: 0,
@@ -515,13 +517,25 @@ export default {
           });
         }
         if (classData.data.wsType === "AnswerShare") {
-          let self = this
+          let self = this;
           self.btn = 0;
-          self.topicList.forEach(val => {
-            if(val.questionId == classData.data.questionId){
-              self.AnswerShareList.push({id:val.questionId,title:val.questionContent,img:this.getSubjectPic(classData.data.picPath)})
+          for (let i = 0; i < self.topicList.length; i++) {
+            let val = self.topicList[i];
+            if (val.questionId === classData.data.questionId) {
+              getSubjectPic(classData.data.picPath).then(res => {
+                if (res.data.data) {
+                  let img =
+                    "data:image/png;base64," +
+                    res.data.data.content.replace(",", "");
+                  self.AnswerShareList=[{
+                    id: val.questionId,
+                    title: val.questionContent,
+                    img: img
+                  }];
+                }
+              });
             }
-          });
+          }
         }
       }
     }
@@ -543,6 +557,17 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
+  .bingimg {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 20;
+    img {
+      width: 100%;
+    }
+  }
   .AnswerShare {
     width: 100%;
     height: 100%;
@@ -560,6 +585,20 @@ export default {
     }
     .AnswerShareList {
       padding: 3rem 1rem;
+      .question {
+        line-height: 2.43rem;
+        font-size: 18px;
+        padding: 0 3.71rem;
+      }
+      .answerimg {
+        width: 100%;
+        height: 20rem;
+        overflow: hidden;
+        img {
+          width: 100%;
+          margin-top: -25%;
+        }
+      }
     }
   }
   #btn {
