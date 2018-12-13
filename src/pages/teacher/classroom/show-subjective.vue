@@ -285,6 +285,8 @@ export default {
       console.log(2)
       console.log(self.subjectiveAnswer)
       console.log(self.subjectiveId)
+      console.log(Boolean(self.subjectiveId))
+      if(self.baseimg){
       for (let i = 0; i < self.subjectiveAnswer.length; i++) {
         if (self.subjectiveAnswer[i].id === self.subjectiveId) {
           console.log(self.baseimg)
@@ -307,6 +309,7 @@ export default {
               self.buttonSate = true;
             });
         }
+      }
       }
       
       console.log(4)
@@ -367,6 +370,7 @@ export default {
         // $('#grow-img').attr('src', canvas.toDataURL());
         // console.log(canvas.toDataURL());
         self.bseimg = canvas.toDataURL();
+        console.log(self.bseimg)
       });
     },
     //共享
