@@ -75,6 +75,7 @@
                 let self = this;
                 let r1 = await getQuestion(self.topicId);
                 self.studentList = r1.data.data;
+                console.log(this.studentList)
                 self.supplementStudentList(self.studentList.answerForStudent);
                 let r2 = await getCourseStatistics(self.courseId);
                 self.studentCount = r2.data.data.studentCount;

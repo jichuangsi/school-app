@@ -79,6 +79,7 @@
                     this.arr = [];
                     for (let i = 0; i < this.studentList.length; i++) {
                         this.arr.push(false);
+                        console.log(1)
                     }
                     console.log(this.arr);
                 },

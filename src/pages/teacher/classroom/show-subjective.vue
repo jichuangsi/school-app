@@ -1,5 +1,5 @@
 <template>
-    <div class="subjectiveShow" id="subjectiveShow">
+    <div class="subjectiveShow">
         <classroom-header :header="header" />
         <div class="content" v-if="pageShow">
             <div class="subjective_warp">
@@ -351,36 +351,9 @@ export default {
     }
   }
 };
-
-$(function() {
-  // $(".subjectiveShow").click(function() {
-  //   console.log(123);
-  //   $("#subjectiveShow").jSignature({
-  //     width: "100%",
-  //     height: "100%",
-  //     color: "red",
-  //     lineWidth: 1
-  //   });
-  // })
-  $('.subjectiveShow').click(function(){
-      console.log($('#div'))
-    $('.content').jSignature({
-      width: "100%",
-      height: "100%",
-      color: "red",
-      lineWidth: 1
-    })
-  })
-});
 </script>
 
 <style lang="scss" scoped>
-#div {
-  width: 100%;
-  height: 200px;
-  background-color: yellowgreen;
-  z-index: 10000;
-}
 .subjectiveShow {
   position: absolute;
   top: 0;
