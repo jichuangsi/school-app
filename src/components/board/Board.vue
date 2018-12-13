@@ -325,6 +325,9 @@
         height: 500px;
         margin: 0 auto;
         position: relative;
+        #demo-test-gallery {
+            height: 100%;
+        }
         img {
             max-width: 100%;
             width: 100%;

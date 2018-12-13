@@ -14,6 +14,7 @@ import '@/assets/style/index.scss'
 import $ from "jquery";
 import "@/assets/jquery-2.2.2.min.js";
 import "@/assets/jSignature.js";
+
 /* eslint-disable no-unused-vars */
 // import vConsole from './utils/log'
 import Print from 'vue-print-nb'
