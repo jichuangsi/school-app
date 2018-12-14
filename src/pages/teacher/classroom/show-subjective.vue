@@ -178,11 +178,12 @@ export default {
           console.log(res);
           this.subjectiveMsg = res.data.data;
           this.subjectiveMsg.title = this.title;
-          console.log(this.subjectiveMsg.answerForStudent.studentId)
-          console.log(this.studentId)
           for (let i = 0; i < this.subjectiveMsg.answerForStudent.length; i++) {
         if (this.subjectiveMsg.answerForStudent[i].studentId === this.studentId) {
           this.sharebtn = this.subjectiveMsg.answerForStudent[i].result;
+          if(this.subjectiveMsg.answerForStudent[i].result){
+              this.picForSubjective = this.subjectiveMsg.answerForStudent[i].reviseForSubjective
+          }
         }
       }
           this.getImg();
@@ -222,7 +223,7 @@ export default {
         );
         self.answerId = stubForSubjective.answerId;
         console.log(res.data.data);
-        self.picForSubjective = res.data.data.name
+        // self.picForSubjective = res.data.data.name
         if (res.data.data) {
           self.picUrl = res.data.data.content;
           self.subjectiveAnswer.push({ id: self.topicId, answer: self.picUrl });

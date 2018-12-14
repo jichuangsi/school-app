@@ -12,7 +12,7 @@ export async function login(userAccount, userPwd) {
         }
     });
     if (res.data.code === '0010') {
-        console.log(res.data.data.accessToken)
+        // console.log(res.data.data.accessToken)
         localStorage.setItem("token", res.data.data.accessToken);
         return res.data.data ? res.data.data.user : false;
     } else {
