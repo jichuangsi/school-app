@@ -38,16 +38,15 @@
         </div>
       </div>
       <div id="btn" :class="{'awbtn':btn===current}" @click="AnswerShareshow=!AnswerShareshow">
-        答案
+        <img src="@/assets/答案.png" alt="">
       </div>
     </scroll-content>
     <div class="AnswerShare" v-show="AnswerShareshow">
       <span class="btnout" @click="btnout">x</span>
       <div class="AnswerShareList" v-for="(item,index) in AnswerShareList" :key="index">
         <div :id="item.id" class="question">{{item.title}}</div>
-        <div class="answerimg" @click="bingimg=!bingimg"><img :src="item.img" alt=""></div>
+        <div class="answerimg"><img :src="item.img" alt=""></div>
       </div>
-      <div class="bingimg" v-show="bingimg" @click="bingimg!=bingimg"><img :src="AnswerShareList.img" alt=""></div>
     </div>
     <loading v-if="loading" />
   </div>
@@ -91,7 +90,6 @@ export default {
   },
   data() {
     return {
-      bingimg:false,
       AnswerShareList: [],
       AnswerShareshow: false,
       btn: 1,
@@ -557,17 +555,6 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  .bingimg {
-    width: 100%;
-    height: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 20;
-    img {
-      width: 100%;
-    }
-  }
   .AnswerShare {
     width: 100%;
     height: 100%;
@@ -592,28 +579,36 @@ export default {
       }
       .answerimg {
         width: 100%;
-        height: 20rem;
+        height: 100%;
         overflow: hidden;
         img {
           width: 100%;
-          margin-top: -25%;
         }
       }
     }
   }
   #btn {
-    font-size: 1.5rem;
-    padding: 1.6rem 1rem;
+    width: 10rem;
+    height: 10rem;
     position: fixed;
-    top: 45%;
-    left: -5rem;
-    background-color: yellowgreen;
+    top: 40%;
+    left: -10rem;
     color: #fff;
     border-radius: 50%;
     transition: left 1s;
+    overflow: hidden;
+    z-index: 102;
+    img {
+      width: 100%;
+      height: 100%;
+    }
   }
   .awbtn {
-    left: 1rem !important;
+    left: 18rem !important; 
+    img {
+      width: 100%;
+      height: 100%;
+    }
   }
   .mescroll {
     box-sizing: border-box;
