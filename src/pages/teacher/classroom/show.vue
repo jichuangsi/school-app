@@ -43,6 +43,7 @@
     import {
         changeCourseStatus,
         courseStart,
+        courseEnd,
         getCourse,
         getCourseStatistics,
         getQuestionStatisticsList
@@ -171,7 +172,7 @@
                     case 'NOTSTART':
                         try {
                             await MessageBox.confirm('', {message: '是否开始上课'});
-                            await changeCourseStatus(this.courseId, "PROGRESS");
+                            //await changeCourseStatus(this.courseId, "PROGRESS");
                             await courseStart(this.courseId);
                             this.classMsg.courseStatus = 'PROGRESS';
                         } catch (e) {
@@ -182,7 +183,8 @@
                     case 'PROGRESS':
                         try {
                             await MessageBox.confirm('', {message: '是否结束课程'});
-                            await changeCourseStatus(this.courseId, "FINISH");
+                            //await changeCourseStatus(this.courseId, "FINISH");
+                            await courseEnd(this.courseId);
                             this.classMsg.courseStatus = 'FINISH';
                         } catch (e) {
                             console.log(e);
@@ -195,7 +197,7 @@
             async start() {
                 if (this.courseStatus == 'PROGRESS') {
                     await courseStart(this.courseId);
-                    await changeCourseStatus(this.courseId, this.courseStatus);
+                    //await changeCourseStatus(this.courseId, this.courseStatus);
                 }
             },
             //下拉刷新

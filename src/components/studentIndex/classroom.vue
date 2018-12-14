@@ -68,7 +68,8 @@
                 wsUrl: 'http://school.jichuangsi.com:81',
                 stompClient: null,
                 subscription: null,
-                token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1c2VySW5mbyI6IntcInRpbWVTdGFtcFwiOjE1MzkyNDUzODQzMDYsXCJ1c2VySWRcIjpcIjEyM1wiLFwidXNlck5hbWVcIjpcIuW8oOS4iVwifSJ9.Vdc-5R7I3I-EGriPu9ytbdAKt_X21HrSnLNoqS-TANQ6OALuFEasWhnbOoG5_wJmHA__nDgVHeN6DSxjJZ1Biw'
+                token: localStorage.getItem("token"),
+                classId: ''
             }
         },
         computed: {
@@ -80,6 +81,7 @@
         mounted() {
             // this.getClassroomList();
             // 判断vuex里面是否有数据
+            this.classId = JSON.parse(localStorage.getItem("user")).roles[0].primaryClass.classId;
             if (this.classroomList.length === 0) {
                 this.getClassroomList();
             } else {
@@ -185,7 +187,7 @@
                         accessToken: _this.token
                     };//订阅时的头信息
                     //监听的路径以及回调。返回的subscription用于取消订阅
-                    _this.subscription = _this.stompClient.subscribe('/topic/group/student/777', function (response) {
+                    _this.subscription = _this.stompClient.subscribe('/topic/group/student/'+_this.classId, function (response) {
                         _this.classData(response);
                     }, subHeader);
                 });
@@ -209,7 +211,7 @@
         },
         beforeDestroy() {
             //取消订阅
-            this.stompClient.unsubscribe('/topic/group/student/777');
+            this.stompClient.unsubscribe('/topic/group/student/'+this.classId);
         }
     }
 </script>

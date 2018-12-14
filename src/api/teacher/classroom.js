@@ -38,6 +38,15 @@ export function courseStart(courseId) {
     });
 }
 
+//开始上课
+export function courseEnd(courseId) {
+    return axios({
+        method: 'POST',
+        url: `${apiUrl}courseEnd/${courseId}`,
+        headers: {'accessToken': localStorage.getItem('token')}
+    });
+}
+
 //获取课堂详情
 export function getCourse(courseId) {
     return axios({
