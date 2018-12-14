@@ -105,6 +105,7 @@
                 let _this = this;
                 getCourse(_this.courseId)
                     .then(res => {
+                        console.log(res)
                         _this.pageShow = true;
                         _this.loading = false;
                         _this.classMsg = res.data.data;

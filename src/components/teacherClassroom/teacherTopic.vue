@@ -22,6 +22,13 @@
                  @click.stop="releaseTips(topic.questionId)">发布
             </div>
         </div>
+        <div class="remind" v-if="topic.questionPic" @click.stop="picimg(topic.questionPic)">
+                此题有图片（点开查看图片）
+            </div>
+            <div class="bigimg" v-if="dsadsa">
+                <div class="btn" @click.stop="picimgshow">x</div>
+                <img :src="bigimg" alt="">
+            </div>
     </div>
 </template>
 
@@ -31,7 +38,7 @@
     import {MessageBox, Toast} from 'mint-ui';
     import store from '@/store'
     import {mapGetters} from 'vuex'
-    import {questionPublish, questionTerminate} from '@/api/teacher/classroom'
+    import {questionPublish, questionTerminate, getSubjectPic} from '@/api/teacher/classroom'
 
     export default {
         name: "teacherTopic",
@@ -60,7 +67,10 @@
             }
         },
         data() {
-            return {}
+            return {
+                bigimg:'',
+                dsadsa: false
+            }
         },
         computed: {
             //vuex 调用
@@ -70,12 +80,25 @@
             ])
         },
         methods: {
+            picimgshow(){
+                let self = this
+                self.dsadsa = false
+            },
+            picimg(src){
+                let self = this
+                self.dsadsa = true
+                getSubjectPic(src).then(res=>{
+                    // console.log(res.data.data.content)
+                    self.bigimg = res.data.data.content
+                })
+            },
             percent: function (submited, total) {
                 if (total == 0) return 0;
                 else return (submited / total).toFixed(4) * 100;
             },
             //进入题目
             goTopic(type, id, title) {
+                console.log(this.dsadsa)
                 store.commit('SET_TOPICID', id);
                 store.commit('SET_TITLE', title);
                 if (type === 'objective') {
@@ -141,6 +164,31 @@
         .title {
             color: rgba(105, 180, 130, 1);
         }
+        .bigimg {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100%;
+                width: 100%;
+                background-color: #fff;
+                z-index: 101;
+                .btn {
+                    padding: 1rem 2rem;
+                    float: right;
+                    font-size: 2.5rem;
+                    color: yellowgreen;
+                }
+                img {
+                    padding: 4.5rem 2rem;
+                }
+            }
+            .remind {
+                font-size: 16px;
+                color: #666;
+                position: absolute;
+                right: 40%;
+                // bottom: 0%
+            }
         .topic {
             padding: 1.14rem 0 .5rem;
             line-height: 34px;

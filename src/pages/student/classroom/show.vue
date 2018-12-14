@@ -37,7 +37,7 @@
           </div>
         </div>
       </div>
-      <div id="btn" :class="{'awbtn':btn===current}" @click="AnswerShareshow=!AnswerShareshow">
+      <div id="btn" :class="{'awbtn':btn===current}" @click="Answerbtn">
         <img src="@/assets/答案.png" alt="">
       </div>
     </scroll-content>
@@ -208,6 +208,9 @@ export default {
     ...mapGetters(["isBoard", "isBlueTooth", "boardImg"])
   },
   methods: {
+    Answerbtn(){
+      this.AnswerShareshow = true;
+    },
     btnout() {
       this.btn = 1;
       this.AnswerShareshow = false;
@@ -560,7 +563,7 @@ export default {
     height: 100%;
     position: fixed;
     background-color: #fff;
-    z-index: 3;
+    z-index: 121;
     top: 0;
     .btnout {
       font-size: 4rem;
