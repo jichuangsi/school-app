@@ -9,6 +9,13 @@
                 <div class="option" v-for="(item,index) in objective.options" :key="index">
                     {{tab(index)}}.{{item}}
                 </div>
+                <div class="remind" v-if="objective.questionPic" @click.stop="picimg(objective.questionPic)">
+                    （点开查看图片）
+                </div>
+                <div class="bigimg" v-if="dsadsa">
+                    <div class="btn" @click.stop="picimgshow">x</div>
+                    <img :src="bigimg" alt="">
+                </div>
             </div>
             <div class="tips">
                 提交人数：{{initial.count}}人，正确率{{initial.acc*100}}%
@@ -37,7 +44,7 @@
     import TeacherHeader from '../../../components/public/PublicHeader'
     import ScrollContent from '../../../components/public/ScrollContent'
     import StudentList from '../../../components/teacherClassroom/studentList'
-    import {getCourseStatistics, getQuestion, getQuestionStatisticsList} from '@/api/teacher/classroom'
+    import {getCourseStatistics, getQuestion, getQuestionStatisticsList, getQuestionPic} from '@/api/teacher/classroom'
     import Loading from '../../../components/public/Loading'
     import {mapGetters} from 'vuex'
 
@@ -70,7 +77,9 @@
                 initial: {
                     acc: '',
                     count: ''
-                }
+                },
+                bigimg:'',
+                dsadsa: false
             }
         },
         computed: {
@@ -85,6 +94,20 @@
             this.getObjectiveQuestions();
         },
         methods: {
+            picimgshow(){
+                let self = this
+                self.dsadsa = false
+            },
+            picimg(src){
+                let self = this
+                self.dsadsa = true
+                getQuestionPic(src).then(res=>{
+                    // console.log(res.data.data.content)
+                    self.bigimg = //res.data.data.content;
+                        "data:image/png;base64," +
+                        res.data.data.content.replace(",", "");
+                })
+            },
             //第一个饼图
             drawLine1() {
                 this.$nextTick(function () {
@@ -260,6 +283,33 @@
                 background-color: rgba(246, 255, 247, 1);
                 .topic {
                     padding-bottom: 1rem;
+                }
+                .bigimg {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    height: 100%;
+                    width: 100%;
+                    background-color: #fff;
+                    z-index: 101;
+                    .btn {
+                        padding: 1rem 2rem;
+                        float: right;
+                        font-size: 2.5rem;
+                        color: yellowgreen;
+                    }
+                    img {
+                        height: 100%;
+                        width: 100%;
+                        //padding: 4.5rem 2rem;
+                    }
+                }
+                .remind {
+                    font-size: 16px;
+                    color: #666;
+                    position: absolute;
+                    right: 40%;
+                    // bottom: 0%
                 }
             }
             .tips {

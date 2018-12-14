@@ -70,6 +70,18 @@ export function getSubjectPic(stubForSubjective) {
     });
 }
 
+//课堂题目图片
+export function getQuestionPic(stubForSubjective) {
+    return axios({
+        method: 'POST',
+        url: `${apiUrl}getQuestionPic`,
+        data: {
+            stubForSubjective
+        },
+        headers: {'accessToken': localStorage.getItem('token')}
+    });
+}
+
 //根据学生id和文件名删除指定文件
 export function remoreSubjectPic() {
     return axios({

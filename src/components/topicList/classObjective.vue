@@ -12,7 +12,7 @@
             <div class="text">{{item}}</div>
         </div>
         <div class="remind" v-if="objective.questionPic" @click.stop="picimg(objective.questionPic)">
-            此题有图片（点开查看图片）
+            （点开查看图片）
         </div>
         <div class="bigimg" v-if="dsadsa">
             <div class="btn" @click.stop="picimgshow">x</div>
@@ -53,7 +53,9 @@ export default {
       self.dsadsa = true;
       getQuestionPic(src).then(res => {
         // console.log(res.data.data.content)
-        self.bigimg = res.data.data.content;
+        self.bigimg = //res.data.data.content;
+            "data:image/png;base64," +
+            res.data.data.content.replace(",", "");
       });
     },
     selectIndex(index, id) {
@@ -90,6 +92,8 @@ export default {
       top: 1rem;
     }
     img {
+        height: 100%;
+        width: 100%;
     }
   }
   .remind {
@@ -98,7 +102,7 @@ export default {
     position: absolute;
     right: 40%;
     z-index: 11;
-    // bottom: 0%
+    bottom: 10%
   }
   .title {
     padding-bottom: 0.57rem;

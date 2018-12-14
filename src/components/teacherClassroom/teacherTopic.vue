@@ -2,6 +2,13 @@
     <div class="teacherTopic" @click="goTopic(topic.quesetionType,topic.questionId,topic.title)">
         <div class="title">{{topic.title}}</div>
         <div class="topic" v-html="topic.questionContent">{{topic.questionContent}}</div>
+        <div class="remind" v-if="topic.questionPic" @click.stop="picimg(topic.questionPic)">
+            （点开查看图片）
+        </div>
+        <div class="bigimg" v-if="dsadsa">
+            <div class="btn" @click.stop="picimgshow">x</div>
+            <img :src="bigimg" alt="">
+        </div>
         <div class="correct_rate" v-if="topic.quesetionType === 'objective'&&topic.questionStatus !== 'NOTSTART'">
             正确率{{topicAcc*100}}%
         </div>
@@ -22,13 +29,6 @@
                  @click.stop="releaseTips(topic.questionId)">发布
             </div>
         </div>
-        <div class="remind" v-if="topic.questionPic" @click.stop="picimg(topic.questionPic)">
-                此题有图片（点开查看图片）
-            </div>
-            <div class="bigimg" v-if="dsadsa">
-                <div class="btn" @click.stop="picimgshow">x</div>
-                <img :src="bigimg" alt="">
-            </div>
     </div>
 </template>
 
@@ -89,7 +89,9 @@
                 self.dsadsa = true
                 getQuestionPic(src).then(res=>{
                     // console.log(res.data.data.content)
-                    self.bigimg = res.data.data.content
+                    self.bigimg = //res.data.data.content;
+                        "data:image/png;base64," +
+                        res.data.data.content.replace(",", "");
                 })
             },
             percent: function (submited, total) {
@@ -179,7 +181,9 @@
                     color: yellowgreen;
                 }
                 img {
-                    padding: 4.5rem 2rem;
+                    height: 100%;
+                    width: 100%;
+                    //padding: 4.5rem 2rem;
                 }
             }
             .remind {

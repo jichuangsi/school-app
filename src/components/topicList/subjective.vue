@@ -7,7 +7,7 @@
             </div>
         </div>
         <div class="remind" v-if="subjectiveTopic.questionPic" @click.stop="picimg(subjectiveTopic.questionPic)">
-            此题有图片（点开查看图片）
+            （点开查看图片）
         </div>
         <div class="bigimg" v-if="dsadsa">
             <div class="btn" @click.stop="picimgshow">x</div>
@@ -19,7 +19,7 @@
 <!--主观题-->
 
 <script>
-import { getQuestionPic } from "@/api/teacher/classroom";
+import { getQuestionPic } from "@/api/student/classroom";
 export default {
   name: "subjective",
   props: {
@@ -46,7 +46,9 @@ export default {
       self.dsadsa = true;
       getQuestionPic(src).then(res => {
         // console.log(res.data.data.content)
-        self.bigimg = res.data.data.content;
+        self.bigimg = //res.data.data.content;
+          "data:image/png;base64," +
+          res.data.data.content.replace(",", "");
       });
     }
   }
@@ -74,6 +76,8 @@ export default {
       top: 1rem;
     }
     img {
+        height: 100%;
+        width: 100%;
     }
   }
   .remind {

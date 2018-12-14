@@ -107,7 +107,7 @@ export function questionTerminate(courseId, questionId) {
     });
 }
 
-//课堂主观通题目图片getQuestionPic
+//课堂主观手寫板图片
 export function getSubjectPic(stubForSubjective) {
     return axios({
         method: 'POST',
@@ -118,7 +118,8 @@ export function getSubjectPic(stubForSubjective) {
         headers: {'accessToken': localStorage.getItem('token')}
     });
 }
-//课堂主观通题目图片
+
+//课堂题目图片
 export function getQuestionPic(stubForSubjective) {
     return axios({
         method: 'POST',
@@ -129,6 +130,7 @@ export function getQuestionPic(stubForSubjective) {
         headers: {'accessToken': localStorage.getItem('token')}
     });
 }
+
 //课堂状态更新
 export function changeCourseStatus(courseId, courseStatus) {
     return axios({
