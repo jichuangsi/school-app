@@ -2,11 +2,12 @@ import axios from '../../utils/axios'
 
 let apiUrl = 'http://school.jichuangsi.com:81/COURSESERVICE/teacher/';
 //公司用的token
-const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1c2VySW5mbyI6IntcImNsYXNzSWRcIjpcIjc3N1wiLFwidGltZVN0YW1wXCI6MTUzOTMxNzIzMTE2NCxcInVzZXJJZFwiOlwiMTIzXCIsXCJ1c2VyTmFtZVwiOlwi5byg5LiJXCIsXCJ1c2VyTnVtXCI6XCI0NTZcIn0ifQ.BXQaa-JsFEBCB0tECtY1fjWhxxEbzlPwADsRRN2rvo-sW_n6OvRrEKvmpsdq75zkxeSvdeiYXfzX9SG_6yERKg';
+// const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1c2VySW5mbyI6IntcImNsYXNzSWRcIjpcIjc3N1wiLFwidGltZVN0YW1wXCI6MTUzOTMxNzIzMTE2NCxcInVzZXJJZFwiOlwiMTIzXCIsXCJ1c2VyTmFtZVwiOlwi5byg5LiJXCIsXCJ1c2VyTnVtXCI6XCI0NTZcIn0ifQ.BXQaa-JsFEBCB0tECtY1fjWhxxEbzlPwADsRRN2rvo-sW_n6OvRrEKvmpsdq75zkxeSvdeiYXfzX9SG_6yERKg';
 //调试用的token
 // const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1c2VySW5mbyI6IntcImNsYXNzSWRcIjpcIjc3N1wiLFwidGltZVN0YW1wXCI6MTUzOTMxNzIzMTE2NCxcInVzZXJJZFwiOlwiMTIzXCIsXCJ1c2VyTmFtZVwiOlwi5byg5LiJXCIsXCJ1c2VyTnVtXCI6XCI0NTZcIn0ifQ.BXQaa-JsFEBCB0tECtY1fjWhxxEbzlPwADsRRN2rvo-sW_n6OvRrEKvmpsdq75zkxeSvdeiYXfzX9SG_6yERKg'
 // const apiUrl = 'http://192.168.54.101:8888/COURSESERVICE/teacher/';
 const host = 'http://school.jichuangsi.com:81/COURSESTATISTICS/';
+
 
 export function getList() {
     return axios({
@@ -69,7 +70,7 @@ export function getQuestion(questionId) {
     return axios({
         method: 'get',
         url: `${apiUrl}getQuestion/${questionId}`,
-        headers: {'accessToken': token}
+        headers: {'accessToken': localStorage.getItem('token')}
     });
 }
 
@@ -207,7 +208,7 @@ export function shareAnswer(questionId, studentAnswerId, answerId, score, stubFo
     let picForSubjective = null;
     return axios({
         method: 'post',
-        url: `${apiUrl}sendAnswer/${questionId}/${studentAnswerId}`,
+        url: `${apiUrl}shareAnswer/${questionId}/${studentAnswerId}`,
         data: {
             answerId,
             picForSubjective,
