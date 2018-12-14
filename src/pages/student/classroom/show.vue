@@ -600,7 +600,7 @@ export default {
     border-radius: 50%;
     transition: left 1s;
     overflow: hidden;
-    z-index: 102;
+    z-index: 1002;
     img {
       width: 100%;
       height: 100%;

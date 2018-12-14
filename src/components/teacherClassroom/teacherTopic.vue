@@ -38,7 +38,7 @@
     import {MessageBox, Toast} from 'mint-ui';
     import store from '@/store'
     import {mapGetters} from 'vuex'
-    import {questionPublish, questionTerminate, getSubjectPic} from '@/api/teacher/classroom'
+    import {questionPublish, questionTerminate, getQuestionPic} from '@/api/teacher/classroom'
 
     export default {
         name: "teacherTopic",
@@ -87,7 +87,7 @@
             picimg(src){
                 let self = this
                 self.dsadsa = true
-                getSubjectPic(src).then(res=>{
+                getQuestionPic(src).then(res=>{
                     // console.log(res.data.data.content)
                     self.bigimg = res.data.data.content
                 })

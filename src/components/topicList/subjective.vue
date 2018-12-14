@@ -19,7 +19,7 @@
 <!--主观题-->
 
 <script>
-import { getSubjectPic } from "@/api/teacher/classroom";
+import { getQuestionPic } from "@/api/teacher/classroom";
 export default {
   name: "subjective",
   props: {
@@ -44,7 +44,7 @@ export default {
     picimg(src) {
       let self = this;
       self.dsadsa = true;
-      getSubjectPic(src).then(res => {
+      getQuestionPic(src).then(res => {
         // console.log(res.data.data.content)
         self.bigimg = res.data.data.content;
       });

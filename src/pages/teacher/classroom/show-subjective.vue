@@ -61,7 +61,7 @@ import {
 import { Toast } from "mint-ui";
 import { mapGetters } from "vuex";
 import store from "@/store";
-import html2canvas from "html2canvas";
+// import html2canvas from "html2canvas";
 
 export default {
   components: {
@@ -73,7 +73,7 @@ export default {
   data() {
     return {
       sharebtn: "",
-      bseimg: "",
+      imgawer:'',
       cover_box: 0,
       //图片URL
       picUrl: "",
@@ -179,13 +179,18 @@ export default {
           this.subjectiveMsg = res.data.data;
           this.subjectiveMsg.title = this.title;
           for (let i = 0; i < this.subjectiveMsg.answerForStudent.length; i++) {
-        if (this.subjectiveMsg.answerForStudent[i].studentId === this.studentId) {
-          this.sharebtn = this.subjectiveMsg.answerForStudent[i].result;
-          if(this.subjectiveMsg.answerForStudent[i].result){
-              this.picForSubjective = this.subjectiveMsg.answerForStudent[i].reviseForSubjective
+            if (
+              this.subjectiveMsg.answerForStudent[i].studentId ===
+              this.studentId
+            ) {
+              this.sharebtn = this.subjectiveMsg.answerForStudent[i].result;
+              if (this.subjectiveMsg.answerForStudent[i].result) {
+                this.picForSubjective = this.subjectiveMsg.answerForStudent[
+                  i
+                ].reviseForSubjective;
+              }
+            }
           }
-        }
-      }
           this.getImg();
           this.pageShow = true;
           this.loading = false;
@@ -223,7 +228,7 @@ export default {
         );
         self.answerId = stubForSubjective.answerId;
         console.log(res.data.data);
-        // self.picForSubjective = res.data.data.name
+        self.picForSubjective = res.data.data.name;
         if (res.data.data) {
           self.picUrl = res.data.data.content;
           self.subjectiveAnswer.push({ id: self.topicId, answer: self.picUrl });
@@ -311,7 +316,7 @@ export default {
             message: "提交成功",
             position: "bottom"
           });
-          sessionStorage.setItem('sharebtn','共享')
+          sessionStorage.setItem("sharebtn", "共享");
           self.$router.push({
             path: "@/pages/teacher/classroom/subjective",
             name: "subjectiveDetails"
@@ -327,56 +332,52 @@ export default {
     // bse
     bse() {
       let self = this;
-      let asd = document.getElementById("demo-test-gallery"); // 要转化的div
-      let width = asd.offsetWidth;
-      let height = asd.offsetHeight;
-      let offsetTop = asd.offsetTop;
-      let canvas = document.createElement("canvas");
-      let context = canvas.getContext("2d");
-      let scaleBy = Math.ceil(window.devicePixelRatio);
-      canvas.width = width * scaleBy;
-      canvas.height = (height + offsetTop) * scaleBy;
-      context.scale(scaleBy, scaleBy);
-      var opts = {
-        allowTaint: true, // 允许加载跨域的图片
-        tainttest: true, // 检测每张图片都已经加载完成
-        scale: scaleBy, // 添加的scale 参数
-        canvas: canvas, // 自定义 canvas
-        logging: false, // 日志开关，发布的时候记得改成false
-        width: width, // dom 原始宽度
-        height: height // dom 原始高度
-      };
-      html2canvas(asd, opts).then(function(canvas) {
-        canvas.style.width = width + "px";
-        canvas.style.height = height + "px";
-        self.bseimg = canvas.toDataURL();
-        // console.log(self.bseimg);
-        let img = self.bseimg.split('data:image/png;base64,')[1]
-        for (let i = 0; i < self.subjectiveAnswer.length; i++) {
-          if (self.subjectiveAnswer[i].id === self.subjectiveId) {
-            // console.log(self.bseimg); 
-            sendSubjectPicByString(img)
-              .then(res => {
-                self.picForSubjective = res.data.data.stubForSubjective;
-                console.log("成功");
-                Toast({
-                  message: "储存图片成功",
-                  position: "bottom"
-                });
-                self.buttonSate = true;
-              })
-              .catch(err => {
-                console.log(err);
-                Toast({
-                  message: "储存图片失败",
-                  position: "bottom"
-                });
-                self.buttonSate = true;
-              });
-          }
-        }
-        return self.picForSubjective;
-      });
+      let datapair = $(".answer").jSignature("getData");
+      getSubjectPic(self.picForSubjective).then(res=>{
+        this.imgawer = res.data.data.content
+        var canvas = document.createElement("canvas");
+        var ctx = canvas.getContext("2d");
+        var imgObj = new Image();
+        imgObj.setAttribute("crossOrigin", "anonymous");
+        imgObj.src = "data:image/png;base64,"+self.imgawer
+        imgObj.onload = function() {
+          canvas.width = this.width;
+          canvas.height = this.height;
+          ctx.drawImage(this, 0, 0);
+          var imgq = new Image();
+          imgq.setAttribute("crossOrigin", "anonymous");
+          imgq.src = datapair;
+          imgq.onload = function() {
+            ctx.drawImage(this, 0, 0);
+            var imgq = canvas.toDataURL("image/png", 0.5);
+            let img = imgq.split("data:image/png;base64,")[1];
+            for (let i = 0; i < self.subjectiveAnswer.length; i++) {
+              if (self.subjectiveAnswer[i].id === self.subjectiveId) {
+                // console.log(self.bseimg);
+                sendSubjectPicByString(img)
+                  .then(res => {
+                    self.picForSubjective = res.data.data.stubForSubjective;
+                    console.log("成功");
+                    Toast({
+                      message: "储存图片成功",
+                      position: "bottom"
+                    });
+                    self.buttonSate = true;
+                  })
+                  .catch(err => {
+                    console.log(err);
+                    Toast({
+                      message: "储存图片失败",
+                      position: "bottom"
+                    });
+                    self.buttonSate = true;
+                  });
+              }
+            }
+          };
+        };
+      })
+
     },
     //共享
     share() {
@@ -385,20 +386,28 @@ export default {
       // console.log(self.scores,self.teacherId, self.teacherName)
       // console.log(self.picForSubjective);
       try {
-          shareAnswer(self.topicId, self.answerId, null, self.scores, self.picForSubjective, self.teacherId, self.teacherName);
-          Toast({
-              message: '共享成功',
-              position: 'bottom'
-          });
-          self.$router.push({
-              path: '@/pages/teacher/classroom/subjective',
-              name: 'subjectiveDetails'
-          })
+        shareAnswer(
+          self.topicId,
+          self.answerId,
+          null,
+          self.scores,
+          self.picForSubjective,
+          self.teacherId,
+          self.teacherName
+        );
+        Toast({
+          message: "共享成功",
+          position: "bottom"
+        });
+        self.$router.push({
+          path: "@/pages/teacher/classroom/subjective",
+          name: "subjectiveDetails"
+        });
       } catch (e) {
-          Toast({
-              message: '共享失敗',
-              position: 'bottom'
-          });
+        Toast({
+          message: "共享失敗",
+          position: "bottom"
+        });
       }
     }
   }
