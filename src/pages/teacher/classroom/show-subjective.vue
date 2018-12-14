@@ -8,7 +8,7 @@
           <!-- @click="modifyAnswer(subjectiveMsg.questionId)" -->
           <div class="subjective_submit" @click="zz(subjectiveMsg.questionId)">批改答案
           </div>
-          <div class="subjective_submit_box" v-if="cover_box==1">批改答案</div>
+          <div class="subjective_submit_box" v-if="cover_box==1" @click="qq">确认批改</div>
         </div>
         <board :id="this.topicId" :subjectiveAnswer="subjectiveAnswer" />
         <!-- <div id="div" class="ass"></div> -->
@@ -37,7 +37,7 @@
           </div>
         </mt-popup>
       </div>
-      <div class="share" @click="share">共享</div>
+      <div class="share" @click="share" v-show="sharebtn">共享</div>
       <div class="submit" @click="submited" v-show="buttonSate">提交</div>
     </div>
     <loading v-if="loading" />
@@ -72,6 +72,7 @@ export default {
   },
   data() {
     return {
+      sharebtn: "",
       bseimg: "",
       cover_box: 0,
       //图片URL
@@ -106,33 +107,33 @@ export default {
       buttonSate: false //控制button显示
     };
   },
-  // watch: {
-  //   boardImg(val) {
-  //     this.buttonSate = false;
-  //     for (let i = 0; i < this.subjectiveAnswer.length; i++) {
-  //       if (this.subjectiveAnswer[i].id === this.subjectiveId) {
-  //         this.subjectiveAnswer[i].answer = val.data;
-  //         sendSubjectPicByString(val.data)
-  //           .then(res => {
-  //             this.picForSubjective = res.data.data.stubForSubjective;
-  //             Toast({
-  //               message: "储存图片成功",
-  //               position: "bottom"
-  //             });
-  //             this.buttonSate = true;
-  //           })
-  //           .catch(err => {
-  //             console.log(err);
-  //             Toast({
-  //               message: "储存图片失败",
-  //               position: "bottom"
-  //             });
-  //             this.buttonSate = true;
-  //           });
-  //       }
-  //     }
-  //   }
-  // },
+  watch: {
+    boardImg(val) {
+      this.buttonSate = false;
+      for (let i = 0; i < this.subjectiveAnswer.length; i++) {
+        if (this.subjectiveAnswer[i].id === this.subjectiveId) {
+          this.subjectiveAnswer[i].answer = val.data;
+          sendSubjectPicByString(val.data)
+            .then(res => {
+              this.picForSubjective = res.data.data.stubForSubjective;
+              Toast({
+                message: "储存图片成功",
+                position: "bottom"
+              });
+              this.buttonSate = true;
+            })
+            .catch(err => {
+              console.log(err);
+              Toast({
+                message: "储存图片失败",
+                position: "bottom"
+              });
+              this.buttonSate = true;
+            });
+        }
+      }
+    }
+  },
   mounted() {
     // this.getSubjectiveShow();
     this.getCourseId();
@@ -151,6 +152,9 @@ export default {
     ])
   },
   methods: {
+    qq() {
+      this.bse();
+    },
     zz(id) {
       this.subjectiveId = id;
       this.cover_box = 1;
@@ -160,6 +164,7 @@ export default {
         color: "red",
         lineWidth: 1
       });
+      // console.log(Boolean(this.sharebtn))
     },
     //获取课堂列表穿过来的数据
     getCourseId() {
@@ -167,16 +172,24 @@ export default {
     },
     getSubjectPic() {
       //获取题目基本信息
+      // console.log(this.topicId)
       getQuestion(this.topicId)
         .then(res => {
           console.log(res);
           this.subjectiveMsg = res.data.data;
           this.subjectiveMsg.title = this.title;
+          console.log(this.subjectiveMsg.answerForStudent.studentId)
+          console.log(this.studentId)
+          for (let i = 0; i < this.subjectiveMsg.answerForStudent.length; i++) {
+        if (this.subjectiveMsg.answerForStudent[i].studentId === this.studentId) {
+          this.sharebtn = this.subjectiveMsg.answerForStudent[i].result;
+        }
+      }
           this.getImg();
           this.pageShow = true;
           this.loading = false;
-          console.log(this.subjectiveMsg);
-          console.log(this.subjectiveAnswer);
+          // console.log(this.subjectiveMsg);
+          // console.log(this.subjectiveAnswer);
         })
         .catch(err => {
           console.log(err);
@@ -209,6 +222,7 @@ export default {
         );
         self.answerId = stubForSubjective.answerId;
         console.log(res.data.data);
+        self.picForSubjective = res.data.data.name
         if (res.data.data) {
           self.picUrl = res.data.data.content;
           self.subjectiveAnswer.push({ id: self.topicId, answer: self.picUrl });
@@ -278,45 +292,12 @@ export default {
       );
     },
     //提交
-    async submited() {
-      console.log(1)
+    submited() {
       let self = this;
-      self.bse();
-      console.log(2)
-      console.log(self.subjectiveAnswer)
-      console.log(self.subjectiveId)
-      console.log(Boolean(self.subjectiveId))
-      if(self.baseimg){
-      for (let i = 0; i < self.subjectiveAnswer.length; i++) {
-        if (self.subjectiveAnswer[i].id === self.subjectiveId) {
-          console.log(self.baseimg)
-          sendSubjectPicByString(self.baseimg)
-            .then(res => {
-              self.picForSubjective = res.data.data.stubForSubjective; 
-      console.log(3)
-              Toast({
-                message: "储存图片成功",
-                position: "bottom"
-              });
-              self.buttonSate = true;
-            })
-            .catch(err => {
-              console.log(err);
-              Toast({
-                message: "储存图片失败",
-                position: "bottom"
-              });
-              self.buttonSate = true;
-            });
-        }
-      }
-      }
-      
-      console.log(4)
+      // console.log(self.picForSubjective)
       if (self.picForSubjective) {
-      console.log(5)
         try {
-          await sendAnswer(
+          sendAnswer(
             self.topicId,
             self.answerId,
             null,
@@ -329,6 +310,7 @@ export default {
             message: "提交成功",
             position: "bottom"
           });
+          sessionStorage.setItem('sharebtn','共享')
           self.$router.push({
             path: "@/pages/teacher/classroom/subjective",
             name: "subjectiveDetails"
@@ -366,33 +348,57 @@ export default {
       html2canvas(asd, opts).then(function(canvas) {
         canvas.style.width = width + "px";
         canvas.style.height = height + "px";
-        // var image = new Image()
-        // $('#grow-img').attr('src', canvas.toDataURL());
-        // console.log(canvas.toDataURL());
         self.bseimg = canvas.toDataURL();
-        console.log(self.bseimg)
+        // console.log(self.bseimg);
+        let img = self.bseimg.split('data:image/png;base64,')[1]
+        for (let i = 0; i < self.subjectiveAnswer.length; i++) {
+          if (self.subjectiveAnswer[i].id === self.subjectiveId) {
+            // console.log(self.bseimg); 
+            sendSubjectPicByString(img)
+              .then(res => {
+                self.picForSubjective = res.data.data.stubForSubjective;
+                console.log("成功");
+                Toast({
+                  message: "储存图片成功",
+                  position: "bottom"
+                });
+                self.buttonSate = true;
+              })
+              .catch(err => {
+                console.log(err);
+                Toast({
+                  message: "储存图片失败",
+                  position: "bottom"
+                });
+                self.buttonSate = true;
+              });
+          }
+        }
+        return self.picForSubjective;
       });
     },
     //共享
-    async share() {
-      console.log(self.topicId, self.answerId);
-      console.log(Boolean(self.picForSubjective));
-      // try {
-      //     await shareAnswer(self.topicId, self.answerId, null, self.scores, self.picForSubjective, self.teacherId, self.teacherName);
-      //     Toast({
-      //         message: '提交成功',
-      //         position: 'bottom'
-      //     });
-      //     self.$router.push({
-      //         path: '@/pages/teacher/classroom/subjective',
-      //         name: 'subjectiveDetails'
-      //     })
-      // } catch (e) {
-      //     Toast({
-      //         message: '提交失敗',
-      //         position: 'bottom'
-      //     });
-      // }
+    share() {
+      let self = this;
+      // console.log(self.topicId, self.answerId);
+      // console.log(self.scores,self.teacherId, self.teacherName)
+      // console.log(self.picForSubjective);
+      try {
+          shareAnswer(self.topicId, self.answerId, null, self.scores, self.picForSubjective, self.teacherId, self.teacherName);
+          Toast({
+              message: '共享成功',
+              position: 'bottom'
+          });
+          self.$router.push({
+              path: '@/pages/teacher/classroom/subjective',
+              name: 'subjectiveDetails'
+          })
+      } catch (e) {
+          Toast({
+              message: '共享失敗',
+              position: 'bottom'
+          });
+      }
     }
   }
 };
@@ -440,6 +446,7 @@ export default {
           right: 3.71rem;
           padding: 0 20px;
           height: 2.29rem;
+          background-color: #fff;
           border: 2px solid #9a84ff;
           line-height: 2.29rem;
           text-align: center;
@@ -447,6 +454,19 @@ export default {
           color: #9a84ff;
           font-size: 18px;
           z-index: 101;
+        }
+        .subjective_submit_box_box {
+          position: absolute;
+          right: 3.71rem;
+          padding: 0 20px;
+          height: 2.29rem;
+          border: 2px solid #9a84ff;
+          line-height: 2.29rem;
+          text-align: center;
+          border-radius: 1.145rem;
+          color: #9a84ff;
+          font-size: 18px;
+          z-index: 102;
         }
         .subjective_submit:active {
           background-color: #b4b4b4;
