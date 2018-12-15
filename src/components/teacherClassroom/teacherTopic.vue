@@ -2,13 +2,14 @@
     <div class="teacherTopic" @click="goTopic(topic.quesetionType,topic.questionId,topic.title)">
         <div class="title">{{topic.title}}</div>
         <div class="topic" v-html="topic.questionContent">{{topic.questionContent}}</div>
-        <div class="remind" v-if="topic.questionPic" @click.stop="picimg(topic.questionPic)">
+        <!--<div class="remind" v-if="topic.questionPic" @click.stop="picimg(topic.questionPic)">
             （点开查看图片）
         </div>
         <div class="bigimg" v-if="dsadsa">
             <div class="btn" @click.stop="picimgshow">x</div>
             <img :src="bigimg" alt="">
-        </div>
+        </div>-->
+        <PopupPic :questionPic="topic.questionPic"/>
         <div class="correct_rate" v-if="topic.quesetionType === 'objective'&&topic.questionStatus !== 'NOTSTART'">
             正确率{{topicAcc*100}}%
         </div>
@@ -38,10 +39,16 @@
     import {MessageBox, Toast} from 'mint-ui';
     import store from '@/store'
     import {mapGetters} from 'vuex'
-    import {questionPublish, questionTerminate, getQuestionPic} from '@/api/teacher/classroom'
+    import {
+        questionPublish,
+        questionTerminate
+        //getQuestionPic
+    } from '@/api/teacher/classroom'
+    import PopupPic from "./PopupPic";
 
     export default {
         name: "teacherTopic",
+        components: {PopupPic},
         props: {
             topicAcc: {
                 type: Number,
@@ -68,8 +75,8 @@
         },
         data() {
             return {
-                bigimg:'',
-                dsadsa: false
+                /*bigimg:'',
+                dsadsa: false*/
             }
         },
         computed: {
@@ -80,7 +87,7 @@
             ])
         },
         methods: {
-            picimgshow(){
+            /*picimgshow(){
                 let self = this
                 self.dsadsa = false
             },
@@ -93,7 +100,7 @@
                         "data:image/png;base64," +
                         res.data.data.content.replace(",", "");
                 })
-            },
+            },*/
             percent: function (submited, total) {
                 if (total == 0) return 0;
                 else return (submited / total).toFixed(4) * 100;
@@ -166,7 +173,7 @@
         .title {
             color: rgba(105, 180, 130, 1);
         }
-        .bigimg {
+        /*.bigimg {
                 position: fixed;
                 top: 0;
                 left: 0;
@@ -192,7 +199,7 @@
                 position: absolute;
                 right: 40%;
                 // bottom: 0%
-            }
+            }*/
         .topic {
             padding: 1.14rem 0 .5rem;
             line-height: 34px;

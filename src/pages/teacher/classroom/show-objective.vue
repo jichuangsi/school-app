@@ -9,13 +9,14 @@
                 <div class="option" v-for="(item,index) in objective.options" :key="index">
                     {{tab(index)}}.{{item}}
                 </div>
-                <div class="remind" v-if="objective.questionPic" @click.stop="picimg(objective.questionPic)">
+                <!--<div class="remind" v-if="objective.questionPic" @click.stop="picimg(objective.questionPic)">
                     （点开查看图片）
                 </div>
                 <div class="bigimg" v-if="dsadsa">
                     <div class="btn" @click.stop="picimgshow">x</div>
                     <img :src="bigimg" alt="">
-                </div>
+                </div>-->
+                <PopupPic :questionPic="objective.questionPic"/>
             </div>
             <div class="tips">
                 提交人数：{{initial.count}}人，正确率{{initial.acc*100}}%
@@ -44,16 +45,23 @@
     import TeacherHeader from '../../../components/public/PublicHeader'
     import ScrollContent from '../../../components/public/ScrollContent'
     import StudentList from '../../../components/teacherClassroom/studentList'
-    import {getCourseStatistics, getQuestion, getQuestionStatisticsList, getQuestionPic} from '@/api/teacher/classroom'
+    import {
+        getCourseStatistics,
+        getQuestion,
+        getQuestionStatisticsList
+        //getQuestionPic
+    } from '@/api/teacher/classroom'
     import Loading from '../../../components/public/Loading'
     import {mapGetters} from 'vuex'
+    import PopupPic from '../../../components/teacherClassroom/PopupPic'
 
     export default {
         components: {
             TeacherHeader,
             ScrollContent,
             StudentList,
-            Loading
+            Loading,
+            PopupPic
         },
         data() {
             return {
@@ -77,9 +85,9 @@
                 initial: {
                     acc: '',
                     count: ''
-                },
+                }/*,
                 bigimg:'',
-                dsadsa: false
+                dsadsa: false*/
             }
         },
         computed: {
@@ -94,7 +102,7 @@
             this.getObjectiveQuestions();
         },
         methods: {
-            picimgshow(){
+            /*picimgshow(){
                 let self = this
                 self.dsadsa = false
             },
@@ -107,7 +115,7 @@
                         "data:image/png;base64," +
                         res.data.data.content.replace(",", "");
                 })
-            },
+            },*/
             //第一个饼图
             drawLine1() {
                 this.$nextTick(function () {
@@ -284,7 +292,7 @@
                 .topic {
                     padding-bottom: 1rem;
                 }
-                .bigimg {
+                /*.bigimg {
                     position: fixed;
                     top: 0;
                     left: 0;
@@ -310,7 +318,7 @@
                     position: absolute;
                     right: 40%;
                     // bottom: 0%
-                }
+                }*/
             }
             .tips {
                 padding: 3.43rem 0 1.36rem;

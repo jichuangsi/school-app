@@ -11,21 +11,24 @@
             <div class="option">{{conversion(index)}}.</div>
             <div class="text">{{item}}</div>
         </div>
-        <div class="remind" v-if="objective.questionPic" @click.stop="picimg(objective.questionPic)">
+        <PopupPic :questionPic="objective.questionPic"/>
+        <!--<div class="remind" v-if="objective.questionPic" @click.stop="picimg(objective.questionPic)">
             （点开查看图片）
         </div>
         <div class="bigimg" v-if="dsadsa">
             <div class="btn" @click.stop="picimgshow">x</div>
             <img :src="bigimg" alt="">
-        </div>
+        </div>-->
     </div>
 </template>
 
 <script>
-import { getQuestionPic } from "@/api/teacher/classroom";
+//import { getQuestionPic } from "@/api/teacher/classroom";
+import PopupPic from "./PopupPic";
 export default {
   name: "classObjective",
-  props: {
+    components: {PopupPic},
+    props: {
     objective: {
       type: Object,
       default: function() {
@@ -35,16 +38,16 @@ export default {
   },
   data() {
     return {
-      pointIndex: -1,
+      pointIndex: -1/*,
       bigimg: "",
-      dsadsa: false
+      dsadsa: false*/
     };
   },
   mounted() {
     // console.log(this.objective);
   },
   methods: {
-    picimgshow() {
+    /*picimgshow() {
       let self = this;
       self.dsadsa = false;
     },
@@ -57,7 +60,7 @@ export default {
             "data:image/png;base64," +
             res.data.data.content.replace(",", "");
       });
-    },
+    },*/
     selectIndex(index, id) {
       this.pointIndex = index;
       let num = 65 + index;
@@ -74,7 +77,7 @@ export default {
 
 <style lang="scss" scoped>
 .topic_warp {
-    .bigimg {
+    /*.bigimg {
     position: fixed;
     top: 0;
     left: 0;
@@ -103,7 +106,7 @@ export default {
     right: 40%;
     z-index: 11;
     bottom: 10%
-  }
+  }*/
   .title {
     padding-bottom: 0.57rem;
     font-size: 18px;

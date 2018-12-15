@@ -6,23 +6,26 @@
                 {{subjectiveTopic.questionContent}}
             </div>
         </div>
-        <div class="remind" v-if="subjectiveTopic.questionPic" @click.stop="picimg(subjectiveTopic.questionPic)">
+        <!--<div class="remind" v-if="subjectiveTopic.questionPic" @click.stop="picimg(subjectiveTopic.questionPic)">
             （点开查看图片）
         </div>
         <div class="bigimg" v-if="dsadsa">
             <div class="btn" @click.stop="picimgshow">x</div>
             <img :src="bigimg" alt="">
-        </div>
+        </div>-->
+        <PopupPic :questionPic="subjectiveTopic.questionPic"/>
     </div>
 </template>
 
 <!--主观题-->
 
 <script>
-import { getQuestionPic } from "@/api/student/classroom";
+//import { getQuestionPic } from "@/api/student/classroom";
+import PopupPic from "./PopupPic";
 export default {
   name: "subjective",
-  props: {
+    components: {PopupPic},
+    props: {
     subjectiveTopic: {
       type: Object,
       default: function() {
@@ -32,12 +35,12 @@ export default {
   },
   data() {
     return {
-      bigimg: "",
-      dsadsa: false
+      /*bigimg: "",
+      dsadsa: false*/
     };
   },
   methods: {
-    picimgshow() {
+    /*picimgshow() {
       let self = this;
       self.dsadsa = false;
     },
@@ -50,7 +53,7 @@ export default {
           "data:image/png;base64," +
           res.data.data.content.replace(",", "");
       });
-    }
+    }*/
   }
 };
 </script>
@@ -58,7 +61,7 @@ export default {
 <style lang="scss" scoped>
 .subjective {
   width: 100%;
-  .bigimg {
+  /*.bigimg {
     position: fixed;
     top: 0;
     left: 0;
@@ -87,7 +90,7 @@ export default {
     right: 40%;
     z-index: 11;
     // bottom: 0%
-  }
+  }*/
   .topic_warp {
     position: relative;
     .title {
