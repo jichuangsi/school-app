@@ -321,12 +321,17 @@
 
 <style lang="scss" scoped>
     .Board {
-        width: 386px;
-        height: 500px;
-        margin: 0 auto;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        // margin: 0 auto;
         position: relative;
         #demo-test-gallery {
             height: 100%;
+            width: 772px;
+            height: 1000px;
+            margin: 0 auto;
+            position: relative;
         }
         img {
             max-width: 100%;

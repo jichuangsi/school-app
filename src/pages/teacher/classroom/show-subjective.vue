@@ -343,14 +343,17 @@ export default {
         imgObj.onload = function() {
           canvas.width = this.width;
           canvas.height = this.height;
+          console.log(this.width,this.height)
           ctx.drawImage(this, 0, 0);
           var imgq = new Image();
           imgq.setAttribute("crossOrigin", "anonymous");
           imgq.src = datapair;
           imgq.onload = function() {
-            ctx.drawImage(this, 0, 0);
+          console.log(this.width,this.height)
+            ctx.drawImage(this, 0, 0,772,1000);
             var imgq = canvas.toDataURL("image/png", 0.5);
             let img = imgq.split("data:image/png;base64,")[1];
+            // console.log(imgq)
             for (let i = 0; i < self.subjectiveAnswer.length; i++) {
               if (self.subjectiveAnswer[i].id === self.subjectiveId) {
                 // console.log(self.bseimg);
@@ -421,6 +424,7 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
+  background-color: #fff;
   .content {
     position: absolute;
     top: 0;
