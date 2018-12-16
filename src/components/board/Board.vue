@@ -327,9 +327,8 @@
         // margin: 0 auto;
         position: relative;
         #demo-test-gallery {
-            height: 100%;
-            width: 772px;
-            height: 1000px;
+            width: 600px;
+        height: 820px;
             margin: 0 auto;
             position: relative;
         }
