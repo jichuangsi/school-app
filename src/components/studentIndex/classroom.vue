@@ -199,6 +199,9 @@
                 if (classData.data) {
                     for (let i = 0; i < this.classList.length; i++) {
                         if (classData.data.courseId === this.classList[i].courseId) {
+                            this.classList[i].courseStatus = 'PROGRESS'
+                            // sessionStorage.setItem("message", "提示");
+                            this.$emit("message","提示")
                             Toast({
                                 message: this.classList[i].courseName + '上课了',
                                 position: 'middle',

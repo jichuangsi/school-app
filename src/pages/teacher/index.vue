@@ -10,7 +10,6 @@
                     :key="item.index"
                     @click="State(index)"
             >
-                <div class="msg"></div>
                 <span class="iconfont icon" v-html="item.icon"></span>
                 <div class="text">{{item.text}}</div>
             </div>

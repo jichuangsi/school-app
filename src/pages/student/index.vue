@@ -1,6 +1,6 @@
 <template>
     <div class="student">
-        <classroom v-show="linkState === 0"/>
+        <classroom v-show="linkState === 0" v-on:message="zxc($event)"/>
         <homework v-show="linkState === 1"/>
         <my v-show="linkState === 2"/>
         <div class="footers">
@@ -11,7 +11,7 @@
                     :key="item.index"
                     @click="State(index)"
             >
-                <div class="msg"></div>
+                <div class="msg" v-if="Message"></div>
                 <span class="iconfont icon" v-html="item.icon"></span>
                 <div class="text">{{item.text}}</div>
             </div>
@@ -34,6 +34,7 @@
         },
         data() {
             return {
+                Message : '',
                 linkState: 0,
                 footerArr: [{
                     icon: '&#xe617;',
@@ -55,6 +56,9 @@
             ])
         },
         methods: {
+            zxc(val){
+                this.Message = val
+            },
             State(index) {
                 this.linkState = index;
             }
