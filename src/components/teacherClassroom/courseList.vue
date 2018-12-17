@@ -4,7 +4,7 @@
         <div class="courseLeft">
             <div class="course">{{teacherClassroom.courseName}}</div>
             <div class="item grade">班级：{{teacherClassroom.className}}</div>
-            <div class="item time">上课时间：{{time(teacherClassroom.courseEndTime)}}</div>
+            <div class="item time">上课时间：{{time(teacherClassroom.courseStartTime)}}</div>
         </div>
         <div class="state class" v-if="'PROGRESS' === teacherClassroom.courseStatus">上课中</div>
         <div class="state view" v-if="'FINISH' === teacherClassroom.courseStatus">查看</div>

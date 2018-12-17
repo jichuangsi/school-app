@@ -24,7 +24,7 @@
                     </div>
                 </div>
                 <div class="subjectState processing" v-if="item.courseStatus==='PROGRESS'">课程进行中</div>
-                <div class="subjectState startTime" v-if="item.courseStatus==='NOTSTART'">开始时间：10:30</div>
+                <div class="subjectState startTime" v-if="item.courseStatus==='NOTSTART'">开始时间：{{time(item.courseStartTime)}}</div>
                 <div class="subjectState end" v-if="item.courseStatus==='FINISH'">已结束</div>
             </div>
             <div class="history" v-if="classroomState">上拉查看历史信息</div>
@@ -97,7 +97,7 @@
                     this.pageShow = true;
                     this.loading = false;
                     this.classList = this.classroomList;
-                    this.time()
+                    //this.time()
                     console.log(this.classList)
                 }).catch((err) => {
                     console.log("err", err);
@@ -134,12 +134,19 @@
             time(time) {
                 let times = parseInt(time);
                 let date = new Date(times);
+                let month = (date.getMonth() + 1 > 10 ? 0 + (date.getMonth() + 1) : date.getMonth() + 1);
+                let day = date.getDate();
+                let hours = date.getHours();
+                let minutes = date.getMinutes();
+                return month + '月' + day + '日\t' + hours + ':' + minutes;
+                /*let times = parseInt(time);
+                let date = new Date(times);
                 let year = date.getFullYear();
                 let month = (date.getMonth() + 1 > 10 ? 0 + (date.getMonth() + 1) : date.getMonth() + 1);
                 let day = date.getDate();
                 let hours = date.getHours();
                 let minutes = date.getMinutes();
-                return year + '.' + month + '.' + day + '.\t' + hours + ':' + minutes;
+                return year + '.' + month + '.' + day + '.\t' + hours + ':' + minutes;*/
             },
             //给课堂列表路由传id跟课堂名字
             goClassroom(Id, courseName) {

@@ -215,7 +215,11 @@
                     return _this.teacherClassroom;
                 } else {
                     for (let i = 0; i < _this.teacherClassroom.length; i++) {
-                        if (_this.teacherClassroom[i].courseName === _this.inputValue) {
+                        /*console.log(_this.teacherClassroom[i].courseName + ", " + _this.inputValue);*/
+                        /*if (_this.teacherClassroom[i].courseName === _this.inputValue) {
+                            arr.push(_this.teacherClassroom[i]);
+                        }*/
+                        if(_this.teacherClassroom[i].courseName.indexOf(_this.inputValue) > -1){
                             arr.push(_this.teacherClassroom[i]);
                         }
                     }
