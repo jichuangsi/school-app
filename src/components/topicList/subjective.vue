@@ -102,9 +102,17 @@ export default {
       font-size: 18px;
       line-height: 34px;
       padding: 0 2.57rem;
+      .MathJye {
+  width: 100px;
+  height: 100px;
+  background-color: red;
+}
+
+
     }
   }
 }
+
 .MathJye table {
   border-collapse: collapse;
   margin: 0;
@@ -176,4 +184,5 @@ sup {
 sub{
     vertical-align: sub;
 }
+
 </style>
