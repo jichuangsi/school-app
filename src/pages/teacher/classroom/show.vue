@@ -2,7 +2,18 @@
     <div class="TClassroom">
         <teacher-header :header="header"/>
         <scroll-content ref="myscrollfull" @load="loadData" :mescrollValue="mescrollValue" v-if="pageShow">
-            <div class="subjectAvatar"></div>
+            <div class="subjectAvatar">
+                <img src="../../../../public/images/classroom.png" v-if="subjectId==null">
+                        <img src="../../../assets/语文_03.png" v-if="subjectId==1">
+                        <img src="../../../assets/数学_03.png" v-if="subjectId==2">
+                        <img src="../../../assets/英语_03.png" v-if="subjectId==3">
+                        <img src="../../../assets/历史_03.png" v-if="subjectId==4">
+                        <img src="../../../assets/地理_03.png" v-if="subjectId==5">
+                        <img src="../../../assets/政治_03.png" v-if="subjectId==6">
+                        <img src="../../../assets/生物_03.png" v-if="subjectId==7">
+                        <img src="../../../assets/物理_03.png" v-if="subjectId==8">
+                        <img src="../../../assets/化学_03.png" v-if="subjectId==9">
+            </div>
             <div class="subjectName">{{courseName}}</div>
             <div class="msg">
                 <div class="left">
@@ -297,9 +308,13 @@
             .subjectAvatar {
                 width: 13.43rem;
                 height: 13.43rem;
-                background-color: red;
+                // background-color: red;
                 margin: 0 auto;
                 border-radius: 10%;
+                img {
+                    width:100%;
+                    height:100%;
+                }
             }
             .subjectName {
                 padding-top: 1.14rem;

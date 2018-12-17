@@ -14,6 +14,7 @@
             >
                 <div class="subject">
                     <div class="subject_img">
+                        <img src="../../../public/images/classroom.png" v-if="item.subjectId==null">
                         <img src="../../assets/语文_03.png" v-if="item.subjectId==1">
                         <img src="../../assets/数学_03.png" v-if="item.subjectId==2">
                         <img src="../../assets/英语_03.png" v-if="item.subjectId==3">
