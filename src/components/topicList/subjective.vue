@@ -173,4 +173,7 @@ table.composition2 th {
 sup {
   vertical-align: super;
 }
+sub{
+    vertical-align: sub;
+}
 </style>

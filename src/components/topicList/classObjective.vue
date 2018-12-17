@@ -9,7 +9,7 @@
                 <span class="point" v-if="pointIndex === index"></span>
             </div>
             <div class="option">{{conversion(index)}}.</div>
-            <div class="text">{{item}}</div>
+            <div class="text" v-html="item">{{item}}</div>
         </div>
         <PopupPic :questionPic="objective.questionPic"/>
         <!--<div class="remind" v-if="objective.questionPic" @click.stop="picimg(objective.questionPic)">

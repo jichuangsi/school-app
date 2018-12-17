@@ -6,8 +6,9 @@
                 <div class="topic" v-html="objective.questionContent">
                     {{objective.questionContent}}
                 </div>
-                <div class="option" v-for="(item,index) in objective.options" :key="index">
-                    {{tab(index)}}.{{item}}
+                <div class="select" v-for="(item,index) in objective.options" :key="index">
+                    <div class="option">{{tab(index)}}.</div>
+                    <div class="text" v-html="item">{{item}}</div>
                 </div>
                 <!--<div class="remind" v-if="objective.questionPic" @click.stop="picimg(objective.questionPic)">
                     （点开查看图片）
@@ -291,6 +292,31 @@
                 background-color: rgba(246, 255, 247, 1);
                 .topic {
                     padding-bottom: 1rem;
+                }
+                .select {
+                    position: relative;
+                    height: 1.79rem;
+                    //padding: 1.14rem 3.71rem 1.36rem;
+                    font-size: 0;
+                    .option {
+                        display: inline-block;
+                        height: 1.79rem;
+                        line-height: 2.0rem;
+                        padding-left: 0.57rem;
+                        padding-right: 0.79rem;
+                        font-size: 20px;
+                        //color: rgba(105, 180, 130, 1);
+                        float: left;
+                    }
+
+                    .text {
+                        display: inline-block;
+                        height: 1.79rem;
+                        line-height: 1.79rem;
+                        font-size: 18px;
+                        //color: rgba(53, 53, 53, 1);
+                        float: left;
+                    }
                 }
                 /*.bigimg {
                     position: fixed;

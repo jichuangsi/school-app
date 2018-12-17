@@ -426,4 +426,7 @@
     sup {
         vertical-align: super;
     }
+    sub{
+        vertical-align: sub;
+    }
 </style>
