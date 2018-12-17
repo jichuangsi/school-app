@@ -165,12 +165,12 @@ export default {
     }
 
     .text {
-      display: inline-block;
-      height: 1.79rem;
+      display: block;
+      height: 3rem;
       line-height: 1.79rem;
       font-size: 18px;
       color: rgba(53, 53, 53, 1);
-      float: left;
+      // float: left;
     }
   }
 }

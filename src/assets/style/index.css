@@ -240,6 +240,10 @@ table.composition2 th {
   vertical-align: middle;
 }
 
+text {
+  margin-bottom: 10px;
+}
+
 sup {
   vertical-align: super;
 }

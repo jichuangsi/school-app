@@ -14,7 +14,15 @@
             >
                 <div class="subject">
                     <div class="subject_img">
-                        <img src="../../../public/images/classroom.png">
+                        <img src="../../assets/语文_03.png" v-if="item.subjectId==1">
+                        <img src="../../assets/数学_03.png" v-if="item.subjectId==2">
+                        <img src="../../assets/英语_03.png" v-if="item.subjectId==3">
+                        <img src="../../assets/历史_03.png" v-if="item.subjectId==4">
+                        <img src="../../assets/地理_03.png" v-if="item.subjectId==5">
+                        <img src="../../assets/政治_03.png" v-if="item.subjectId==6">
+                        <img src="../../assets/生物_03.png" v-if="item.subjectId==7">
+                        <img src="../../assets/物理_03.png" v-if="item.subjectId==8">
+                        <img src="../../assets/化学_03.png" v-if="item.subjectId==9">
                     </div>
                     <div class="subject_details">
                         <p class="name">{{item.courseName}}</p>
@@ -93,7 +101,7 @@
         methods: {
             //页面加载获取数据
             getClassroomList() {
-                this.$store.dispatch('getClassList').then(() => {
+                this.$store.dispatch('getClassList').then((res) => {
                     this.pageShow = true;
                     this.loading = false;
                     this.classList = this.classroomList;
