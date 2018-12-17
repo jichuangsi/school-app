@@ -72,6 +72,7 @@ export default {
   },
   data() {
     return {
+      correction: false,
       sharebtn: "",
       imgawer:'',
       cover_box: 0,
@@ -301,7 +302,7 @@ export default {
     submited() {
       let self = this;
       // console.log(self.picForSubjective)
-      if (self.picForSubjective) {
+      if (self.correction) {
         try {
           sendAnswer(
             self.topicId,
@@ -317,16 +318,17 @@ export default {
             position: "bottom"
           });
           sessionStorage.setItem("sharebtn", "共享");
-          self.$router.push({
-            path: "@/pages/teacher/classroom/subjective",
-            name: "subjectiveDetails"
-          });
         } catch (e) {
           Toast({
             message: "提交失敗",
             position: "bottom"
           });
         }
+      } else {
+        Toast({
+            message: "请确认批改后再提交",
+            position: "bottom"
+          });
       }
     },
     // bse
@@ -361,6 +363,7 @@ export default {
                   .then(res => {
                     self.picForSubjective = res.data.data.stubForSubjective;
                     console.log("成功");
+                    self.correction = true;
                     Toast({
                       message: "储存图片成功",
                       position: "bottom"
@@ -401,10 +404,6 @@ export default {
         Toast({
           message: "共享成功",
           position: "bottom"
-        });
-        self.$router.push({
-          path: "@/pages/teacher/classroom/subjective",
-          name: "subjectiveDetails"
         });
       } catch (e) {
         Toast({
@@ -579,8 +578,8 @@ export default {
       }
     }
     .share {
-      position: absolute;
-      right: 42%;
+      // position: absolute;
+      // right: 42%;
       font-size: 18px;
       padding: 0.57rem 3.14rem;
       background-color: #9a84ff;

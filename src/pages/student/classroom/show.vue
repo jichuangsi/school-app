@@ -563,7 +563,7 @@ export default {
     height: 100%;
     position: fixed;
     background-color: #fff;
-    z-index: 121;
+    z-index: 1000;
     top: 0;
     .btnout {
       font-size: 4rem;

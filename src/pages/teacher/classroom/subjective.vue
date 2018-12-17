@@ -149,7 +149,7 @@
                                 name: '主观题',
                                 type: 'pie',
                                 radius: '70%',
-                                center: ['70%', '50%'],
+                                center: ['70%', '55%'],
                                 data: [
                                     {value: this.initial.count, name: "提交"},
                                     {value: this.studentCount - this.initial.count, name: "未提交"}
@@ -275,7 +275,7 @@
             }
             #subjectiveChart {
                 width: 100%;
-                height: 10.7rem;
+                height: 11.7rem;
                 position: relative;
                 padding-bottom: 1.93rem;
                 &:before {
