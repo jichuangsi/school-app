@@ -9,7 +9,7 @@
       <div class="class_topic_warp" v-for="(item,index) in showTopicList" :key="index">
         <!--客观题-->
         <div class="objective_warp" v-if="item.quesetionType==='objective'">
-          <class-objective :objective="item" @selectAnswer="selectAnswer" />
+          <class-objective :objective="item" @selectAnswer="selectAnswer" @Multipleanswers="Multipleanswers"/>
           <div class="submit_warp" v-if="item.questionStatus !== 'FINISH'">
             <div class="objective_submit" @click="objective_submit(item.questionId)">
               提交
@@ -304,10 +304,20 @@ export default {
       );
     },
     //选择题答案
+    // 单选
     selectAnswer(id, title) {
       for (let i = 0; i < this.objectiveAnswer.length; i++) {
         if (this.objectiveAnswer[i].id === id) {
           this.objectiveAnswer[i].answer = title;
+        }
+      }
+    },
+    // 多选题答案
+    Multipleanswers(id, title){
+      for (let i = 0; i < this.objectiveAnswer.length; i++) {
+        if (this.objectiveAnswer[i].id === id) {
+          this.objectiveAnswer[i].answer = title;
+          console.log(this.objectiveAnswer[i].answer)
         }
       }
     },

@@ -4,18 +4,27 @@
         <div class="topic" v-html="objective.questionContent">
             {{objective.questionContent}}
         </div>
-        <div class="select clearfix" v-for="(item,index) in objective.options" :key="index" @click="selectIndex(index,objective.questionId)">
+        <div class="select clearfix" v-for="(item,index) in objective.options" :key="index" @click="selectIndex(index,objective.questionId)" v-if="objective.answer.length==1">
             <div class="round">
                 <span class="point" v-if="pointIndex === index"></span>
             </div>
             <div class="option">{{conversion(index)}}.</div>
             <div class="text" v-html="item">{{item}}</div>
         </div>
-        <PopupPic :questionPic="objective.questionPic"/>
-        <!--<div class="remind" v-if="objective.questionPic" @click.stop="picimg(objective.questionPic)">
-            （点开查看图片）
+        <div class="select clearfix" v-for="(item,index) in objective.options" :key="index" @click="selectsIndex(index,objective.questionId)" v-if="objective.answer.length>1">
+            <div class="round">
+                <span class="point" v-if="answers.indexOf(index)>-1"></span>
+            </div>
+            <div class="option">{{conversion(index)}}.</div>
+            <div class="text" v-html="item">{{item}}</div>
         </div>
-        <div class="bigimg" v-if="dsadsa">
+        <PopupPic :questionPic="objective.questionPic"/>
+        <div class="anwers" v-if="objective.questionStatus == 'FINISH'">
+          此题答案为:<span v-html="objective.answer"></span>
+        </div>
+        <div class="remind" v-html="objective.parse" v-if="objective.questionStatus == 'FINISH'">
+        </div>
+        <!--<div class="bigimg" v-if="dsadsa">
             <div class="btn" @click.stop="picimgshow">x</div>
             <img :src="bigimg" alt="">
         </div>-->
@@ -38,15 +47,34 @@ export default {
   },
   data() {
     return {
-      pointIndex: -1/*,
-      bigimg: "",
-      dsadsa: false*/
+      pointIndex: -1,
+      answers: ""
     };
   },
   mounted() {
     // console.log(this.objective);
   },
   methods: {
+    selectsIndex(index,id) {
+      let b =""
+      if(this.answers.indexOf(index)>-1){
+       let a = this.answers.split(index)
+       this.answers = a[0]+a[1]
+      }else{
+      this.answers = this.answers+index
+      }
+      if(this.answers.indexOf(0)>-1){
+        b = b+"A"
+      }if(this.answers.indexOf(1)>-1){
+        b = b+"B"
+      }if(this.answers.indexOf(2)>-1){
+        b = b+"C"
+      }if(this.answers.indexOf(3)>-1){
+        b = b+"D"
+      }
+      b = b.split("").join("|")
+      this.$emit("Multipleanswers",id,b)
+    },
     /*picimgshow() {
       let self = this;
       self.dsadsa = false;
@@ -64,7 +92,7 @@ export default {
     selectIndex(index, id) {
       this.pointIndex = index;
       let num = 65 + index;
-      let option = String.fromCharCode(num);
+      let option = String.fromCharCode(num)
       this.$emit("selectAnswer", id, option);
     },
     conversion(index) {
@@ -98,15 +126,18 @@ export default {
         height: 100%;
         width: 100%;
     }
+  }*/
+  .anwers{
+   font-size: 18px;
+    padding: 15px;
+    span {
+      color: red;
+    }
   }
   .remind {
-    font-size: 16px;
-    color: #666;
-    position: absolute;
-    right: 40%;
-    z-index: 11;
-    bottom: 10%
-  }*/
+    font-size: 18px;
+    padding: 15px;
+  }
   .title {
     padding-bottom: 0.57rem;
     font-size: 18px;
