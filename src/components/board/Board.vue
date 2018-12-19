@@ -40,7 +40,7 @@
         },
         data() {
             return {
-                answer: '',
+                answer: ''
             }
         },
         methods:{

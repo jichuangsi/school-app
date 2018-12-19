@@ -441,10 +441,12 @@ export default {
               let i = self.objectiveAnswer.findIndex(x => {
                 return x.id === t.questionId;
               });
-              let answer = self.objectiveAnswer[i];
-              if (img.data.data) {
-                answer.answer = img.data.data.content;
-                self.$set(self.objectiveAnswer, i, answer);
+              if(i != -1){
+                let answer = self.objectiveAnswer[i];
+                if (img.data.data) {
+                  answer.answer = img.data.data.content;
+                  self.$set(self.objectiveAnswer, i, answer);
+                }
               }
             }
           }
