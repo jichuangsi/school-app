@@ -67,7 +67,8 @@
         courseEnd,
         getCourse,
         getCourseStatistics,
-        getQuestionStatisticsList
+        getQuestionStatisticsList,
+        getSubjectPic
     } from '@/api/teacher/classroom'
     import Loading from '../../../components/public/Loading'
     import {mapGetters} from 'vuex'
@@ -304,7 +305,7 @@
                 if(AnswerSubmit.data){
                 for (let i =0; i<self.allquestions.length;i++){
                 if (self.allquestions[i].questionId == AnswerSubmit.data.questionId){
-                    self.current = 1
+                    self.btn = 0
                     getSubjectPic(self.allquestions[i].answerForStudent.stubForSubjective).then(res => {
                     if (res.data.data) {
                     let img =
@@ -312,7 +313,7 @@
                         res.data.data.content.replace(",", "");
                     }
                 });
-                    AnswerShareList = [{questionId:AnswerSubmit.data.questionId,studentId:AnswerSubmit.data.studentId,title:self.allquestions[i].questionContent,answer:img}]
+                    self.AnswerShareList = [{questionId:AnswerSubmit.data.questionId,studentId:AnswerSubmit.data.studentId,title:self.allquestions[i].questionContent,answer:img}]
                 }
                 }
                 for (let i =0;i<self.students.length;i++){
