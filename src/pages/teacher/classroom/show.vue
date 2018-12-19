@@ -45,13 +45,13 @@
                 <span>{{onestudentname}}<br>已提交</span>
             </div>
         </scroll-content>
-        <div class="AnswerShare" v-show="AnswerShareshow">
+        <!-- <div class="AnswerShare" v-show="AnswerShareshow">
             <span class="btnout" @click="btnout">x</span>
             <div class="AnswerShareList" v-for="(item,index) in AnswerShareList" :key="index">
                 <div :id="item.studentId" class="question" v-html="item.title">{{item.title}}</div>
                 <div class="answerimg"><img :src="item.answer" alt=""></div>
             </div>
-        </div>
+        </div> -->
         <loading v-if="loading"/>
     </div>
 </template>
@@ -67,8 +67,7 @@
         courseEnd,
         getCourse,
         getCourseStatistics,
-        getQuestionStatisticsList,
-        getSubjectPic
+        getQuestionStatisticsList
     } from '@/api/teacher/classroom'
     import Loading from '../../../components/public/Loading'
     import {mapGetters} from 'vuex'
@@ -295,6 +294,7 @@
                     }, subHeader);
                     //监听课堂提交答案
                     _this.stompClient.subscribe('/queue/course/teacher/question/' + _this.courseId, function (response) {
+                        // console.log(response)
                         _this.classAnswerSubmit(response);
                     }, subHeader);
                 });
@@ -303,24 +303,26 @@
             classAnswerSubmit(resopnse){
                 let self = this
                 let AnswerSubmit = JSON.parse(resopnse.body);
+                console.log(AnswerSubmit)
                 if(AnswerSubmit.data){
-                for (let i =0; i<self.allquestions.length;i++){
-                if (self.allquestions[i].questionId == AnswerSubmit.data.questionId){
-                    self.btn = 0
-                    getSubjectPic(self.allquestions[i].answerForStudent.stubForSubjective).then(res => {
-                    if (res.data.data) {
-                    self.img =
-                        "data:image/png;base64," +
-                        res.data.data.content.replace(",", "");
-                    }
-                });
-                    self.AnswerShareList = [{questionId:AnswerSubmit.data.questionId,
-                                            studentId:AnswerSubmit.data.studentId,
-                                            title:self.allquestions[i].questionContent,
-                                            answer:self.img}]
-                }
-                }
-                for (let i =0;i<self.students.length;i++){
+                // for (let i =0; i<self.allquestions.length;i++){
+                // if (self.allquestions[i].questionId == AnswerSubmit.data.questionId){
+                //     self.btn = 0
+                //     getSubjectPic(self.allquestions[i].answerForStudent.stubForSubjective).then(res => {
+                //     if (res.data.data) {
+                //     self.img =
+                //         "data:image/png;base64," +
+                //         res.data.data.content.replace(",", "");
+                //     }
+                // });
+                //     self.AnswerShareList = [{questionId:AnswerSubmit.data.questionId,
+                //                             studentId:AnswerSubmit.data.studentId,
+                //                             title:self.allquestions[i].questionContent,
+                //                             answer:self.img}]
+                //                             console.log(self.AnswerShareList)
+                // }
+                // }
+                for (let i =0;i<self.allstudents.length;i++){
                     if(self.students[i].studentId == AnswerSubmit.data.studentId){
                         self.onestudentname = self.students[i].studentName
                     }

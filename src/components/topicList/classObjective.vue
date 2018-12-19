@@ -63,12 +63,12 @@ export default {
       }else{
       this.answers = this.answers+index
       }
-      let c = this.answers.split("")
       for(let i=0;i<this.answers.length;i++){
       let d = parseInt(this.answers[i])+65
       let e = String.fromCharCode(d)
       b = b+e
       }
+      b = b.split("").sort().join('')
       if(b.length==1){
         b = b+"|"
       }else{
