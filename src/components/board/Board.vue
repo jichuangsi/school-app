@@ -34,12 +34,13 @@
                         }
                     }
                 },
-                deep: true
+                deep: true,
+                immediate: true
             }
         },
         data() {
             return {
-                answer: '',
+                answer: ''
             }
         },
         mounted() {
