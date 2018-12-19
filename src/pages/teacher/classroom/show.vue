@@ -42,7 +42,7 @@
                            :courseId="courseId"
                            :studentCount="studentCount" :key="item.index"/>
             <div id="btn" :class="{'awbtn':btn===current}" @click="Answerbtn">
-                <img src="@/assets/提交.png" alt="">
+                <span>{{onestudentname}}<br>已提交</span>
             </div>
         </scroll-content>
         <div class="AnswerShare" v-show="AnswerShareshow">
@@ -84,6 +84,8 @@
         },
         data() {
             return {
+                onestudentname:"李某某",
+                students:[],
                 allquestions:[],
                 AnswerShareList: [],
                 AnswerShareshow: false,
@@ -147,6 +149,7 @@
                         _this.loading = false;
                         _this.classMsg = res.data.data;
                         _this.allquestions = res.data.data.questions
+                        _this.allstudents = res.data.data.students
                         let objective = 0;
                         let subjective = 0;
                         _this.courseStatus = this.classMsg.courseStatus;
@@ -297,11 +300,30 @@
             // 
             classAnswerSubmit(resopnse){
                 let self = this
-                let AnswerSubmit = JSON.parse(response.body);
+                let AnswerSubmit = JSON.parse(resopnse.body);
+                if(AnswerSubmit.data){
                 for (let i =0; i<self.allquestions.length;i++){
                 if (self.allquestions[i].questionId == AnswerSubmit.data.questionId){
                     self.current = 1
+                    getSubjectPic(classData.data.picPath).then(res => {
+                    if (res.data.data) {
+                    let img =
+                        "data:image/png;base64," +
+                        res.data.data.content.replace(",", "");
+                    self.AnswerShareList=[{
+                        id: val.questionId,
+                        title: val.questionContent,
+                        img: img
+                    }];
+                    }
+                });
                     AnswerShareList = [{questionId:AnswerSubmit.data.questionId,studentId:AnswerSubmit.data.studentId,title:self.allquestions[i].questionContent,answer:AnswerSubmit.data.answer}]
+                }
+                }
+                for (let i =0;i<self.students.length;i++){
+                    if(self.students[i].studentId == AnswerSubmit.data.studentId){
+                        self.onestudentname = self.students[i].studentName
+                    }
                 }
                 }
             },
@@ -465,14 +487,20 @@
     position: fixed;
     top: 40%;
     left: -10rem;
-    color: #fff;
-    border-radius: 50%;
+    background: url("../../../assets/提交.png") no-repeat;
+    background-size: 100% 100%;
     transition: left 1s;
     overflow: hidden;
     z-index: 900;
-    img {
-      width: 100%;
-      height: 100%;
+    span {
+            display: block;
+            color: #fff;
+            line-height: 1.5rem;
+            font-size: 1.3rem;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 4.9rem;
+            letter-spacing: 0.2rem;
     }
   }
   .awbtn {

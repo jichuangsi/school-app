@@ -69,7 +69,7 @@ export default {
       pageShow: false,
       username: "韩梅梅",
       usertext: "学如逆水行舟，不进则退。",
-      userimg: "http://pd0qnho0l.bkt.clouddn.com/Bitmap.png"
+      userimg: require('../../assets/老师.png')
     };
   },
   mounted() {

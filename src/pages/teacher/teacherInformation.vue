@@ -5,7 +5,7 @@
       <div class="avatar clearfix">
         <div class="title">头像</div>
         <div class="img_warp">
-          <img src="http://pd0qnho0l.bkt.clouddn.com/Bitmap.png">
+          <img src="../../assets/老师.png">
         </div>
       </div>
       <div class="row">
