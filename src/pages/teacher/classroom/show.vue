@@ -41,7 +41,7 @@
                            :topicAcc="item.acc"
                            :courseId="courseId"
                            :studentCount="studentCount" :key="item.index"/>
-            <div id="btn" :class="{'awbtn':btn===current}" @click="Answerbtn">
+            <div id="btn" :class="{'awbtn':btn===current}">
                 <span>{{onestudentname}}<br>已提交</span>
             </div>
         </scroll-content>
@@ -131,14 +131,13 @@
             this.start();
         },
         methods: {
-            Answerbtn(){
-                this.AnswerShareshow = true;
-                },
-                btnout() {
-                this.btn = 1;
-                this.AnswerShareshow = false;
-                },
-
+            // Answerbtn(){
+            //     this.AnswerShareshow = true;
+            //     },
+            //     btnout() {
+            //     this.btn = 1;
+            //     this.AnsswerShareshow = false;
+            //     },
             //页面获取数据
             getTClassroom() {
                 let _this = this;
@@ -294,7 +293,7 @@
                     }, subHeader);
                     //监听课堂提交答案
                     _this.stompClient.subscribe('/queue/course/teacher/question/' + _this.courseId, function (response) {
-                        // console.log(response)
+                        console.log(response)
                         _this.classAnswerSubmit(response);
                     }, subHeader);
                 });
@@ -302,12 +301,12 @@
             // 
             classAnswerSubmit(resopnse){
                 let self = this
-                let AnswerSubmit = JSON.parse(resopnse.body);
-                console.log(AnswerSubmit)
-                if(AnswerSubmit.data){
+                let subjectivesubmit = JSON.parse(resopnse.body);
+                // console.log(subjectivesubmit.hasOwnProperty('quType'))
+                if(subjectivesubmit.hasOwnProperty('quType')){
                 // for (let i =0; i<self.allquestions.length;i++){
                 // if (self.allquestions[i].questionId == AnswerSubmit.data.questionId){
-                //     self.btn = 0
+                    self.btn = 0
                 //     getSubjectPic(self.allquestions[i].answerForStudent.stubForSubjective).then(res => {
                 //     if (res.data.data) {
                 //     self.img =
@@ -323,10 +322,13 @@
                 // }
                 // }
                 for (let i =0;i<self.allstudents.length;i++){
-                    if(self.students[i].studentId == AnswerSubmit.data.studentId){
+                    if(self.students[i].studentId == subjectivesubmit.data.studentId){
                         self.onestudentname = self.students[i].studentName
                     }
                 }
+                setTimeout(function(){
+                    self.btn = 1;
+                },2000)
                 }
             },
             //上课人数
