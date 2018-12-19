@@ -49,7 +49,7 @@
             <span class="btnout" @click="btnout">x</span>
             <div class="AnswerShareList" v-for="(item,index) in AnswerShareList" :key="index">
                 <div :id="item.studentId" class="question" v-html="item.title">{{item.title}}</div>
-                <div class="answerimg"><img :src="item.img" alt=""></div>
+                <div class="answerimg"><img :src="item.answer" alt=""></div>
             </div>
         </div>
         <loading v-if="loading"/>
@@ -305,19 +305,14 @@
                 for (let i =0; i<self.allquestions.length;i++){
                 if (self.allquestions[i].questionId == AnswerSubmit.data.questionId){
                     self.current = 1
-                    getSubjectPic(classData.data.picPath).then(res => {
+                    getSubjectPic(self.allquestions[i].answerForStudent.stubForSubjective).then(res => {
                     if (res.data.data) {
                     let img =
                         "data:image/png;base64," +
                         res.data.data.content.replace(",", "");
-                    self.AnswerShareList=[{
-                        id: val.questionId,
-                        title: val.questionContent,
-                        img: img
-                    }];
                     }
                 });
-                    AnswerShareList = [{questionId:AnswerSubmit.data.questionId,studentId:AnswerSubmit.data.studentId,title:self.allquestions[i].questionContent,answer:AnswerSubmit.data.answer}]
+                    AnswerShareList = [{questionId:AnswerSubmit.data.questionId,studentId:AnswerSubmit.data.studentId,title:self.allquestions[i].questionContent,answer:img}]
                 }
                 }
                 for (let i =0;i<self.students.length;i++){
