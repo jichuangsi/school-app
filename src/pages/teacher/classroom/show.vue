@@ -41,7 +41,17 @@
                            :topicAcc="item.acc"
                            :courseId="courseId"
                            :studentCount="studentCount" :key="item.index"/>
+            <div id="btn" :class="{'awbtn':btn===current}" @click="Answerbtn">
+                <img src="@/assets/提交.png" alt="">
+            </div>
         </scroll-content>
+        <div class="AnswerShare" v-show="AnswerShareshow">
+            <span class="btnout" @click="btnout">x</span>
+            <div class="AnswerShareList" v-for="(item,index) in AnswerShareList" :key="index">
+                <div :id="item.studentId" class="question" v-html="item.title">{{item.title}}</div>
+                <div class="answerimg"><img :src="item.img" alt=""></div>
+            </div>
+        </div>
         <loading v-if="loading"/>
     </div>
 </template>
@@ -74,6 +84,12 @@
         },
         data() {
             return {
+                allquestions:[],
+                AnswerShareList: [],
+                AnswerShareshow: false,
+                btn: 1,
+                current: 0,
+                subjectId: null,
                 //当前班总人数
                 studentTotal: 0,
                 //课堂人数
@@ -112,15 +128,25 @@
             this.start();
         },
         methods: {
+            Answerbtn(){
+                this.AnswerShareshow = true;
+                },
+                btnout() {
+                this.btn = 1;
+                this.AnswerShareshow = false;
+                },
+
             //页面获取数据
             getTClassroom() {
                 let _this = this;
                 getCourse(_this.courseId)
                     .then(res => {
                         console.log(res)
+                        _this.subjectId = res.data.data.subjectId
                         _this.pageShow = true;
                         _this.loading = false;
                         _this.classMsg = res.data.data;
+                        _this.allquestions = res.data.data.questions
                         let objective = 0;
                         let subjective = 0;
                         _this.courseStatus = this.classMsg.courseStatus;
@@ -262,10 +288,26 @@
                     _this.stompClient.subscribe('/queue/course/teacher/qs/' + _this.courseId, function (response) {
                         _this.classAnswer(response);
                     }, subHeader);
+                    //监听课堂提交答案
+                    _this.stompClient.subscribe('/queue/course/teacher/question/' + _this.courseId, function (response) {
+                        _this.classAnswerSubmit(response);
+                    }, subHeader);
                 });
+            },
+            // 
+            classAnswerSubmit(resopnse){
+                let self = this
+                let AnswerSubmit = JSON.parse(response.body);
+                for (let i =0; i<self.allquestions.length;i++){
+                if (self.allquestions[i].questionId == AnswerSubmit.data.questionId){
+                    self.current = 1
+                    AnswerShareList = [{questionId:AnswerSubmit.data.questionId,studentId:AnswerSubmit.data.studentId,title:self.allquestions[i].questionContent,answer:AnswerSubmit.data.answer}]
+                }
+                }
             },
             //上课人数
             classNumber(response) {
+                console.log(response)
                 let classData = JSON.parse(response.body);
                 if (classData.data) {
                     this.studentCount = classData.data.studentCount
@@ -273,6 +315,7 @@
             },
             //上课提交的答案
             classAnswer(response) {
+                // console.log(response)
                 let _this = this;
                 let classData = JSON.parse(response.body);
                 if (classData.data) {
@@ -416,6 +459,61 @@
             }
         }
     }
+     #btn {
+    width: 10rem;
+    height: 10rem;
+    position: fixed;
+    top: 40%;
+    left: -10rem;
+    color: #fff;
+    border-radius: 50%;
+    transition: left 1s;
+    overflow: hidden;
+    z-index: 900;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .awbtn {
+    left: 18rem !important; 
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .AnswerShare {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    background-color: #fff;
+    z-index: 1000;
+    top: 0;
+    .btnout {
+      font-size: 4rem;
+      font-weight: 700;
+      color: yellowgreen;
+      position: absolute;
+      right: 2rem;
+      top: 1rem;
+    }
+    .AnswerShareList {
+      padding: 3rem 1rem;
+      .question {
+        line-height: 2.43rem;
+        font-size: 18px;
+        padding: 0 3.71rem;
+      }
+      .answerimg {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        img {
+          width: 100%;
+        }
+      }
+    }
+  }
     .MathJye table{
         border-collapse: collapse;
         margin: 0;

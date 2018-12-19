@@ -598,6 +598,7 @@ export default {
           width: 100%;
         }
       }
+    }
       .MathJye table {
         border-collapse: collapse;
         margin: 0;
@@ -670,7 +671,6 @@ export default {
         vertical-align: sub;
       }
     }
-  }
   #btn {
     width: 10rem;
     height: 10rem;
@@ -681,7 +681,7 @@ export default {
     border-radius: 50%;
     transition: left 1s;
     overflow: hidden;
-    z-index: 1002;
+    z-index: 900;
     img {
       width: 100%;
       height: 100%;

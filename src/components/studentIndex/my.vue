@@ -60,7 +60,7 @@ export default {
       pageShow: false, //内容状态
       username: "韩梅梅",
       usertext: "学如逆水行舟，不进则退。",
-      userimg: ''
+      userimg: 'http://pd0qnho0l.bkt.clouddn.com/Bitmap.png'
     };
   },
   mounted() {

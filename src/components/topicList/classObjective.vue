@@ -20,7 +20,7 @@
         </div>
         <PopupPic :questionPic="objective.questionPic"/>
         <div class="anwers" v-if="objective.questionStatus == 'FINISH'">
-          此题答案为:<span v-html="objective.answer"></span>
+          此题答案为:<span>{{objective.answer.split("|")[0]}}</span>
         </div>
         <div class="remind" v-html="objective.parse" v-if="objective.questionStatus == 'FINISH'">
         </div>
@@ -63,16 +63,18 @@ export default {
       }else{
       this.answers = this.answers+index
       }
-      if(this.answers.indexOf(0)>-1){
-        b = b+"A"
-      }if(this.answers.indexOf(1)>-1){
-        b = b+"B"
-      }if(this.answers.indexOf(2)>-1){
-        b = b+"C"
-      }if(this.answers.indexOf(3)>-1){
-        b = b+"D"
+      let c = this.answers.split("")
+      for(let i=0;i<this.answers.length;i++){
+      let d = parseInt(this.answers[i])+65
+      let e = String.fromCharCode(d)
+      b = b+e
       }
+      if(b.length==1){
+        b = b+"|"
+      }else{
       b = b.split("").join("|")
+      }
+      console.log(b)
       this.$emit("Multipleanswers",id,b)
     },
     /*picimgshow() {

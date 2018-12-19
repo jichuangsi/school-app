@@ -102,13 +102,6 @@ export default {
       font-size: 18px;
       line-height: 34px;
       padding: 0 2.57rem;
-      .MathJye {
-  width: 100px;
-  height: 100px;
-  background-color: red;
-}
-
-
     }
   }
 }
