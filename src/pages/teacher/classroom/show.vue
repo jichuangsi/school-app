@@ -85,6 +85,7 @@
         },
         data() {
             return {
+                img:"",
                 onestudentname:"李某某",
                 students:[],
                 allquestions:[],
@@ -308,12 +309,15 @@
                     self.btn = 0
                     getSubjectPic(self.allquestions[i].answerForStudent.stubForSubjective).then(res => {
                     if (res.data.data) {
-                    let img =
+                    self.img =
                         "data:image/png;base64," +
                         res.data.data.content.replace(",", "");
                     }
                 });
-                    self.AnswerShareList = [{questionId:AnswerSubmit.data.questionId,studentId:AnswerSubmit.data.studentId,title:self.allquestions[i].questionContent,answer:img}]
+                    self.AnswerShareList = [{questionId:AnswerSubmit.data.questionId,
+                                            studentId:AnswerSubmit.data.studentId,
+                                            title:self.allquestions[i].questionContent,
+                                            answer:self.img}]
                 }
                 }
                 for (let i =0;i<self.students.length;i++){
