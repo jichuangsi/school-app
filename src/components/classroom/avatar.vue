@@ -1,6 +1,6 @@
 <template>
     <div class="avatar_warp">
-        <img :src="url" alt="头像">
+        <img :src="userimg" alt="头像">
     </div>
 </template>
 
@@ -11,9 +11,22 @@
         name: 'avatar',
         data() {
             return {
-                url: ''
+                userimg: ''
             }
-        }
+        },
+    mounted(){
+      this.getstudent()
+    },
+    methods:{
+      getstudent(){
+      let user = JSON.parse(localStorage.getItem('user'))
+      if(user.userSex=="FEMALE"){
+        this.userimg = require('../../assets/女学生.png')
+      }else{
+        this.userimg = require('../../assets/男学生.png')
+      }
+      }
+    }
     }
 </script>
 

@@ -1,6 +1,6 @@
 <template>
     <div class="student">
-        <classroom v-show="linkState === 0" v-on:message="zxc($event)"/>
+        <classroom v-show="linkState === 0" v-on:message="zxc($event)" v-on:messageout="qwe($event)"/>
         <homework v-show="linkState === 1"/>
         <my v-show="linkState === 2"/>
         <div class="footers">
@@ -11,7 +11,7 @@
                     :key="item.index"
                     @click="State(index)"
             >
-                <div class="msg" v-if="Message"></div>
+                <div class="msg" v-if="index==0&&Message"></div>
                 <span class="iconfont icon" v-html="item.icon"></span>
                 <div class="text">{{item.text}}</div>
             </div>
@@ -56,6 +56,9 @@
             ])
         },
         methods: {
+            qwe(val){
+                this.Message = val
+            },
             zxc(val){
                 this.Message = val
             },

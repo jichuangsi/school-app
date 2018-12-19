@@ -34,7 +34,8 @@
                         }
                     }
                 },
-                deep: true
+                deep: true,
+                immediate: true
             }
         },
         data() {
@@ -42,11 +43,11 @@
                 answer: '',
             }
         },
+        methods:{
+        },
         mounted() {
         //     (function () {
-
         //         var initPhotoSwipeFromDOM = function (gallerySelector) {
-
         //             var parseThumbnailElements = function (el) {
         //                 var thumbElements = el.childNodes,
         //                     numNodes = thumbElements.length,

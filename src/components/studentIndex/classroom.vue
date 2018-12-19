@@ -159,6 +159,11 @@
             },
             //给课堂列表路由传id跟课堂名字
             goClassroom(Id, courseName) {
+                for (let i = 0; i < this.classList.length; i++) {
+                        if (Id === this.classList[i].courseId) {
+                            this.$emit("messageout",null)
+                        }
+                    }
                 this.$router.push({
                     path: '@/pages/student/classroom/show',
                     name: 'classroom',

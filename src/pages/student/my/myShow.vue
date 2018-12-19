@@ -5,12 +5,12 @@
       <div class="avatar clearfix">
         <div class="title">头像</div>
         <div class="img_warp">
-          <img src="../../../assets/学生.png">
+          <img :src="userimg">
         </div>
       </div>
       <div class="row">
         <div class="title">名字</div>
-        <div class="text">韩梅梅</div>
+        <div class="text">{{username}}</div>
       </div>
       <div class="row">
         <div class="title">班级</div>
@@ -33,7 +33,23 @@
         header: {                       //头部信息
           title: "个人信息",
           url: '/studentIndex'
-        }
+        },
+        userimg: '',
+        username:'韩梅梅'
+      }
+    },
+    mounted(){
+      this.getstudent()
+    },
+    methods:{
+      getstudent(){
+      let user = JSON.parse(localStorage.getItem('user'))
+      if(user.userSex=="FEMALE"){
+        this.userimg = require('../../../assets/女学生.png')
+      }else{
+        this.userimg = require('../../../assets/男学生.png')
+      }
+      this.username = user.userName
       }
     }
   }

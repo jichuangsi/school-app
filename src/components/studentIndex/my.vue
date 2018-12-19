@@ -60,7 +60,7 @@ export default {
       pageShow: false, //内容状态
       username: "韩梅梅",
       usertext: "学如逆水行舟，不进则退。",
-      userimg: require('../../assets/学生.png')
+      userimg: ''
     };
   },
   mounted() {
@@ -71,6 +71,13 @@ export default {
     getMy() {
       this.pageShow = true;
       this.loading = false;
+      let user = JSON.parse(localStorage.getItem('user'))
+      if(user.userSex=="FEMALE"){
+        this.userimg = require('../../assets/女学生.png')
+      }else{
+        this.userimg = require('../../assets/男学生.png')
+      }
+      this.username = user.userName
       // let _this = this;
       // this.api.getMy()
       //     .then(function (res) {

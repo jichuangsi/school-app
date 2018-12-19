@@ -69,7 +69,7 @@ export default {
       pageShow: false,
       username: "韩梅梅",
       usertext: "学如逆水行舟，不进则退。",
-      userimg: require('../../assets/老师.png')
+      userimg: ''
     };
   },
   mounted() {
@@ -78,6 +78,13 @@ export default {
   methods: {
     getTeacherMy() {
       let _this = this;
+      let user = JSON.parse(localStorage.getItem('user'))
+      if(user.userSex=="FEMALE"){
+        this.userimg = require('../../assets/女老师.png')
+      }else{
+        this.userimg = require('../../assets/男老师.png')
+      }
+      this.username = user.userName
       this.api
         .getMy()
         .then(function(res) {
