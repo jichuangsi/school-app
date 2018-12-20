@@ -63,6 +63,7 @@
         },
         data() {
             return {
+                current: '',
                 newborder: 0,
                 //课堂页码
                 classroomPage: 100,
@@ -162,12 +163,10 @@
             },
             //给课堂列表路由传id跟课堂名字
             goClassroom(Id, courseName) {
-                for (let i = 0; i < this.classList.length; i++) {
-                        if (Id === this.classList[i].courseId) {
+                        if (Id === this.current) {
                             this.newborder = 0
                             this.$emit("messageout",null)
                         }
-                    }
                 this.$router.push({
                     path: '@/pages/student/classroom/show',
                     name: 'classroom',
@@ -226,6 +225,7 @@
                         if (classData.data.courseId === this.classList[i].courseId) {
                             this.classList[i].courseStatus = 'PROGRESS'
                             // sessionStorage.setItem("message", "提示");
+                            this.current = this.classList[i].courseId
                             let index_i = i
                             let first = this.classList.splice(index_i,1)[0]
                             this.classList.unshift(first)
