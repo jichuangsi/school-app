@@ -68,6 +68,7 @@ export default {
   width: 100%;
   .anwers{
    font-size: 18px;
+    line-height: 24px;
     padding: 15px;
     span {
       color: red;
@@ -75,6 +76,7 @@ export default {
   }
   .remind {
     font-size: 18px;
+    line-height: 24px;
     padding: 15px;
   }
   /*.bigimg {

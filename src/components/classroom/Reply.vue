@@ -1,7 +1,7 @@
 <template>
     <div class="classroomOneReply">
         <div class="reply_objective"
-             v-for="(item,index) in select" :key="index">
+             v-for="(item,index) in select" v-if="item" :key="index">
             <div class="bubble">
                 <div class="answer" v-if="true">{{item}}</div>
             </div>
@@ -39,7 +39,8 @@
         data() {
             return {
                 select: [],
-                arr:[]
+                arr:[],
+                show: false
             }
         },
         watch: {

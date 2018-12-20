@@ -1,3 +1,4 @@
+/* eslint-disable vue/valid-v-bind */
 <template>
     <div class="classroomList">
         <public-header :header="header"/>
@@ -6,10 +7,11 @@
             <!--<div slot="empty" style="text-align: center">无任何数据</div>-->
             <div class="tips" v-if="classNew"><span class="point"></span><span class="text">老师布置了新题目</span></div>
             <!--今天的课堂-->
+            
             <div
                     class="list"
-                    :class="{nowClass:item.courseStatus === 'PROGRESS'}"
-                    v-for="item in classList" :key="item.index"
+                    :class="{nowClass:item.courseStatus === 'PROGRESS',newClass:newborder==1&&index==0}"
+                    v-for="(item,index) in classList" :key="index"
                     @click="goClassroom(item.courseId,item.courseName)"
             >
                 <div class="subject">
@@ -61,6 +63,7 @@
         },
         data() {
             return {
+                newborder: 0,
                 //课堂页码
                 classroomPage: 100,
                 //判断课堂还有没有
@@ -161,6 +164,7 @@
             goClassroom(Id, courseName) {
                 for (let i = 0; i < this.classList.length; i++) {
                         if (Id === this.classList[i].courseId) {
+                            this.newborder = 0
                             this.$emit("messageout",null)
                         }
                     }
@@ -222,6 +226,10 @@
                         if (classData.data.courseId === this.classList[i].courseId) {
                             this.classList[i].courseStatus = 'PROGRESS'
                             // sessionStorage.setItem("message", "提示");
+                            let index_i = i
+                            let first = this.classList.splice(index_i,1)[0]
+                            this.classList.unshift(first)
+                            this.newborder = 1
                             this.$emit("message","提示")
                             Toast({
                                 message: this.classList[i].courseName + '上课了',
@@ -368,6 +376,9 @@
             }
             .nowClass {
                 box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.18);
+            }
+            .newClass {
+                border: 1px solid #80d59c;
             }
             .history {
                 padding: 2.29rem 0 0;

@@ -132,12 +132,14 @@ export default {
   .anwers{
    font-size: 18px;
     padding: 15px;
+    line-height: 24px;
     span {
       color: red;
     }
   }
   .remind {
     font-size: 18px;
+    line-height: 24px;
     padding: 15px;
   }
   .title {
