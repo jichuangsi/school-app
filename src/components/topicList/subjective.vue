@@ -14,6 +14,11 @@
             <img :src="bigimg" alt="">
         </div>-->
         <PopupPic :questionPic="subjectiveTopic.questionPic"/>
+        <div class="anwers" v-if="subjectiveTopic.questionStatus == 'FINISH'">
+          此题答案为:<span>{{objective.answer}}</span>
+        </div>
+        <div class="remind" v-html="subjectiveTopic.parse" v-if="subjectiveTopic.questionStatus == 'FINISH'">
+        </div>
     </div>
 </template>
 
@@ -61,6 +66,17 @@ export default {
 <style lang="scss" scoped>
 .subjective {
   width: 100%;
+  .anwers{
+   font-size: 18px;
+    padding: 15px;
+    span {
+      color: red;
+    }
+  }
+  .remind {
+    font-size: 18px;
+    padding: 15px;
+  }
   /*.bigimg {
     position: fixed;
     top: 0;

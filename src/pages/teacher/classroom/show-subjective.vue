@@ -317,7 +317,9 @@ export default {
             message: "提交成功",
             position: "bottom"
           });
-          sessionStorage.setItem("sharebtn", "共享");
+
+          // sessionStorage.setItem("sharebtn", "共享");
+          self.sharebtn = "共享"
         } catch (e) {
           Toast({
             message: "提交失敗",

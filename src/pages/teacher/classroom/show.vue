@@ -293,7 +293,6 @@
                     }, subHeader);
                     //监听课堂提交答案
                     _this.stompClient.subscribe('/queue/course/teacher/question/' + _this.courseId, function (response) {
-                        console.log(response)   
                         _this.classAnswerSubmit(response);
                     }, subHeader);
                 });
