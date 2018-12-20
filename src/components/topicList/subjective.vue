@@ -15,7 +15,7 @@
         </div>-->
         <PopupPic :questionPic="subjectiveTopic.questionPic"/>
         <div class="anwers" v-if="subjectiveTopic.questionStatus == 'FINISH'">
-          此题答案为:<span>{{objective.answer}}</span>
+          此题答案为:<span>{{subjectiveTopic.answer}}</span>
         </div>
         <div class="remind" v-html="subjectiveTopic.parse" v-if="subjectiveTopic.questionStatus == 'FINISH'">
         </div>
