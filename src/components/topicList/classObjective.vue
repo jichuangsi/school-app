@@ -161,7 +161,7 @@ export default {
 
   .select {
     position: relative;
-    height: 1.79rem;
+    // height: 1.79rem;
     padding: 1.14rem 3.71rem 1.36rem;
     font-size: 0;
     cursor: pointer;
@@ -173,7 +173,7 @@ export default {
       height: 1.43rem;
       border-radius: 50%;
       border: 2px solid rgba(105, 180, 130, 1);
-      float: left;
+      // float: left;
 
       .point {
         position: absolute;
@@ -194,11 +194,11 @@ export default {
       padding-right: 0.79rem;
       font-size: 20px;
       color: rgba(105, 180, 130, 1);
-      float: left;
+      // float: left;
     }
 
     .text {
-      display: block;
+      display: inline-block;
       height: 3rem;
       line-height: 1.79rem;
       font-size: 18px;

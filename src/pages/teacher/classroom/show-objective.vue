@@ -295,7 +295,7 @@
                 }
                 .select {
                     position: relative;
-                    height: 1.79rem;
+                    // height: 1.79rem;
                     //padding: 1.14rem 3.71rem 1.36rem;
                     font-size: 0;
                     .option {
@@ -306,7 +306,7 @@
                         padding-right: 0.79rem;
                         font-size: 20px;
                         //color: rgba(105, 180, 130, 1);
-                        float: left;
+                        // float: left;
                     }
 
                     .text {
@@ -315,7 +315,7 @@
                         line-height: 1.79rem;
                         font-size: 18px;
                         //color: rgba(53, 53, 53, 1);
-                        float: left;
+                        // float: left;
                     }
                 }
                 /*.bigimg {
@@ -410,7 +410,7 @@
         font-style: normal;
         font-weight: normal;
         border: 0;
-        float: none;
+        // float: none;
         display: inline-block;
         zoom: 0;
     }
