@@ -127,10 +127,7 @@
         },
         mounted() {
             this.getTClassroom();
-            //this.connect();
-            this.connectCS();
-            this.connectQS();
-            this.connectQP();
+            this.connect();
             this.start();
         },
         methods: {
@@ -296,87 +293,17 @@
                     }, subHeader);
                     //监听课堂提交答案
                     _this.stompClient.subscribe('/queue/course/teacher/question/' + _this.courseId, function (response) {
-                        console.log(response)
+                        console.log(response)   
                         _this.classAnswerSubmit(response);
                     }, subHeader);
                 });
             },
-            connectWithParam(param, method) {
-                //地址+端点路径，构建websocket链接地址
-                let socket = new SockJS(this.wsUrl + '/websocket/course');
-                this.stompClient = Stomp.over(socket);//一些老的浏览器不支持WebSocket的脚本或者使用别的名字。默认下，stomp.js会使用浏览器原生的WebSocket class去创建WebSocket。利用Stomp.over(ws)这个方法可以使用其他类型的WebSockets。这个方法得到一个满足WebSocket定义的对象
-                this.stompClient.heartbeat.outgoing = 400000;  // client will send heartbeats every 40000ms
-                this.stompClient.heartbeat.incoming = 0;      // client does not want to receive heartbeats from the server
-                //连接时的请求头部信息
-                let headers = {
-                    login: 'mylogin',
-                    passcode: 'mypasscode',
-                    // additional header
-                    userId: 'curUserId',
-                    accessToken: this.token
-                };
-
-                //var classId = userInfo.classId;
-                let _this = this;
-                this.stompClient.connect(headers, function(frame) {
-                    //setConnected(true);
-                    console.log('Connected:' + frame);
-
-                    _this.call(eval('_this.'+method),param);
-                });
-            },
-            call(a,n){
-                return a(n)
-            },
-            connectCS(){
-                this.connectWithParam(null, 'subscribeCS');
-            },
-            subscribeCS(param){
-                let subHeader = {
-                    userId: 'curUserId',
-                    accessToken: this.token
-                };//订阅时的头信息
-                //监听的路径以及回调。返回的subscription用于取消订阅
-                //监听课堂人数
-                let _this = this;
-                this.subscription = this.stompClient.subscribe('/queue/course/teacher/cs/' + this.courseId, function (response) {
-                    _this.classNumber(response);
-                }, subHeader);
-            },
-            connectQS(){
-                this.connectWithParam(null, 'subscribeQS');
-            },
-            subscribeQS(param){
-                let subHeader = {
-                    userId: 'curUserId',
-                    accessToken: this.token
-                };//订阅时的头信息
-                let _this = this;
-                this.stompClient.subscribe('/queue/course/teacher/qs/' + this.courseId, function (response) {
-                    _this.classAnswer(response);
-                }, subHeader);
-            },
-            connectQP(){
-                this.connectWithParam(null, 'subscribeQP');
-            },
-            subscribeQP(param){
-                let subHeader = {
-                    userId: 'curUserId',
-                    accessToken: this.token
-                };//订阅时的头信息
-                let _this = this;
-                this.stompClient.subscribe('/queue/course/teacher/question/' + this.courseId, function (response) {
-                    console.log(response)
-                    _this.classAnswerSubmit(response);
-                }, subHeader);
-            },
-            //
+            // 
             classAnswerSubmit(resopnse){
-                console.log("===classAnswerSubmit===");
                 let self = this
                 let subjectivesubmit = JSON.parse(resopnse.body);
-                //console.log(subjectivesubmit.data.quType)
-                if(subjectivesubmit.data.quType){
+                // console.log(subjectivesubmit.hasOwnProperty('quType'))
+                if(subjectivesubmit.hasOwnProperty('quType')){
                 // for (let i =0; i<self.allquestions.length;i++){
                 // if (self.allquestions[i].questionId == AnswerSubmit.data.questionId){
                     self.btn = 0
@@ -395,8 +322,8 @@
                 // }
                 // }
                 for (let i =0;i<self.allstudents.length;i++){
-                    if(self.allstudents[i].studentId == subjectivesubmit.data.studentId){
-                        self.onestudentname = self.allstudents[i].studentName
+                    if(self.students[i].studentId == subjectivesubmit.data.studentId){
+                        self.onestudentname = self.students[i].studentName
                     }
                 }
                 setTimeout(function(){
@@ -406,7 +333,6 @@
             },
             //上课人数
             classNumber(response) {
-                console.log("===classNumber===");
                 console.log(response)
                 let classData = JSON.parse(response.body);
                 if (classData.data) {
@@ -415,7 +341,6 @@
             },
             //上课提交的答案
             classAnswer(response) {
-                console.log("===classAnswer===");
                 // console.log(response)
                 let _this = this;
                 let classData = JSON.parse(response.body);

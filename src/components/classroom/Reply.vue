@@ -38,21 +38,24 @@
         },
         data() {
             return {
-                select: []
+                select: [],
+                arr:[]
             }
         },
         watch: {
             reply: {
                 handler() {
+                    let w = ""
                     for (let i = 0; i < this.reply.length; i++) {
                         if (this.reply[i].id === this.id) {
                             this.select = this.reply[i].answer;
-                            for (let q =0;q<this.select.length;q++){
-                                let w = this.select[q].split("|").join("")
-                                this.select=[w]
+                            for (let q =0;q<this.reply[i].answer.length;q++){
+                                w = this.reply[i].answer[q].split("|").join("")
                             } 
                         }
                     }
+                    this.arr.push(w)
+                    this.select = this.arr
                 },
                 immediate: true,
                 deep: true
