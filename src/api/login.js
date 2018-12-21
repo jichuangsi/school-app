@@ -1,8 +1,9 @@
+/* eslint-disable no-unreachable */
 import axios from '../utils/axios'
 
 const apiUrl = 'http://school.jichuangsi.com:81/api/auth/login';
 
-export async function login(userAccount, userPwd) {
+export async function login(userAccount, userPwd ) {
     let res = await axios({
         method: 'POST',
         url: `${apiUrl}`,
@@ -19,4 +20,5 @@ export async function login(userAccount, userPwd) {
     } else {
         throw res.data.msg;
     }
+
 }

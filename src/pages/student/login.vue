@@ -13,6 +13,11 @@
                 <label class="iconfont">&#xe61a;</label>
                 <input type="password" placeholder="密码" v-model="password">
             </div>
+            <div class="pws-yn">
+            <div class="left" @click="selection">
+              <div :class="{'color':boolean==true}">✔</div>记住账号密码
+            </div>
+          </div>
             <div class="loginButton" @click="submitLogin">登录</div>
         </div>
     </div>
@@ -29,11 +34,37 @@
         data() {
             return {
                 account: '',          //账号
-                password: ''         //密码
+                password: '' ,      //密码
+                boolean: false
             }
         },
+        mounted(){
+            this.login()
+        },
         methods: {
+            login(){
+                let a = localStorage.getItem('account')
+                let b = localStorage.getItem('password')
+                if(a&&b){
+                    this.account = a
+                    this.password = b
+                    this.boolean = true
+                }
+            },
+            selection () {
+                if (this.boolean == false) {
+                    this.boolean = true
+                } else {
+                    this.boolean = false
+                    localStorage.removeItem('account')
+                    localStorage.removeItem('password')
+                }
+                },
             async submitLogin() {
+                if (this.boolean) {
+                    localStorage.setItem('account',this.account)
+                    localStorage.setItem('password',this.password)
+                }
                 try {
                     let userInfo = await login(this.account, this.password);
                     if (userInfo) {
@@ -56,6 +87,32 @@
 
 <style lang="scss" scoped>
     .login {
+        .pws-yn {
+        margin-top: 30px;
+        margin-bottom: 60px;
+        font-size: 1.8rem;
+        color: #bbbbbb;
+        display: flex;
+        justify-content:space-between;
+        .left {
+          display: flex;
+          div {
+            width: 1.4rem;
+            height: 1.4rem;
+            border: 1px solid #bbbbbb;
+            display: inline-block;
+            text-align: top;
+          }
+          .color {
+            background-color: #007aff;
+            color: #ffffff;
+          }
+        }
+        div {
+          height: 28px;
+          display: inline-block;
+        }
+      }
         .logo {
             padding: 8rem 0 5rem;
             text-align: center;

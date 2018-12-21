@@ -5,24 +5,24 @@ Vue.use(Router);
 
 export default new Router({
     routes: [
-         {
-             path: '/',
-             name: 'login',
-             component: () => import('@/pages/student/login'), //学生登录页面
-             meta: {
-                 keepAlive: false, //此组件不需要被缓存
-                 isBack: false     //用于判断上一个页面是哪个
-             }
-         },
-        // {
-        //     path: '/',
-        //     name: 'login',
-        //     component: () => import('@/pages/teacher/login'), //老师登录页面
-        //     meta: {
-        //         keepAlive: false, //此组件不需要被缓存
-        //         isBack: false     //用于判断上一个页面是哪个
-        //     }
-        // },
+        //  {
+        //      path: '/',
+        //      name: 'login',
+        //      component: () => import('@/pages/student/login'), //学生登录页面
+        //      meta: {
+        //          keepAlive: false, //此组件不需要被缓存
+        //          isBack: false     //用于判断上一个页面是哪个
+        //      }
+        //  },
+        {
+            path: '/',
+            name: 'login',
+            component: () => import('@/pages/teacher/login'), //老师登录页面
+            meta: {
+                keepAlive: false, //此组件不需要被缓存
+                isBack: false     //用于判断上一个页面是哪个
+            }
+        },
         {
             path: '/studentIndex',
             name: 'studentIndex',
