@@ -20,7 +20,7 @@
         </div>
         <PopupPic :questionPic="objective.questionPic"/>
         <div class="anwers" v-if="objective.questionStatus == 'FINISH'">
-          此题答案为:<span>{{objective.answer.split("|")[0]}}</span>
+          此题答案为:<span>{{objective.answer.split("|").join("")}}</span>
         </div>
         <div class="remind" v-html="objective.parse" v-if="objective.questionStatus == 'FINISH'">
         </div>
