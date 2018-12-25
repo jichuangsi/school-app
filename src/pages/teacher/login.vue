@@ -48,6 +48,8 @@
         },
         mounted() {
             this.login()
+            console.log(123)
+            console.log(this.userMobile)
         },
         methods: {
             login(){
@@ -66,7 +68,6 @@
                     this.boolean = false
                     localStorage.removeItem('account')
                     localStorage.removeItem('password')
-                    this.login()
                 }
                 },
             async submitLogin() {

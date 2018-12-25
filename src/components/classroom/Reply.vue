@@ -48,15 +48,14 @@
                 handler() {
                     let w = ""
                     for (let i = 0; i < this.reply.length; i++) {
+                        for (let q =0;q<this.reply[i].answer.length;q++){
+                                w = this.reply[i].answer[q].split("|").join("")
+                                this.reply[i].answer[q] = w
+                                }
                         if (this.reply[i].id === this.id) {
                             this.select = this.reply[i].answer;
-                            for (let q =0;q<this.reply[i].answer.length;q++){
-                                w = this.reply[i].answer[q].split("|").join("")
-                            } 
                         }
                     }
-                    if(this.arr.length === 0 || (this.arr.length > 0 && this.arr[this.arr.length - 1] !== w)) this.arr.push(w);
-                    this.select = this.arr
                 },
                 immediate: true,
                 deep: true
