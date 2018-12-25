@@ -55,7 +55,7 @@
                             } 
                         }
                     }
-                    this.arr.push(w)
+                    if(this.arr.length === 0 || (this.arr.length > 0 && this.arr[this.arr.length - 1] !== w)) this.arr.push(w);
                     this.select = this.arr
                 },
                 immediate: true,

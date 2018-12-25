@@ -232,7 +232,7 @@
                             this.newborder = 1
                             this.$emit("message","提示")
                             Toast({
-                                message: this.classList[i].courseName + '上课了',
+                                message: this.classList[0].courseName + '上课了',
                                 position: 'middle',
                                 duration: 5000
                             });
