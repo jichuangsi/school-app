@@ -33,6 +33,13 @@
                                 <i class="iconfont icon-icon-arrow-right2"></i>
                             </div>
                         </li>
+                    </router-link><router-link to="/studentCollection">
+                        <li>
+                            <div class="left">我的收藏</div>
+                            <div class="right">
+                                <i class="iconfont icon-icon-arrow-right2"></i>
+                            </div>
+                        </li>
                     </router-link>
                     <li @click="loginout">
                         <div class="left">退出登录</div>
@@ -160,7 +167,7 @@ export default {
   }
   .nav {
     width: 100%;
-    height: 49.7rem;
+    height: 58.7rem;
     padding-top: 23rem;
     margin-bottom: 8.2rem;
     ul {

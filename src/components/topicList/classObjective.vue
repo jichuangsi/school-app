@@ -1,5 +1,8 @@
 <template>
     <div class="topic_warp">
+      <div class="Collection" @click="Collection" v-if="objective.questionStatus == 'FINISH'">
+        <img :src="Collectionsrc" alt="">
+      </div>
         <div class="title">{{objective.title}}</div>
         <div class="topic" v-html="objective.questionContent">
             {{objective.questionContent}}
@@ -48,13 +51,25 @@ export default {
   data() {
     return {
       pointIndex: -1,
-      answers: ""
+      answers: "",
+      Collectionsrc:require('../../assets/未收藏.png'),
+      Collectiontype:false
     };
   },
   mounted() {
     // console.log(this.objective);
   },
   methods: {
+    //点击收藏
+    Collection(){
+      if(this.Collectiontype){
+      this.Collectiontype = false
+      this.Collectionsrc = require('../../assets/未收藏.png')
+      } else{
+      this.Collectiontype = true
+      this.Collectionsrc = require('../../assets/已收藏.png')
+      }
+    },
     selectsIndex(index,id) {
       let b =""
       if(this.answers.indexOf(index)>-1){
@@ -129,6 +144,17 @@ export default {
         width: 100%;
     }
   }*/
+  .Collection {
+    width: 2.5rem;
+    height: 2.5rem;
+    position: absolute;
+    right: 2rem;
+    z-index: 100;
+    img{
+      width: 100%;
+      height: 100%;
+    }
+  }
   .anwers{
    font-size: 18px;
     padding: 15px;

@@ -115,6 +115,7 @@
                     self.bigimg = //res.data.data.content;
                         "data:image/png;base64," +
                         res.data.data.content.replace(",", "");
+                        console.log(123)
                 })
             },*/
             //第一个饼图

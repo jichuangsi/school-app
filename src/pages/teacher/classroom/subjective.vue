@@ -40,7 +40,7 @@
     import {
         getCourseStatistics,
         getQuestion,
-        getQuestionStatisticsList,
+        getQuestionStatisticsList
         //getQuestionPic
     } from '@/api/teacher/classroom'
     import Loading from '../../../components/public/Loading'
@@ -232,11 +232,6 @@
                         float: right;
                         font-size: 2.5rem;
                         color: yellowgreen;
-                    }
-                    img {
-                        height: 100%;
-                        width: 100%;
-                        //padding: 4.5rem 2rem;
                     }
                 }
                 .remind {

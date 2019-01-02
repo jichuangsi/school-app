@@ -82,6 +82,15 @@ export default new Router({
                 keepAlive: false,
                 isBack: false
             }
+        },
+        {
+            path: '/studentCollection',
+            name: 'studentCollection',
+            component: () => import('@/pages/student/statistics/studentCollection'), //学生端我的收藏
+            meta: {
+                keepAlive: false,
+                isBack: false
+            }
         }, {
             path: '/teacherIndex',
             name: 'teacherIndex',

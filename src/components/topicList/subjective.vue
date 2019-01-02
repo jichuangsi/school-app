@@ -1,5 +1,8 @@
 <template>
     <div class="subjective">
+      <div class="Collection" @click="Collection" v-if="subjectiveTopic.questionStatus == 'FINISH'">
+        <img :src="Collectionsrc" alt="">
+      </div>
         <div class="topic_warp">
             <div class="title">{{subjectiveTopic.title}}</div>
             <div class="topic" v-html="subjectiveTopic.questionContent">
@@ -34,7 +37,8 @@ export default {
     subjectiveTopic: {
       type: Object,
       default: function() {
-        return {};
+        return {
+        };
       }
     }
   },
@@ -42,9 +46,21 @@ export default {
     return {
       /*bigimg: "",
       dsadsa: false*/
+      Collectionsrc:require('../../assets/未收藏.png'),
+      Collectiontype:false
     };
   },
   methods: {
+    //点击收藏
+    Collection(){
+      if(this.Collectiontype){
+      this.Collectiontype = false
+      this.Collectionsrc = require('../../assets/未收藏.png')
+      } else{
+      this.Collectiontype = true
+      this.Collectionsrc = require('../../assets/已收藏.png')
+      }
+    }
     /*picimgshow() {
       let self = this;
       self.dsadsa = false;
@@ -66,6 +82,17 @@ export default {
 <style lang="scss" scoped>
 .subjective {
   width: 100%;
+  .Collection {
+    width: 2.5rem;
+    height: 2.5rem;
+    position: absolute;
+    right: 2rem;
+    z-index: 100;
+    img{
+      width: 100%;
+      height: 100%;
+    }
+  }
   .anwers{
    font-size: 18px;
     line-height: 24px;
