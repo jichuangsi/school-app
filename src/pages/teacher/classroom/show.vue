@@ -127,12 +127,12 @@
         },
         mounted() {
             this.getTClassroom();
-            /*this.connect();
-            this.connect1();
+            this.connect();
+            /*this.connect1();
             this.connect2();*/
-            this.connectCS();
+            /*this.connectCS();
             this.connectQS();
-            this.connectQP();
+            this.connectQP();*/
             this.start();
         },
         methods: {
@@ -289,8 +289,13 @@
                     };//订阅时的头信息
                     //监听的路径以及回调。返回的subscription用于取消订阅
                     //监听课堂人数
-                    _this.subscription = _this.stompClient.subscribe('/queue/course/teacher/cs/' + _this.courseId, function (response) {
-                        _this.classNumber(response);
+                    _this.subscription = _this.stompClient.subscribe('/queue/course/teacher/course/' + _this.courseId, function (response) {
+                        console.log(response);
+                        if(response.body){
+                            _this.classData(response);
+                        }
+
+
                     }, subHeader);
                     /*//监听课堂提交答案
                     _this.stompClient.subscribe('/queue/course/teacher/qs/' + _this.courseId, function (response) {
@@ -302,6 +307,17 @@
                         _this.classAnswerSubmit(response);
                     }, subHeader);*/
                 });
+            },
+            classData(response) {
+                let classData = JSON.parse(response.body);
+                if(classData.data&&classData.data.notifyType){
+                    console.log(classData.data.notifyType);
+                    switch(classData.data.notifyType){
+                        case "CourseStatistics": this.classNumber(response); break;
+                        case "QuestionStatistics": this.classAnswer(response); break;
+                        case "StudentAnswer": this.classAnswerSubmit(response); break;
+                    }
+                }
             },
             //连接方法
             connect1() {
