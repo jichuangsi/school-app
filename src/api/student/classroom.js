@@ -133,3 +133,33 @@ export function sendSubjectPicByString(content) {
         headers: {'accessToken': localStorage.getItem('token')}
     });
 }
+
+//根据问题id添加收藏
+export function addFavorQuestion(questionId) {
+    return axios({
+        method: 'put',
+        url: `${apiUrl}addFavorQuestion/${questionId}`,
+        data: {
+            questionId
+        },
+        headers: {'accessToken': localStorage.getItem('token')}
+    });
+}
+
+//根据问题id删除收藏
+export function removeFavorQuestion(questionId) {
+    return axios({
+        method: 'DELETE',
+        url: `${apiUrl}removeFavorQuestion/${questionId}`,
+        headers: {'accessToken': localStorage.getItem('token')}
+    });
+}
+
+//获取收藏列表
+export function listFavorQuestions() {
+    return axios({
+        method: 'get',
+        url: `${apiUrl}listFavorQuestions`,
+        headers: {'accessToken': localStorage.getItem('token')}
+    });
+}

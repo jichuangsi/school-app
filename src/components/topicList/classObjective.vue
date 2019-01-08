@@ -23,7 +23,7 @@
         </div>
         <PopupPic :questionPic="objective.questionPic"/>
         <div class="anwers" v-if="objective.questionStatus == 'FINISH'">
-          此题答案为:<span v-html="objective.answer.split('|').join('')"></span>
+          此题答案为:<span v-html="objective.answer.split('|').join(',')"></span>
         </div>
         <div class="remind" v-html="objective.parse" v-if="objective.questionStatus == 'FINISH'">
         </div>
@@ -35,8 +35,9 @@
 </template>
 
 <script>
-//import { getQuestionPic } from "@/api/teacher/classroom";
+import { addFavorQuestion, removeFavorQuestion } from "@/api/student/classroom";
 import PopupPic from "./PopupPic";
+import { Toast } from "mint-ui";
 export default {
   name: "classObjective",
     components: {PopupPic},
@@ -57,17 +58,40 @@ export default {
     };
   },
   mounted() {
-    // console.log(this.objective);
+      if(this.objective.favor){
+          this.Collectiontype = true
+          this.Collectionsrc = require('../../assets/已收藏.png')
+      }
   },
   methods: {
     //点击收藏
     Collection(){
       if(this.Collectiontype){
-      this.Collectiontype = false
-      this.Collectionsrc = require('../../assets/未收藏.png')
+          removeFavorQuestion(this.objective.questionId).then(res => {
+              if (res.data.code === '0010') {
+                  this.Collectiontype = false
+                  this.Collectionsrc = require('../../assets/未收藏.png')
+              }else{
+                  Toast({
+                      message: res.data.msg,
+                      position: "middle",
+                      duration: 1000
+                  });
+              }
+          });
       } else{
-      this.Collectiontype = true
-      this.Collectionsrc = require('../../assets/已收藏.png')
+          addFavorQuestion(this.objective.questionId).then(res => {
+              if (res.data.code === '0010') {
+                  this.Collectiontype = true
+                  this.Collectionsrc = require('../../assets/已收藏.png')
+              }else{
+                  Toast({
+                      message: res.data.msg,
+                      position: "middle",
+                      duration: 1000
+                  });
+              }
+          });
       }
     },
     selectsIndex(index,id) {

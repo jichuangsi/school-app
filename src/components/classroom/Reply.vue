@@ -49,7 +49,7 @@
                     let w = ""
                     for (let i = 0; i < this.reply.length; i++) {
                         for (let q =0;q<this.reply[i].answer.length;q++){
-                                w = this.reply[i].answer[q].split("|").join("")
+                                w = this.reply[i].answer[q].split("|").join(",")
                                 this.reply[i].answer[q] = w
                                 }
                         if (this.reply[i].id === this.id) {

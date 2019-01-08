@@ -28,8 +28,9 @@
 <!--主观题-->
 
 <script>
-//import { getQuestionPic } from "@/api/student/classroom";
-import PopupPic from "./PopupPic";
+    import { addFavorQuestion, removeFavorQuestion } from "@/api/student/classroom";
+    import PopupPic from "./PopupPic";
+    import { Toast } from "mint-ui";
 export default {
   name: "subjective",
     components: {PopupPic},
@@ -50,17 +51,43 @@ export default {
       Collectiontype:false
     };
   },
+  mounted() {
+     if(this.subjectiveTopic.favor){
+        this.Collectiontype = true
+        this.Collectionsrc = require('../../assets/已收藏.png')
+     }
+  },
   methods: {
     //点击收藏
-    Collection(){
-      if(this.Collectiontype){
-      this.Collectiontype = false
-      this.Collectionsrc = require('../../assets/未收藏.png')
-      } else{
-      this.Collectiontype = true
-      this.Collectionsrc = require('../../assets/已收藏.png')
+      Collection(){
+          if(this.Collectiontype){
+              removeFavorQuestion(this.subjectiveTopic.questionId).then(res => {
+                  if (res.data.code === '0010') {
+                      this.Collectiontype = false
+                      this.Collectionsrc = require('../../assets/未收藏.png')
+                  }else{
+                      Toast({
+                          message: res.data.msg,
+                          position: "middle",
+                          duration: 1000
+                      });
+                  }
+              });
+          } else{
+              addFavorQuestion(this.subjectiveTopic.questionId).then(res => {
+                  if (res.data.code === '0010') {
+                      this.Collectiontype = true
+                      this.Collectionsrc = require('../../assets/已收藏.png')
+                  }else{
+                      Toast({
+                          message: res.data.msg,
+                          position: "middle",
+                          duration: 1000
+                      });
+                  }
+              });
+          }
       }
-    }
     /*picimgshow() {
       let self = this;
       self.dsadsa = false;
