@@ -33,9 +33,18 @@
                                 <i class="iconfont icon-icon-arrow-right2"></i>
                             </div>
                         </li>
-                    </router-link><router-link to="/studentCollection">
+                    </router-link>
+                    <router-link to="/studentCollection">
                         <li>
                             <div class="left">我的收藏</div>
+                            <div class="right">
+                                <i class="iconfont icon-icon-arrow-right2"></i>
+                            </div>
+                        </li>
+                    </router-link>
+                    <router-link to="/mistakescollection">
+                        <li>
+                            <div class="left">错题集</div>
                             <div class="right">
                                 <i class="iconfont icon-icon-arrow-right2"></i>
                             </div>
@@ -167,7 +176,7 @@ export default {
   }
   .nav {
     width: 100%;
-    height: 58.7rem;
+    height: 68.7rem;
     padding-top: 23rem;
     margin-bottom: 8.2rem;
     ul {

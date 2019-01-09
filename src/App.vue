@@ -50,7 +50,7 @@
                 const routerDeep = ['/studentIndex', '/teacher', '/teacherMy', '/classroom', '/myShow',
                     '/objectiveWork', '/subjectiveWork', '/TClassroom', '/objectiveQuestions',
                     '/subjectiveDetails', '/subjectiveShow', '/TStudentList', '/TObjective', '/TSubjective', 'teacherMy',
-                    '/teacherInformation', '/teacherenquiry', 'studentenquiry','teacherhomework', 'principal','studentCollection'];
+                    '/teacherInformation', '/teacherenquiry', 'studentenquiry','teacherhomework', 'principal','studentCollection','mistakescollection','Wrong','raising'];
                 //找到to.path和from.path在routerDeep数组中的下标
                 this.pageUrl = this.$route.path;
                 console.log("当前路由:" + this.$route.path);

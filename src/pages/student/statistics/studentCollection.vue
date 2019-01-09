@@ -126,6 +126,7 @@
         background-color: #80d59c;
         color: #ffffff;
         font-size: 2rem;
+        position: relative;
         .iconfont {
           font-size: 2rem;
           display: inline-block;

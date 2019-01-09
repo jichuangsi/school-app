@@ -91,7 +91,34 @@ export default new Router({
                 keepAlive: false,
                 isBack: false
             }
-        }, {
+        },
+        {
+            path: '/mistakescollection',
+            name: 'mistakescollection',
+            component: () => import('@/pages/student/statistics/mistakescollection'), //学生端错题集
+            meta: {
+                keepAlive: false,
+                isBack: false
+            }
+        }, 
+        {
+            path: '/Wrong',
+            name: 'Wrong',
+            component: () => import('@/pages/student/statistics/Wrong'), //学生端错题集
+            meta: {
+                keepAlive: false,
+                isBack: false
+            }
+        }, 
+        {
+            path: '/raising',
+            name: 'raising',
+            component: () => import('@/pages/student/statistics/raising'), //学生端错题集
+            meta: {
+                keepAlive: false,
+                isBack: false
+            }
+        },  {
             path: '/teacherIndex',
             name: 'teacherIndex',
             component: () => import('@/pages/teacher'), // 老师端三个首页
