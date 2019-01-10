@@ -16,6 +16,11 @@ const getters = {
     //老师课堂题目标题
     title: state => state.topic.title,
     studentId: state => state.topic.studentId,
+    //错题集相关
+    incKnowledgeId: state => state.incorrectQuestions.knowledgeId,
+    incKnowledge: state => state.incorrectQuestions.knowledge,
+    incQuestions: state => state.incorrectQuestions.questions,
+    //错题集相关
     //老师课堂id
     courseId: state => state.teacher.courseId,
     userPassword: state => state.login.userPassword,

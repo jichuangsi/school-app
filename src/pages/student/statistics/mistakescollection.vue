@@ -43,6 +43,24 @@
                 </div>
             </div>
           </swiper-slide>
+            <swiper-slide>
+                <div class="box">
+                    <img src="../../../assets/历史_03.png" alt="">
+                    <div class="text">
+                        <span>历史</span>
+                        <span>共错题{{total}}道，涉及{{involve}}个知识点</span>
+                    </div>
+                </div>
+            </swiper-slide>
+            <swiper-slide>
+                <div class="box">
+                    <img src="../../../assets/地理_03.png" alt="">
+                    <div class="text">
+                        <span>地理</span>
+                        <span>共错题{{total}}道，涉及{{involve}}个知识点</span>
+                    </div>
+                </div>
+            </swiper-slide>
           <swiper-slide>
             <div class="box">
                 <img src="../../../assets/政治_03.png" alt="">
@@ -52,6 +70,15 @@
                 </div>
             </div>
           </swiper-slide>
+            <swiper-slide>
+                <div class="box">
+                    <img src="../../../assets/生物_03.png" alt="">
+                    <div class="text">
+                        <span>生物</span>
+                        <span>共错题{{total}}道，涉及{{involve}}个知识点</span>
+                    </div>
+                </div>
+            </swiper-slide>
           <swiper-slide>
             <div class="box">
                 <img src="../../../assets/物理_03.png" alt="">
@@ -61,24 +88,15 @@
                 </div>
             </div>
           </swiper-slide>
-          <swiper-slide>
-            <div class="box">
-                <img src="../../../assets/生物_03.png" alt="">
-                <div class="text">
-                    <span>生物</span>
-                    <span>共错题{{total}}道，涉及{{involve}}个知识点</span>
+            <swiper-slide>
+                <div class="box">
+                    <img src="../../../assets/化学_03.png" alt="">
+                    <div class="text">
+                        <span>化学</span>
+                        <span>共错题{{total}}道，涉及{{involve}}个知识点</span>
+                    </div>
                 </div>
-            </div>
-          </swiper-slide>
-          <swiper-slide>
-            <div class="box">
-                <img src="../../../assets/历史_03.png" alt="">
-                <div class="text">
-                    <span>历史</span>
-                    <span>共错题{{total}}道，涉及{{involve}}个知识点</span>
-                </div>
-            </div>
-          </swiper-slide>
+            </swiper-slide>
           <!-- Optional controls -->
           <div
             class="swiper-pagination "
@@ -97,7 +115,7 @@
 
       </div>
       <div class="boxnav">
-          <div class="clearfix" @click="mistakescollection(item.name)" v-for="(item,index) in involvenav" :key="index">
+          <div class="clearfix" @click="mistakescollection(item.name,item.id)" v-for="(item,index) in involvenav" :key="index">
               <div class="fl">{{item.name}}</div>
               <div class="fr">
                   <i class="iconfont icon-icon-arrow-right2"></i>
@@ -111,24 +129,24 @@
 </template>
 
 <script>
+    import {listIncorrectQuestions} from '@/api/student/classroom'
+    import {Toast} from 'mint-ui'
+    import store from '@/store'
+
+    let vm = null;
 export default {
   name: "mistakescollection",
   components: {},
   data() {
     return {
-        total:'50',//错题数量
-        involve:'5',//涉及知识点个数
-        involvenav:[
-            {name:'语文知识点一',number:10},
-            {name:'语文知识点二',number:10},
-            {name:'语文知识点三',number:10},
-            {name:'语文知识点四',number:10},
-            {name:'语文知识点五',number:10}
-        ],//涉及知识点列表
+        total:'0',//错题数量
+        involve:'0',//涉及知识点个数
+        involvenav:[],//涉及知识点列表
+        involveStored:[],//页面缓存
       swiperOption: {
         notNextTick: true,
         //循环
-        loop: true,
+        loop: false,
         //设定初始化时slide的索引
         initialSlide: 0,
         //自动播放
@@ -148,29 +166,15 @@ export default {
         // grabCursor : true,
         //滑动之后回调函数
         on: {
-          slideChangeTransitionEnd: function() {
-            console.log(this.activeIndex); //切换结束时，告诉我现在是第几个slide
-            if(this.activeIndex==1 || this.activeIndex==8){
-                // 语文
-            }
-            if(this.activeIndex==2){
-                // 数学
-            }
-            if(this.activeIndex==3){
-                // 英文
-            }
-            if(this.activeIndex==4){
-                // 政治
-            }
-            if(this.activeIndex==5){
-                // 物理
-            }
-            if(this.activeIndex==6){
-                // 生物
-            }
-            if(this.activeIndex==7 || this.activeIndex==0){
-                // 历史
-            }
+            slideChange: function(){
+                //console.log(this.activeIndex);
+                //console.log(this.realIndex);
+            },
+            slideChangeTransitionStart: function() {
+            //console.log(this.activeIndex); //切换结束时，告诉我现在是第几个slide
+
+              let subjectId = this.realIndex + 1;
+              vm.getIncorrectQuestions(subjectId);
           }
         },
         //左右点击
@@ -187,12 +191,43 @@ export default {
       // swiperSlides: [1, 2, 3, 4]
     };
   },
-  mounted() {},
+    created() {
+        vm = this;
+    },
+    mounted(){
+      this.getIncorrectQuestions(1);
+    },
   methods: {
+      getIncorrectQuestions(subjectId, knowledgeId){
+          let _this = this;
+          listIncorrectQuestions(subjectId, knowledgeId).then(res => {
+              console.log(res);
+              if(res.data.code === "0010"){
+                  let questions = res.data.data;
+                  let count = 0;
+                  questions.forEach((obj, index)=>{
+                      count += obj.count;
+                      _this.involvenav.push({name:obj.knowledge,number:obj.count,id:obj.knowledgeId});
+                      _this.involveStored.push({id:obj.knowledgeId,questions:obj.questions});
+                  });
+                  _this.total = count;
+                  _this.involve = questions.length;
+              }else{
+                  Toast(res.data.msg);
+              }
+          });
+      },
     back() {
       this.$router.go(-1); //返回上一层
     },
-    mistakescollection(msgtext){
+    mistakescollection(msgtext,id){
+        this.involveStored.forEach((obj,index)=>{
+            if(obj.id === id){
+                store.commit('SET_KNOWLEDGEID', obj.id);
+                store.commit('SET_KNOWLEDGE', msgtext);
+                store.commit('SET_QUESTIONS', obj.questions);
+            }
+        });
         this.$router.push({
                     path: '@/pages/student/statistics/Wrong',
                     name: 'Wrong',

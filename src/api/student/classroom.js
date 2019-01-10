@@ -163,3 +163,32 @@ export function listFavorQuestions() {
         headers: {'accessToken': localStorage.getItem('token')}
     });
 }
+
+//根据科目获取错题集
+export function listIncorrectQuestions(subjectId, knowledgeId) {
+    return axios({
+        method: 'post',
+        url: `${apiUrl}collectIncorrectQuestions`,
+        //url: `http://127.0.0.1:8888/COURSESERVICE/student/collectIncorrectQuestions`,
+        data: {
+            subjectId,
+            knowledgeId
+        },
+        headers: {'accessToken': localStorage.getItem('token')}
+    });
+}
+
+//根据知识点，题型，难度推送题目
+export function aiPushQuestions(knowledgeId, qtypeId, diff) {
+    return axios({
+        method: 'post',
+        url: `${apiUrl}aiPushQuestions`,
+        //url: `http://127.0.0.1:8888/COURSESERVICE/student/aiPushQuestions`,
+        data: {
+            knowledgeId,
+            qtypeId,
+            diff
+        },
+        headers: {'accessToken': localStorage.getItem('token')}
+    });
+}

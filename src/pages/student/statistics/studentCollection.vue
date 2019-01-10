@@ -10,7 +10,10 @@
       </div>
     </div>
 
-    <div class="class_topic_warp" v-for="(item,index) in topicList" :key="index">
+    <div class="class_topic_warp" v-for="(item,index) in topicList" :key="index" v-if="pageShow">
+      <div class="Collection" @click="Collection(item.questionId)">
+        <img :src="Collectionsrc" alt="">
+      </div>
       <!--客观题-->
       <div class="objective_warp" v-if="item.quesetionType==='objective'">
         <div class="topic" v-html="item.questionContent">
@@ -57,25 +60,32 @@
 
       </div>
     </div>
-
+    <loading v-if="loading"/>
   </div>
 </template>
 
 <script>
-    import {listFavorQuestions, getSubjectPic} from "@/api/student/classroom";
+    import {listFavorQuestions, getSubjectPic, removeFavorQuestion} from "@/api/student/classroom";
     import PopupPic from "../../../components/topicList/PopupPic";
     import Board from "../../../components/board/Board";
+    import Loading from '../../../components/public/Loading';
+    import { Toast } from "mint-ui";
     export default {
         name: "studentCollection",
         components: {
             Board,
-            PopupPic
+            PopupPic,
+            Loading
         },
         data() {
           return {
               //题目列表
               topicList: [],
-              objectiveAnswer: []
+              objectiveAnswer: [],
+              Collectionsrc:require('../../../assets/已收藏.png'),
+              Collectiontype:true,
+              loading: true,                               //页面加载状态
+              pageShow: false                            //页面内容显示
           };
         },
         mounted() {
@@ -87,6 +97,8 @@
                 let res = await listFavorQuestions();
                 console.log(res);
                 self.topicList = res.data.data;
+                self.pageShow = true;
+                self.loading = false;
                 for (let index = 0; index < self.topicList.length; index++) {
                     let t = self.topicList[index];
                     if (t.questionStatus === "FINISH") {
@@ -111,6 +123,23 @@
             conversion(index) {
                 let num = 65 + index;
                 return String.fromCharCode(num);
+            },
+              //点击收藏
+              Collection(questionId){
+                if(this.Collectiontype){
+                    let self = this;
+                    removeFavorQuestion(questionId).then(res => {
+                        if (res.data.code === '0010') {
+                            self.getFavorList();
+                        }else{
+                            Toast({
+                                message: res.data.msg,
+                                position: "middle",
+                                duration: 1000
+                            });
+                        }
+                    });
+                }
             }
         }
     };
@@ -144,6 +173,19 @@
       width: 100%;
       height: auto;
       margin-bottom: 13px;
+      margin-top: 13px;
+      .Collection {
+        width: 2.5rem;
+        height: 2.5rem;
+        position: absolute;
+        right: 2rem;
+        z-index: 100;
+        margin-top: 13px;
+        img{
+          width: 100%;
+          height: 100%;
+        }
+      }
       .objective_warp {
         position: relative;
         width: 100%;

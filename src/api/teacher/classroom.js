@@ -119,6 +119,20 @@ export function getSubjectPic(stubForSubjective) {
     });
 }
 
+//课堂主观手寫板图片
+export function getAttachment(sub) {
+    return axios({
+        method: 'POST',
+        url: `${apiUrl}getAttachment`,
+        //url: `http://127.0.0.1:8888/COURSESERVICE/teacher/getAttachment`,
+        data: {
+            sub
+        },
+        responseType:'blob',
+        headers: {'accessToken': localStorage.getItem('token')}
+    });
+}
+
 //课堂题目图片
 export function getQuestionPic(stubForSubjective) {
     return axios({

@@ -9,63 +9,69 @@
           <div class="text">{{msg}}</div>
         </div>
       </div>
-      <div class="center">
+      <div class="center" v-if="pageShow">
           <div class="one">智能推题</div>
-          <div class="class_topic_warp" v-for="(item,index) in topicList" :key="index">
+          <div class="class_topic_warp" v-for="(item,index) in addTopicList" :key="index">
             <div class="objective_warp" v-if="item.quesetionType==='objective'">
               <div class="topic" v-html="item.questionContent">
                 {{item.questionContent}}
               </div>
-              <div class="select clearfix" @click="Selection(index)" v-for="(item1,index) in item.options" :key="index" v-if="item.answer.length==1">
-                <div class="round">
-                  <span class="point" v-if="Selectionanswer === conversion(index) &&Selectionshow"></span>
-                  <span class="point" v-if="item.answerForStudent.answerForObjective === conversion(index) &&Selectionshow==false"></span>
+              <div class="select clearfix" @click="Selection(index1)" v-for="(item1,index1) in item.options" :key="index1" v-if="item.answer.length==1">
+                <div class="round" v-if="index===addTopicList.length-1">
+                  <span class="point" v-if="Selectionanswer === conversion(index1) &&Selectionshow"></span>
                 </div>
-                <div class="option">{{conversion(index)}}.</div>
+                <div class="option">{{conversion(index1)}}.</div>
                 <div class="text" v-html="item1">{{item1}}</div>
               </div>
-              <div class="select clearfix" @click="Selections(index,)" v-for="(item2,index) in item.options" :key="index" v-if="item.answer.length>1">
-                <div class="round" >
-                    <span class="point" v-for="(item3,index1) in Selectionanswer.split('|')" :key="index1" v-if="item3 === conversion(index) &&Selectionshow"></span>
-                  <span class="point" v-for="(item3,index1) in item.answerForStudent.answerForObjective.split('|')" :key="index1" v-if="item3 === conversion(index) &&Selectionshow==false"></span>
-                </div>
-                <div class="option">{{conversion(index)}}.</div>
+              <div class="select clearfix" @click="Selections(index2)" v-for="(item2,index2) in item.options" :key="index2" v-if="item.answer.length>1">
+                <div class="round" v-if="index===addTopicList.length-1">
+                    <span class="point" v-for="(item3,index3) in Selectionanswer.split('|')" :key="index3" v-if="item3 === conversion(index2) &&Selectionshow"></span>
+                  </div>
+                <div class="option">{{conversion(index2)}}.</div>
                 <div class="text" v-html="item2">{{item2}}</div>
               </div>
               <PopupPic :questionPic="item.questionPic"/>
-                <div v-if="Selectionshow==false">
-                    <div class="anwers">
-                        答案错误:<span v-html="item.answer.split('|').join(',')"></span>
+                <div v-if="item.answerForStudent">
+                    <div class="anwers" v-if="item.answerForStudent">
+                        你的答案:<span v-html="item.answerForStudent.split('|').join(',')"></span>
                     </div>
-                    <div class="anwers">
+                    <div class="anwers" v-if="item.answer">
                         正确答案:<span v-html="item.answer.split('|').join(',')"></span>
                     </div>
                     <div class="remindbtn clearfix"><span @click="remindclick(index)">答案解析</span></div>
-                    <div class="remind" v-html="item.parse" v-if="item.parse!=''&&remindshow&&remindid==index">
+                    <div class="remind" v-html="item.parse" v-if="item.parse&&remindshow&&remindid==index">
                     </div>
-                    <div class="remind" v-if="item.parse==''&&remindshow&&remindid==index">
+                    <div class="remind" v-if="!item.parse&&remindshow&&remindid==index">
                         此题没有解析
                     </div>
                 </div>
-                <div @click="Selectionclick()" class="btn" v-if="Selectionshow"><span>提交答案</span></div>
+                <div @click="Selectionclick(item.answer)" class="btn" v-if="!item.answerForStudent"><span>提交答案</span></div>
             </div>
           </div>
             <div class="btn2" @click="btnclick" v-if="Selectionshow==false">{{btn2text}}</div>
       </div>
+        <loading v-if="loading"/>
     </div>
   </template>
 
   <script>
-      import {listFavorQuestions, getSubjectPic} from "@/api/student/classroom";
+      import {aiPushQuestions, getSubjectPic} from "@/api/student/classroom";
       import PopupPic from "../../../components/topicList/PopupPic";
+      import {mapGetters} from 'vuex';
+      import {Toast} from 'mint-ui';
+      import Loading from '../../../components/public/Loading';
   export default {
     name: "raising",
     components: {
-      PopupPic
+        PopupPic,
+        Loading
     },
     data() {
       return {
           msg:'',
+          questionId:'',
+          diff:'',
+          qtypeId:'',
           Selectionanswer:'',//单选
           Selectiontext:'',
           Selectionshow:true,
@@ -73,20 +79,41 @@
           remindid:'',
           btn2text:'',
           frequency:3,
-                topicList: [],
-                objectiveAnswer: []
+          topicList: [],
+          addTopicList: [],
+          objectiveAnswer: [],
+          loading: true,                               //页面加载状态
+          pageShow: false                            //页面内容显示
       };
     },
+      computed: {
+          //vuex 调用
+          ...mapGetters([
+              'incKnowledgeId',
+              'incKnowledge',
+              'incQuestions'
+          ])
+      },
     mounted() {
-        this.msg = this.$route.query.msg+'·智能推题'
-        this.getFavorList();
+        this.msg = this.$route.query.msg+'·智能推题';
+        this.questionId = this.$route.query.questionId;
+        this.pushQuestions();
     },
     methods: {
-        async getFavorList() {
+        async pushQuestions() {
                   let self = this;
-                  let res = await listFavorQuestions();
+                  self.incQuestions.forEach((obj, index)=>{
+                      if(obj.questionId === self.questionId){
+                          self.diff = obj.difficulty;
+                          self.qtypeId = obj.questionTypeInCN;
+                      }
+                  });
+
+                  let res = await aiPushQuestions(self.incKnowledgeId, self.qtypeId, self.diff);
                   console.log(res);
+                  if(!res.data||!res.data.data||res.data.code!=="0010"){Toast("没有合适题目推送！");return;}
                   self.topicList = res.data.data;
+                  self.frequency = self.topicList.length;
                   for (let index = 0; index < self.topicList.length; index++) {
                       let t = self.topicList[index];
                       if (t.questionStatus === "FINISH") {
@@ -104,6 +131,9 @@
                           }
                       }
                   }
+                self.addTopicList.push(self.topicList[self.addTopicList.length]);
+                self.pageShow = true;
+                self.loading = false;
               },
               conversion(index) {
                   let num = 65 + index;
@@ -145,13 +175,15 @@
                 this.remindshow = true
                 }
               },
-              Selectionclick(){
+              Selectionclick(answer){
                   this.Selectionshow = false
                 //   用于对比当前答案的正确与否
                 //答案正确
-                if(this.topicList[0].answerForStudent.answerForObjective==this.Selectionanswer){
+                if(answer==this.Selectionanswer){
                     this.btn2text = '返回错题集'
                 } else {
+                    this.addTopicList[this.addTopicList.length-1].answerForStudent = this.Selectionanswer;
+                    this.Selectiontext = "";
                     this.frequency = this.frequency-1
                     this.btn2text = '再推一题（剩余'+this.frequency+'次'
                     if(this.frequency == 0) {
@@ -167,8 +199,9 @@
                     });
                   } else {
                     if(this.frequency>0){
-                        this.Selectionshow = true
-                        this.Selectionanswer = ''
+                        this.Selectionshow = true;
+                        this.Selectionanswer = '';
+                        this.addTopicList.push(this.topicList[this.addTopicList.length]);
                     }
                   }
               }

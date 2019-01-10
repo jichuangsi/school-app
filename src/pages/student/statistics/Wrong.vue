@@ -14,7 +14,7 @@
           <div class="two" @click="timeshow=!timeshow">{{time}}
             <span></span>
             <ul :class="{'ulheight':timeshow}">
-              <li v-for="(item,index) in timenav" @click.stop="timeclick(item)" :key="index">{{item}}</li>
+              <li v-for="(item,index) in timenav" @click.stop="timeclick(item, index)" :key="index">{{item}}</li>
             </ul>
           </div>
           <div class="one">错题详情</div>
@@ -38,30 +38,29 @@
                 <div class="text" v-html="item2">{{item2}}</div>
               </div>
               <PopupPic :questionPic="item.questionPic"/>
-              <div class="anwers">
+              <!--<div class="anwers">
                 答案错误:<span v-html="item.answer.split('|').join(',')"></span>
-              </div>
+              </div>-->
               <div class="anwers">
                 正确答案:<span v-html="item.answer.split('|').join(',')"></span>
               </div>
               <div class="remindbtn clearfix"><span @click="remindclick(index)">答案解析</span></div>
-              <div class="remind" v-html="item.parse" v-if="item.parse!=''&&remindshow&&remindid==index">
+              <div class="remind" v-html="item.parse" v-if="item.parse&&remindshow&&remindid==index">
               </div>
-              <div class="remind" v-if="item.parse==''&&remindshow&&remindid==index">
+              <div class="remind" v-if="!item.parse&&remindshow&&remindid==index">
                 此题没有解析
               </div>
+              <div class="raising" @click="raising(item.questionId)">智能推题</div>
             </div>
           </div>
-      </div>
-      <div class="foot">
-              <div class="raising" @click="raising">智能推题</div>
       </div>
     </div>
   </template>
 
   <script>
-      import {listFavorQuestions, getSubjectPic} from "@/api/student/classroom";
+      import {getSubjectPic} from "@/api/student/classroom";
       import PopupPic from "../../../components/topicList/PopupPic";
+      import {mapGetters} from 'vuex'
   export default {
     name: "Wrong",
     components: {
@@ -72,22 +71,32 @@
           msg:'',
           remindshow:false,
           remindid:'',
-          time:'本周错题',
+          time:'全部',
           timeshow:false,
-          timenav:['本周错题','本月错题','本学期错题'],
-                topicList: [],
-                objectiveAnswer: []
+          timenav:['全部','一周前错题','一月前错题'],
+          topicList: [],
+          objectiveAnswer: []
       };
     },
+      computed: {
+          //vuex 调用
+          ...mapGetters([
+              'incKnowledgeId',
+              'incKnowledge',
+              'incQuestions'
+          ])
+      },
     mounted() {
-        this.msg = this.$route.query.msgtext
-              this.getFavorList();
+        this.msg = this.$route.query.msgtext;
+        this.listQuestions();
     },
-    methods: {async getFavorList() {
+    methods: {
+              async listQuestions() {
+                  console.log(this.incKnowledgeId);
+                  console.log(this.incKnowledge);
+                  console.log(this.incQuestions);
                   let self = this;
-                  let res = await listFavorQuestions();
-                  console.log(res);
-                  self.topicList = res.data.data;
+                  self.topicList = this.incQuestions;
                   for (let index = 0; index < self.topicList.length; index++) {
                       let t = self.topicList[index];
                       if (t.questionStatus === "FINISH") {
@@ -117,22 +126,44 @@
                 if(this.remindid == index){
                   this.remindshow = !this.remindshow
                 }else {
-                this.remindid = index
-                this.remindshow = true
+                  this.remindid = index
+                  this.remindshow = true
                 }
               },
-              raising(){
+              raising(questionId){
                 this.$router.push({
                     path: '@/pages/student/statistics/raising',
                     name: 'raising',
                     query:{
-                        msg:this.msg
+                        msg:this.msg,
+                        questionId:questionId
                     }
                 });
               },
-              timeclick(val){
-                this.timeshow = false
-                this.time = val
+              timeclick(name, index){
+                this.timeshow = false;
+                if(this.time !== name){
+                    this.time = name;
+                    this.topicList = [];
+                    let now = new Date().getTime();
+                    if(index===1){
+                        let prevWeek = now - 7*86400000;
+                        this.incQuestions.forEach((obj, index)=>{
+                            if(obj.answerForStudent.createTime >= prevWeek){
+                                this.topicList.push(obj);
+                            }
+                        });
+                    }else if(index===2){
+                        let prevMonth = now - 30*86400000;
+                        this.incQuestions.forEach((obj, index)=>{
+                            if(obj.answerForStudent.createTime >= prevMonth){
+                                this.topicList.push(obj);
+                            }
+                        });
+                    }else{
+                        this.topicList = this.incQuestions;
+                    }
+                }
               }
     }
   };
@@ -317,14 +348,6 @@
         }
       }
     }
-    .foot {
-      position: fixed;
-      bottom: 0px;
-      width: 100%;
-      height: 5rem;
-      background-color: #fff;
-      box-shadow: 0.5rem 0.5rem 0.5rem 1rem #b2b2b2;
-      z-index: 100;
               .raising {
                 display: block;
                 width: 14rem;
@@ -337,6 +360,5 @@
                 font-size: 2rem;
                 background: linear-gradient(to right, #08EBD0, #28A1EC);
               }
-    }
   }
   </style>
