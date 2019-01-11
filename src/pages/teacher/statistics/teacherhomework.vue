@@ -61,7 +61,7 @@ export default {
   data() {
     return {
       current: 1,
-      nav: ["全科", "语文", "数学", "英语", "政治", "地理", "历史"],
+      nav: ['全科', '语文', '数学', '英语', '政治', '地理', '历史', '生物', '物理', '化学'],
       value: "语 文",
       Total: "46",
       Submission: "46",
@@ -96,7 +96,17 @@ export default {
             }
           ]
         }
-      ]
+      ],
+      datalist:[
+              {
+                value: 45,
+                name: "客观题"
+              },
+              {
+                value: 20,
+                name: "主观题"
+              }
+            ]
     };
   },
   mounted() {
@@ -107,13 +117,144 @@ export default {
     allocation(item, index) {
       this.current = index;
       this.value = item;
+      if(index == 0){
+        this.datalist=[
+              {
+                value: 45,
+                name: "客观题"
+              },
+              {
+                value: 55,
+                name: "主观题"
+              }
+            ]
+            this.drawLine()
+      }
+      if(index == 1){
+        this.datalist=[
+              {
+                value: 45,
+                name: "客观题"
+              },
+              {
+                value: 20,
+                name: "主观题"
+              }
+            ]
+            this.drawLine()
+      }
+      if(index == 2){
+        this.datalist=[
+              {
+                value: 35,
+                name: "客观题"
+              },
+              {
+                value: 20,
+                name: "主观题"
+              }
+            ]
+            this.drawLine()
+      }
+      if(index == 3){
+        this.datalist=[
+              {
+                value: 20,
+                name: "客观题"
+              },
+              {
+                value: 30,
+                name: "主观题"
+              }
+            ]
+            this.drawLine()
+      }
+      if(index == 4){
+        this.datalist=[
+              {
+                value: 45,
+                name: "客观题"
+              },
+              {
+                value: 45,
+                name: "主观题"
+              }
+            ]
+            this.drawLine()
+      }
+      if(index == 5){
+        this.datalist=[
+              {
+                value: 25,
+                name: "客观题"
+              },
+              {
+                value: 20,
+                name: "主观题"
+              }
+            ]
+            this.drawLine()
+      }
+      if(index == 6){
+        this.datalist=[
+              {
+                value: 40,
+                name: "客观题"
+              },
+              {
+                value: 30,
+                name: "主观题"
+              }
+            ]
+            this.drawLine()
+      }
+      if(index == 7){
+        this.datalist=[
+              {
+                value: 10,
+                name: "客观题"
+              },
+              {
+                value: 20,
+                name: "主观题"
+              }
+            ]
+            this.drawLine()
+      }
+      if(index == 8){
+        this.datalist=[
+              {
+                value: 20,
+                name: "客观题"
+              },
+              {
+                value: 20,
+                name: "主观题"
+              }
+            ]
+            this.drawLine()
+      }
+      if(index == 9){
+        this.datalist=[
+              {
+                value: 30,
+                name: "客观题"
+              },
+              {
+                value: 38,
+                name: "主观题"
+              }
+            ]
+            this.drawLine()
+      }
     },
     back() {
       this.$router.go(-1); //返回上一层
     },
     drawLine() {
+      let self = this
       // 基于准备好的dom，初始化echarts实例
-      let myChart = this.$echarts.init(document.getElementById("myChart"));
+      let myChart = self.$echarts.init(document.getElementById("myChart"));
       // 绘制图表
       myChart.setOption({
         title: {
@@ -135,7 +276,7 @@ export default {
           data: [
             {
               x: "left",
-              name: "选择题",
+              name: "客观题",
               textStyle: {
                 fontSize: 20,
               color: "#53cc54"
@@ -144,19 +285,10 @@ export default {
             },
             {
               x: "center",
-              name: "填空题",
+              name: "主观题",
               textStyle: {
                 fontSize: 20,
                 color: "#ffce52"
-              },
-              icon: "circle"
-            },
-            {
-              x: "right",
-              name: "解答题",
-              textStyle: {
-                fontSize: 20,
-                color: "#4ea5ff"
               },
               icon: "circle"
             }
@@ -187,23 +319,8 @@ export default {
                 show: false
               }
             },
-            data: [
-              {
-                value: 45,
-                name: "选择题",
-                itemStyle: { normal: { color: "#53cc54" } }
-              },
-              {
-                value: 20,
-                name: "填空题",
-                itemStyle: { normal: { color: "#ffce52" } }
-              },
-              {
-                value: 15,
-                name: "解答题",
-                itemStyle: { normal: { color: "#4ea5ff" } }
-              }
-            ]
+            data: self.datalist,
+            color:["#53cc54","#ffce52"]
           }
         ]
       });
@@ -235,7 +352,7 @@ export default {
       li {
         display: inline-block;
         text-align: center;
-        padding-left: 3rem;
+        padding-left: 1rem;
         span {
           display: inline-block;
           height: 4.7rem;
