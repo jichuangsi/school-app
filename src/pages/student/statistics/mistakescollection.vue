@@ -205,6 +205,8 @@ export default {
               if(res.data.code === "0010"){
                   let questions = res.data.data;
                   let count = 0;
+                  _this.involvenav = [];
+                  _this.involveStored = [];
                   questions.forEach((obj, index)=>{
                       count += obj.count;
                       _this.involvenav.push({name:obj.knowledge,number:obj.count,id:obj.knowledgeId});
@@ -218,7 +220,11 @@ export default {
           });
       },
     back() {
-      this.$router.go(-1); //返回上一层
+      //this.$router.go(-1); //返回上一层
+        this.$router.push({
+            path: '/studentIndex',
+            name: 'studentIndex'
+        });
     },
     mistakescollection(msgtext,id){
         this.involveStored.forEach((obj,index)=>{

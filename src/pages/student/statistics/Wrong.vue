@@ -229,7 +229,7 @@
               position: absolute;
               left:1rem;
               overflow: hidden;
-              transition: height 1s;
+              transition: height 0.5s;
               z-index: 1000;
               li {
                 background-color: #fce99b;
