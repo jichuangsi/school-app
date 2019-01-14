@@ -20,6 +20,9 @@
                     <div class="row">班级 &nbsp;<span>{{classMsg.className}}</span></div>
                     <div class="row">上课时间 &nbsp;<span>{{time(classMsg.courseStartTime)}}</span></div>
                     <div class="row">在线人数 &nbsp;<span class="people">{{studentCount}}</span> / {{studentTotal}}</div>
+                    <div class="row">附件 &nbsp;
+                        <a v-for="(item,index) in classMsg.attachments" :key="index" @click.capture="downloadAttachment4App(item)">{{item.name}}，</a>
+                    </div>
                 </div>
                 <div class="right started" @click.stop.passive="updateState"
                      v-if="classMsg.courseStatus === 'NOTSTART'">上课
@@ -67,13 +70,14 @@
         courseEnd,
         getCourse,
         getCourseStatistics,
-        getQuestionStatisticsList
+        getQuestionStatisticsList,
+        getAttachment
     } from '@/api/teacher/classroom'
     import Loading from '../../../components/public/Loading'
     import {mapGetters} from 'vuex'
     import SockJS from 'sockjs-client'
     import Stomp from 'stompjs'
-    import {MessageBox} from 'mint-ui';
+    import {MessageBox, Toast, Indicator} from 'mint-ui'
 
     export default {
         components: {
@@ -115,7 +119,8 @@
                 stompClient: null,
                 subscription: null,
                 //用户token
-                token: localStorage.getItem('token')
+                token: localStorage.getItem('token'),
+                ready: false
             }
         },
         computed: {
@@ -128,12 +133,11 @@
         mounted() {
             this.getTClassroom();
             this.connect();
-            /*this.connect1();
-            this.connect2();*/
             /*this.connectCS();
             this.connectQS();
             this.connectQP();*/
             this.start();
+            this.initialize();
         },
         methods: {
             // Answerbtn(){
@@ -143,6 +147,204 @@
             //     this.btn = 1;
             //     this.AnsswerShareshow = false;
             //     },
+            initialize() {
+                let _this = this;
+                document.addEventListener(
+                    'deviceready',
+                    _this.onDeviceReady.bind(this),
+                    false
+                );
+            },
+            // deviceready Event Handler
+            onDeviceReady() {
+                this.ready = true;
+            },
+            // 创建文件路径
+            downloadAttachment4App(attachmentInfo) {
+                let _this = this;
+                if (_this.ready) {
+                    Indicator.open({
+                        text: '加载中...',
+                        spinnerType: 'fading-circle'
+                    });
+                    window.resolveLocalFileSystemURL(
+                        //cordova.file.externalCacheDirectory,
+                        cordova.file.externalDataDirectory,
+                        /*window.requestFileSystem(
+                        LocalFileSystem.PERSISTENT,
+                        0,*/
+                        //5 * 1024 * 1024,
+                        function (fs) {
+                            console.log('file system open: ' + fs.nativeURL);
+                            _this.createFile(fs, attachmentInfo);
+                    }, function(error) {
+                        Toast('进入文件系统失败！');
+                    });
+                } else {
+                    Toast('设备没响应，请稍后重试');
+                }
+            },
+
+            async createFile(dirEntry, attachmentInfo) {
+                let _this = this;
+
+                    // Creates a new file or returns the file if it already exists.
+                    dirEntry.getFile(attachmentInfo.name, {create: true, exclusive: true}, function(fileEntry) {
+                        _this.requestAttachment(fileEntry, attachmentInfo);
+                    }, function(error) {
+                        Indicator.close();
+                        console.log(error);
+                        dirEntry.getFile(
+                            attachmentInfo.name,
+                            { create: false },
+                            function(fileEntry) {
+                                // 成功读取文件后调用cordova-plugin-file-opener2插件打开文件
+                                _this.preview(fileEntry, attachmentInfo);
+                            },
+                            function(err) {
+                                Toast('读取文件失败');
+                            }
+                        );
+                    });
+            },
+            async requestAttachment(fileEntry, attachmentInfo) {
+                try{
+                    let attachment = await getAttachment(attachmentInfo.sub);
+                    Indicator.close();
+                    if(!attachment||!attachment.data) {Toast('下载失败，请稍后重试'); throw new Error("返回值为空:" + attachment + "," + attachment.data);}
+                    let myBlob = new Blob([attachment.data]);
+                    this.writeFile(fileEntry, myBlob, attachmentInfo);
+                }catch (e) {
+                    console.log(e);
+                    Indicator.close();
+                    Toast({
+                        message: "下载失败，请稍后重试！",
+                        duration: 1000
+                    });
+                    fileEntry.remove(
+                        function () {
+                            console.log("删除成功");
+                        },
+                        function (file_error) {
+                            console.log("删除错误：" + file_error);
+                        }
+                    );
+                }
+            },
+            writeFile(fileEntry, dataObj, attachmentInfo) {
+                let _this = this;
+                // Create a FileWriter object for our FileEntry (log.txt).
+                fileEntry.createWriter(function (fileWriter) {
+
+                    fileWriter.onwriteend = function() {
+                        console.log("Successful file write...");
+                        //_this.readFile(fileEntry);
+                        _this.preview(fileEntry, attachmentInfo);
+                    };
+
+                    fileWriter.onerror = function (e) {
+                        console.log("Failed file write: " + e.toString());
+                    };
+
+                    // If data object is not passed in,
+                    // create a new Blob instead.
+                    if (!dataObj) {
+                        throw new Error("返回值为空:" + dataObj);
+                    }
+
+                    fileWriter.write(dataObj);
+                });
+            },
+            /*readFile(fileEntry) {
+
+                fileEntry.file(function (file) {
+                    var reader = new FileReader();
+
+                    reader.onloadend = function() {
+                        console.log("Successful file read: " + this.result);
+                        console.log(fileEntry.fullPath + ": " + this.result);
+                    };
+
+                    reader.readAsArrayBuffer(file);
+
+                }, function(error) {
+                    Toast('读取文件系统失败！');
+                });
+            },
+            // fileTransfer plugin
+            downloadFile(fileEntry) {
+                let _this = this;
+                //实例化
+                let fileTransfer = new window.FileTransfer();
+                //监听下载进度
+                fileTransfer.onprogress = function(e) {
+                    //opener.showOpenWithDialog()
+                };
+                // 使用fileTransfer.download开始下载
+                fileTransfer.download(
+                    encodeURI(_this.savePath), //uri网络下载路径
+                    fileEntry.toURL(), //文件本地存储路径
+                    function(entry) {
+                        // 下载完成执行本地预览
+                        if (_this.progress > 1 || _this.progress === 1) {
+                            _this.showProgress = false;
+                            entry.file(data => {
+                                //_this.preView(fileEntry);
+                                // 此处data.type可以直接得到文件的MIME-TYPE类型
+                            });
+                        }
+                    },
+                    function(error) {
+                        Toast('下载失败！');
+                    },
+                    null,
+                    {
+                        //headers: {
+                        //    "Authorization": "Basic dGVzdHVzZXJuYW1lOnRlc3RwYXNzd29yZA=="
+                        //}
+                    }
+                );
+            },*/
+            preview(fileEntry, attachmentInfo){
+                console.log("file name:" + fileEntry.name + ",file path:"+ fileEntry.toInternalURL());
+                // 调用cordova-plugin-file-opener2插件实现用第三方app打开文件
+                cordova.plugins.fileOpener2.showOpenWithDialog(
+                    // 此处必须填写cdvfile://地址，不然android7.0+会报文件权限错误
+                    fileEntry.toInternalURL(), //文件本地地址转cdvfile://地址
+                    attachmentInfo.contentType, //文件类型
+                    function onSuccess(data) {
+                        console.log('成功预览:' + data);
+                    },
+                    function onError(error) {
+                        Toast(
+                            '出错！请在' + cordova.file.externalDataDirectory + '目录下查看'
+                        );
+                    }
+                );
+            },
+            //网页下载附件
+            async downloadAttachment4Web(attachmentInfo){
+                let attachment = await getAttachment(attachmentInfo.sub);
+                console.log(attachment);
+                let myBlob = new Blob([attachment.data]);
+                let URL = window.URL || window.webkitURL;
+                let bloburl = URL.createObjectURL(myBlob);
+                let anchor = document.createElement("a");
+                if ('download' in anchor) {
+                    anchor.style.visibility = "hidden";
+                    anchor.href = bloburl;
+                    anchor.download = attachmentInfo.name;
+                    document.body.appendChild(anchor);
+                    let evt = document.createEvent("MouseEvents");
+                    evt.initEvent("click", true, true);
+                    anchor.dispatchEvent(evt);
+                    document.body.removeChild(anchor);
+                } else if (navigator.msSaveBlob) {
+                    navigator.msSaveBlob(myBlob, name);
+                } else {
+                    location.href = bloburl;
+                } //移除链接释放资源
+            },
             //页面获取数据
             getTClassroom() {
                 let _this = this;
@@ -294,8 +496,6 @@
                         if(response.body){
                             _this.classData(response);
                         }
-
-
                     }, subHeader);
                     /*//监听课堂提交答案
                     _this.stompClient.subscribe('/queue/course/teacher/qs/' + _this.courseId, function (response) {
@@ -318,87 +518,6 @@
                         case "StudentAnswer": this.classAnswerSubmit(response); break;
                     }
                 }
-            },
-            //连接方法
-            connect1() {
-                //地址+端点路径，构建websocket链接地址
-                let socket = new SockJS(this.wsUrl + '/websocket/course');
-                this.stompClient = Stomp.over(socket);//一些老的浏览器不支持WebSocket的脚本或者使用别的名字。默认下，stomp.js会使用浏览器原生的WebSocket class去创建WebSocket。利用Stomp.over(ws)这个方法可以使用其他类型的WebSockets。这个方法得到一个满足WebSocket定义的对象
-                this.stompClient.heartbeat.outgoing = 400000;  // client will send heartbeats every 40000ms
-                this.stompClient.heartbeat.incoming = 0;      // client does not want to receive heartbeats from the server
-                //连接时的请求头部信息
-                let headers = {
-                    login: 'mylogin',
-                    passcode: 'mypasscode',
-                    // additional header
-                    userId: 'curUserId',
-                    accessToken: this.token
-                };
-
-                //创建连接并在连接成功后订阅班级为“2018001”班级的信息
-                let _this = this;
-                this.stompClient.connect(headers, function (frame) {
-                    console.log('Connected:' + frame);
-
-                    let subHeader = {
-                        userId: 'curUserId',
-                        accessToken: _this.token
-                    };//订阅时的头信息
-                    //监听的路径以及回调。返回的subscription用于取消订阅
-                    /*//监听课堂人数
-                    _this.subscription = _this.stompClient.subscribe('/queue/course/teacher/cs/' + _this.courseId, function (response) {
-                        _this.classNumber(response);
-                    }, subHeader);*/
-                    //监听课堂提交答案
-                    _this.stompClient.subscribe('/queue/course/teacher/qs/' + _this.courseId, function (response) {
-                        _this.classAnswer(response);
-                    }, subHeader);
-                    /*//监听课堂提交答案
-                    _this.stompClient.subscribe('/queue/course/teacher/question/' + _this.courseId, function (response) {
-                        console.log(response)
-                        _this.classAnswerSubmit(response);
-                    }, subHeader);*/
-                });
-            },
-            //连接方法
-            connect2() {
-                //地址+端点路径，构建websocket链接地址
-                let socket = new SockJS(this.wsUrl + '/websocket/course');
-                this.stompClient = Stomp.over(socket);//一些老的浏览器不支持WebSocket的脚本或者使用别的名字。默认下，stomp.js会使用浏览器原生的WebSocket class去创建WebSocket。利用Stomp.over(ws)这个方法可以使用其他类型的WebSockets。这个方法得到一个满足WebSocket定义的对象
-                this.stompClient.heartbeat.outgoing = 400000;  // client will send heartbeats every 40000ms
-                this.stompClient.heartbeat.incoming = 0;      // client does not want to receive heartbeats from the server
-                //连接时的请求头部信息
-                let headers = {
-                    login: 'mylogin',
-                    passcode: 'mypasscode',
-                    // additional header
-                    userId: 'curUserId',
-                    accessToken: this.token
-                };
-
-                //创建连接并在连接成功后订阅班级为“2018001”班级的信息
-                let _this = this;
-                this.stompClient.connect(headers, function (frame) {
-                    console.log('Connected:' + frame);
-
-                    let subHeader = {
-                        userId: 'curUserId',
-                        accessToken: _this.token
-                    };//订阅时的头信息
-                    //监听的路径以及回调。返回的subscription用于取消订阅
-                    /*//监听课堂人数
-                    _this.subscription = _this.stompClient.subscribe('/queue/course/teacher/cs/' + _this.courseId, function (response) {
-                        _this.classNumber(response);
-                    }, subHeader);
-                    //监听课堂提交答案
-                    _this.stompClient.subscribe('/queue/course/teacher/qs/' + _this.courseId, function (response) {
-                        _this.classAnswer(response);
-                    }, subHeader);*/
-                    //监听课堂提交答案
-                    _this.stompClient.subscribe('/queue/course/teacher/question/' + _this.courseId, function (response) {
-                        _this.classAnswerSubmit(response);
-                    }, subHeader);
-                });
             },
             connectWithParam(param, method) {
                 //地址+端点路径，构建websocket链接地址
@@ -575,7 +694,7 @@
             }
             .msg {
                 padding: 1.71rem 0;
-                height: 9.14rem;
+                height: 15rem;
                 font-size: 18px;
                 box-sizing: border-box;
                 display: flex;
@@ -595,6 +714,14 @@
                             color: #80D59C;
                             font-size: 34px;
                         }
+                        a {
+                            color: #999999;
+                        }
+                        a:hover {
+                            color: #0b01ff;
+                            text-decoration: underline
+                        }
+
                     }
                 }
                 .right {
