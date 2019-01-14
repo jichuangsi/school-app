@@ -155,6 +155,7 @@ export default {
   methods: {
     qq() {
       this.bse();
+      $(".answer").jSignature("disable"); 
     },
     zz(id) {
       this.subjectiveId = id;
@@ -162,9 +163,12 @@ export default {
       $(".answer").jSignature({
         width: "100%",
         height: "100%",
-        color: "red",
+        color: 'red',
+        backcolor:'blue',
+        cssclass:'backcolor',
         lineWidth: 1
       });
+      $(".answer").jSignature("enable"); 
       // console.log(Boolean(this.sharebtn))
     },
     //获取课堂列表穿过来的数据
@@ -357,7 +361,6 @@ export default {
             ctx.drawImage(this, 0, 0,772,1000);
             var imgq = canvas.toDataURL("image/png", 0.5);
             let img = imgq.split("data:image/png;base64,")[1];
-            // console.log(imgq)
             for (let i = 0; i < self.subjectiveAnswer.length; i++) {
               if (self.subjectiveAnswer[i].id === self.subjectiveId) {
                 // console.log(self.bseimg);
@@ -366,6 +369,7 @@ export default {
                     self.picForSubjective = res.data.data.stubForSubjective;
                     console.log("成功");
                     self.correction = true;
+                    self.cover_box = 0
                     Toast({
                       message: "储存图片成功",
                       position: "bottom"
@@ -426,6 +430,9 @@ export default {
   right: 0;
   bottom: 0;
   background-color: #fff;
+  .jSignature {
+    transform: rotate(30deg)
+  }
   .content {
     position: absolute;
     top: 0;

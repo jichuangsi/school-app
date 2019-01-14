@@ -41,7 +41,7 @@
     .classroomHeader {
         position: fixed;
         top: 0;
-        z-index: 100;
+        z-index: 1005;
         width: 100%;
         height: 3.15rem;
         line-height: 3.15rem;
