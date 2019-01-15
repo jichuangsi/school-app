@@ -24,6 +24,7 @@
                         <a v-for="(item,index) in classMsg.attachments" :key="index" @click.capture="downloadAttachment4App(item)">{{item.name}}，</a>
                     </div>
                 </div>
+                <div class="img" @click="zsbtn"><img src="../../../assets/zsbtn.png" alt=""></div>
                 <div class="right started" @click.stop.passive="updateState"
                      v-if="classMsg.courseStatus === 'NOTSTART'">上课
                 </div>
@@ -140,6 +141,15 @@
             this.initialize();
         },
         methods: {
+            zsbtn(){
+                this.$router.push({
+                    path: '@/pages/teacher/assistant',
+                    name: 'assistant',
+                    query: {
+                        students: this.allstudents
+                    }
+                });
+            },
             // Answerbtn(){
             //     this.AnswerShareshow = true;
             //     },
@@ -724,6 +734,12 @@
 
                     }
                 }
+                    .img {
+                        position: absolute;
+                        right: -3rem;
+                        top: 8rem;
+                        transform: scale(0.8)
+                    }
                 .right {
                     width: 8.57rem;
                     height: 3rem;

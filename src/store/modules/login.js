@@ -3,12 +3,16 @@ import {login} from '../../api/login'
 const Login = {
   state: {
     userMobile: '',
-    userPassword: ''
+    userPassword: '',
+    userroute:''
   },
   mutations: {
     SET_USER: (state, user) => {
       state.userMobile = user.data.logins.userMobile;
       state.userPassword = user.data.logins.userPassword;
+    },
+    SET_ROUTE: (state,asd)=>{
+      state.userroute = asd
     }
   },
   actions: {

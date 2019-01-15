@@ -105,7 +105,8 @@ export default {
       //     });
     },
     loginout() {
-      this.$router.push({ path: "/", name: "login" });
+      localStorage.removeItem('token')
+      this.$router.push({ path: "/", name: "login" })
     }
   }
 };

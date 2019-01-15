@@ -573,7 +573,9 @@ export default {
       }
     },
     back (){
-      this.$router.go(-1);//返回上一层
+      this.$router.push({
+        path: '/studentIndex'
+    })
     },
     drawLine () {
       // 基于准备好的dom，初始化echarts实例

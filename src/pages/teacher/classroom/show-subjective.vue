@@ -160,6 +160,7 @@ export default {
     zz(id) {
       this.subjectiveId = id;
       this.cover_box = 1;
+      this.correction = false
       $(".answer").jSignature({
         width: "100%",
         height: "100%",

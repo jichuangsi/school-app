@@ -37,7 +37,8 @@
             return {
                 account: '',          //账号
                 password: '',         //密码
-                boolean: false
+                boolean: false,
+                goroute:''
             }
         },
         computed: {
@@ -52,6 +53,9 @@
             console.log(this.userMobile)
         },
         methods: {
+            userroute:function(val){
+                console.log(val)
+            },
             login(){
                 let a = localStorage.getItem('account')
                 let b = localStorage.getItem('password')
@@ -77,11 +81,17 @@
                 }
                 try {
                     let userInfo = await login(this.account, this.password);
-                    if (userInfo) {
+                    if(this.$store.state.userroute){
+                        this.$router.push({
+                            path: this.$store.state.userroute
+                        })
+                    }else{
+                        if (userInfo) {
                         this.$router.push({
                             path: '/teacherIndex',
                             name: 'teacherIndex'
                         })
+                    }
                     }
                 } catch (e) {
                     Toast({

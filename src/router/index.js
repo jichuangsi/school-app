@@ -206,7 +206,15 @@ export default new Router({
                 keepAlive: false,
                 isBack: false
             }
-        }, {
+        },  {
+            path: '/assistant',
+            name: 'assistant',
+            component: () => import('@/pages/teacher/assistant'), //老师端助手
+            meta: {
+                keepAlive: false,
+                isBack: false
+            }
+        },{
             path: '/principal',
             name: 'principal',
             component: () => import('@/pages/teacher/statistics/principal/principal'), //校长数据

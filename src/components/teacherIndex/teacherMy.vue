@@ -94,6 +94,7 @@ export default {
         .catch(function(err) {});
     },
     loginout() {
+      localStorage.removeItem('token')
       this.$router.push({ path: "/", name: "login" });
     }
   }
