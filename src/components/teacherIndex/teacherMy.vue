@@ -42,6 +42,14 @@
                             </div>
                         </li>
                     </router-link>
+                    <router-link to="/assistant">
+                        <li>
+                            <div class="left">小助手</div>
+                            <div class="right">
+                                <i class="iconfont icon-icon-arrow-right2"></i>
+                            </div>
+                        </li>
+                    </router-link>
                     <li @click="loginout">
                         <div class="left">退出登录</div>
                         <div class="right">
@@ -167,7 +175,7 @@ export default {
   }
   .nav {
     width: 100%;
-    height: 49.7rem;
+    height: 56.7rem;
     padding-top: 23rem;
     margin-bottom: 8.2rem;
     ul {
