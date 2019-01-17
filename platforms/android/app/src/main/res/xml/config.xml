@@ -18,17 +18,29 @@
         <param name="android-package" value="com.android.plugins.Permissions" />
     </feature>
     <feature name="HandwrittenBoard">
-        <param name="android-package" value="android.HandwrittenBoard.HandwrittenBoard" />
+        <param name="android-package" value="handwritten.board.HandwrittenBoard" />
     </feature>
-    <name>集创思老师端</name>
+    <feature name="File">
+        <param name="android-package" value="org.apache.cordova.file.FileUtils" />
+        <param name="onload" value="true" />
+    </feature>
+    <allow-navigation href="cdvfile:*" />
+    <feature name="FileTransfer">
+        <param name="android-package" value="org.apache.cordova.filetransfer.FileTransfer" />
+    </feature>
+    <feature name="FileOpener2">
+        <param name="android-package" value="io.github.pwlin.cordova.plugins.fileopener2.FileOpener2" />
+    </feature>
+    <name>集创思学生端</name>
     <description>
-        集创思老师端
+        集创思学生端
     </description>
     <author email="dev@cordova.apache.org" href="http://cordova.io">
-        集创思老师端
+        集创思学生端
     </author>
     <content src="index.html" />
     <access origin="*" />
+    <access origin="cdvfile://*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
     <allow-intent href="tel:*" />
@@ -36,11 +48,11 @@
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
     <allow-intent href="market:*" />
-    <icon density="ldpi" src="res/icon/android/icon-48.png" />
-    <icon density="mdpi" src="res/icon/android/icon-48.png" />
-    <icon density="hdpi" src="res/icon/android/icon-72.png" />
-    <icon density="xhdpi" src="res/icon/android/icon-72.png" />
-    <icon density="xxhdpi" src="res/icon/android/icon-72.png" />
+    <icon density="ldpi" src="res/icon/android/icon.png" />
+    <icon density="mdpi" src="res/icon/android/icon.png" />
+    <icon density="hdpi" src="res/icon/android/icon.png" />
+    <icon density="xhdpi" src="res/icon/android/icon.png" />
+    <icon density="xxhdpi" src="res/icon/android/icon.png" />
     <splash density="land-hdpi" src="res/screen/android/screen.png" />
     <splash density="land-ldpi" src="res/screen/android/screen.png" />
     <splash density="land-mdpi" src="res/screen/android/screen.png" />
