@@ -62,10 +62,16 @@ export default {
               MessageBox.prompt('请输入小组个数').then((value) => {
               console.log(value)
               this.xiaozu = Number(value.value)
-              if(this.xiaozu === "" || this.xiaozu ==null ||isNaN(this.xiaozu)){
-                  Toast('请输入小组个数');
+              if((/(^[1-9]\d*$)/.test(this.xiaozu))){
+                  console.log(123)
+                if(this.xiaozu === "" || this.xiaozu ==null ||isNaN(this.xiaozu)){
+                    Toast('请输入小组个数');
+                }else {
+                    this.textname=''
+                }
               }else {
-                  this.textname=''
+                  this.xiaozu=''
+                  Toast('请输入整数');
               }
             }).catch(err=>{
                 console.log(err)
@@ -74,7 +80,8 @@ export default {
           if(this.type=='计时'){
               MessageBox.prompt('请输入分钟').then((value) => {
               this.jishi = value.value
-              if(Number(this.jishi)<10 && Number(this.jishi)>0){
+              if((/(^[1-9]\d*$)/.test(Number(this.jishi)))){
+                  if(Number(this.jishi)<10 && Number(this.jishi)>0){
                       this.one = 0
                       this.two = this.jishi
                       this.three = 0
@@ -87,8 +94,12 @@ export default {
                       this.four = 0
                   }
                   if(!(Number(this.jishi) > 0 &&Number(this.jishi) <= 60)){
-                    Toast('请输入1-60的数字');
+                    Toast('请输入1-60的整数');
                   }
+              }else {
+                  this.jishi=''
+                Toast('请输入1-60的整数');
+              }
             }).catch(err=>{
                 console.log(err)
             })
