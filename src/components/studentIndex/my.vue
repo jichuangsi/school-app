@@ -105,7 +105,8 @@ export default {
       //     });
     },
     loginout() {
-      localStorage.removeItem('token')
+      localStorage.removeItem('token');
+      window.HandwrittenBoard.disconnect();
       this.$router.push({ path: "/", name: "login" })
     }
   }

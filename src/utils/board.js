@@ -60,6 +60,10 @@ function onDestroy(res) {
     //銷毀成功
 }
 
+function onDisconnect(res) {
+    Toast('断开设备成功!');
+}
+
 function getBase64img(res) {
     if (res !== undefined) {
         store.commit('SET_BOARD_IMG', res);
@@ -104,6 +108,9 @@ export default function () {
                     break;
                 case "destroy":
                     onDestroy(result.data);
+                    break;
+                case "disconnect":
+                    onDisconnect(result.data);
                     break;
                 case "getBase64img":
                     getBase64img(result.data);

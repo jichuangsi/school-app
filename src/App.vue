@@ -54,7 +54,10 @@
                 //找到to.path和from.path在routerDeep数组中的下标
                 this.pageUrl = this.$route.path;
                 console.log("当前路由:" + this.$route.path);
-                if(this.$route.path=='/teacherenquiry'){
+                if(this.$route.path=='/studentenquiry'
+                    ||this.$route.path=='/studentIndex'
+                    ||this.$route.path=='/mistakescollection'
+                    ||this.$route.path=='/myShow'){
                 if(!(localStorage.getItem('token'))){
                     let route = this.$route.path
                         this.$router.push({ path: "/", name: "login" })
@@ -76,10 +79,16 @@
             }
         },
         created() {
-            setTimeout(function () {
-                initialize();
-                navigator.splashscreen.hide();
-            }, 500);
+            console.log("created-userroute:"+this.$store.state.userroute);
+            console.log("created-path:"+this.$route.path);
+                setTimeout(function () {
+                    try{
+                        initialize();//教师端去掉启动蓝牙检测
+                        navigator.splashscreen.hide();
+                    }catch (e) {
+                        console.log(e);
+                    }
+                }, 500);
         },
         mounted() {
             let exitAppTicker = 0;

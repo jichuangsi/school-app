@@ -67,11 +67,17 @@
                 }
                 try {
                     let userInfo = await login(this.account, this.password);
-                    if (userInfo) {
+                    if(this.$store.state.userroute){
                         this.$router.push({
-                            path: '/studentIndex',
-                            name: 'studentIndex'
+                            path: this.$store.state.userroute
                         })
+                    }else{
+                        if (userInfo) {
+                            this.$router.push({
+                                path: '/studentIndex',
+                                name: 'studentIndex'
+                            })
+                        }
                     }
                 } catch (e) {
                     Toast({

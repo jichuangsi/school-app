@@ -87,11 +87,11 @@
                         })
                     }else{
                         if (userInfo) {
-                        this.$router.push({
-                            path: '/teacherIndex',
-                            name: 'teacherIndex'
-                        })
-                    }
+                            this.$router.push({
+                                path: '/teacherIndex',
+                                name: 'teacherIndex'
+                            })
+                        }
                     }
                 } catch (e) {
                     Toast({
