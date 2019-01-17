@@ -735,10 +735,10 @@
                     }
                 }
                     .img {
-                        position: absolute;
-                        right: -3rem;
+                        position: fixed;
+                        right: 3rem;
                         top: 8rem;
-                        transform: scale(0.8)
+                        transform: scale(0.6)
                     }
                 .right {
                     width: 8.57rem;

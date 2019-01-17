@@ -32,7 +32,7 @@ export default {
   name: "assistant",
   data() {
     return {
-        textname:'xuesheng001',
+        textname:'',
         selet:'请选择',
         studentlist:[],
         studentid:[],
@@ -43,10 +43,10 @@ export default {
         type:'',
         xiaozu:'',
         jishi:'',
-        one:'',
-        two:'',
-        three:'',
-        four:''
+        one:'0',
+        two:'0',
+        three:'0',
+        four:'0'
     };
   },
   methods: {
@@ -64,6 +64,8 @@ export default {
               this.xiaozu = Number(value.value)
               if(this.xiaozu === "" || this.xiaozu ==null ||isNaN(this.xiaozu)){
                   Toast('请输入小组个数');
+              }else {
+                  this.textname=''
               }
             }).catch(err=>{
                 console.log(err)
@@ -96,36 +98,32 @@ export default {
       state(){
           let self = this
             self.clear = false
-          if(this.type=='个人'){
+          if(self.type=='个人'){
             let interval = setInterval(function(){
-                if(self.clear){
+                if(self.clear || self.type!='个人'){
                 clearInterval(interval)
                 }
             let i = Math.floor(Math.random()*(self.studentname.length));
             self.textname = self.studentname[i]
             },60)
           }
-          if(this.type=='小组'){
+          if(self.type=='小组'){
               if(self.xiaozu){
                   let interval = setInterval(function(){
-                if(self.clear){
+                if(self.clear || self.type!='小组'){
                 clearInterval(interval)
                 }
                 let i = Math.ceil(Math.random() * self.xiaozu)
-                console.log(i)
-                if(i == 10){
-                    clearInterval(interval)
-                }
                 self.textname = i
                 },60)
               }else{
                   Toast('请输入小组个数');
               }
           }
-          if(this.type=='计时'){
+          if(self.type=='计时'){
               if(self.jishi){
                 let interval = setInterval(function(){
-                    if(self.clear){
+                    if(self.clear||self.type!='计时'){
                     clearInterval(interval)
                     }else{
                         if(self.four==0){
@@ -146,12 +144,13 @@ export default {
                         if(self.four==9&&self.three==5&&self.two!=0){
                             self.two = self.two-1
                         }
-                        if(self.four==0&&self.three==0&&self.two==0&&self.one==0){
-                            clearInterval(interval)
-                            Toast('时间到');
-                        }
                         if(self.four==9&&self.three==5&&self.two==9&&self.one!=0){
                             self.one = self.one-1
+                        }
+                        if(self.four==0&&self.three==0&&self.two==0&&self.one==0){
+                            clearInterval(interval)
+                            console.log(132)
+                            Toast('时间到');
                         }
                     }
                 },1000)
@@ -191,7 +190,9 @@ export default {
   width: 100%;
   position: relative;
   img {
+    position: relative;
     width: 100%;
+    // padding-bottom: 200px;
   }
   .img {
       position: absolute;
@@ -227,7 +228,7 @@ export default {
          color: #3591B6;
          position: absolute;
          transform-style: preserve-3d;
-         top: 24%;
+         top: 22%;
          left: 50%;
          font-size: 6rem;
          margin-left: -28%;
@@ -257,7 +258,7 @@ export default {
         width: 36.2%;
         position: absolute;
         left: 50%;
-        top: 61.2%;
+        top: 57%;
         height: 6.8%;
         line-height: 5rem;
         text-align: center;
@@ -305,7 +306,7 @@ export default {
         width: 36.2%;
         position: absolute;
         left: 50%;
-        top: 71.2%;
+        top: 66.6%;
         height: 6.8%;
         line-height: 5rem;
         text-align: center;
@@ -318,7 +319,7 @@ export default {
         width: 36.2%;
         position: absolute;
         left: 50%;
-        top: 81.2%;
+        top: 76.2%;
         height: 6.8%;
         line-height: 5rem;
         text-align: center;
