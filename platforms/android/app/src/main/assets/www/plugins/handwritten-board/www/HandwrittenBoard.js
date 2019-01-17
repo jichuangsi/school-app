@@ -35,6 +35,9 @@ var HandwrittenBoard = {
     destroy: function (callback) {
         cordova.exec(callback, callback, 'HandwrittenBoard', 'destroy', []);
     },
+    disconnect: function () {
+        cordova.exec(this.Handler, this.Handler, 'HandwrittenBoard', 'disconnect', []);
+    },
     getBase64img: function (base64img) {
         cordova.exec(this.Handler, this.Handler, 'HandwrittenBoard', 'getBase64img', base64img ? [base64img] : []);
     },
