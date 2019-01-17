@@ -101,6 +101,8 @@ public class HandwrittenBoard extends CordovaPlugin implements IScanListener, ID
                 return isConnect(callbackContext);
             case "destroy":
                 return destroy(callbackContext);
+            case "disconnect":
+                return disconnect(callbackContext);
             case "getBase64img":
                 return getBase64img(params);
             default:
@@ -224,6 +226,14 @@ public class HandwrittenBoard extends CordovaPlugin implements IScanListener, ID
         if (mCallbackContext != null) {
             mRyDrawingManager.destroy();
             mCallbackContext.sendPluginResult(result("destroy", PluginResult.Status.OK, "銷毀成功"));
+        }
+        return true;
+    }
+
+    private boolean disconnect(CallbackContext mCallbackContext) {
+        if (mCallbackContext != null&&mRyDrawingManager.getConnectedDevice()!=null) {
+            mRyDrawingManager.disconnectDevice();
+            mCallbackContext.sendPluginResult(result("disconnect", PluginResult.Status.OK, "断开设备"));
         }
         return true;
     }
