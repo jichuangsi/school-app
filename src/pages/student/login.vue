@@ -96,7 +96,7 @@
         .pws-yn {
         margin-top: 30px;
         margin-bottom: 60px;
-        font-size: 1.8rem;
+        font-size: 1.6rem;
         color: #bbbbbb;
         display: flex;
         justify-content:space-between;
@@ -108,6 +108,7 @@
             border: 1px solid #bbbbbb;
             display: inline-block;
             text-align: top;
+            overflow: hidden;
           }
           .color {
             background-color: #007aff;

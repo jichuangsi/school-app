@@ -787,7 +787,7 @@ export default {
       width: 100%;
       font-size: 2rem;
       margin-top: 3.9rem;
-      overflow: hidden;
+      // overflow: hidden;
       border: 1px solid #b3b3b3;
       tr {
         height: 7.9rem;
