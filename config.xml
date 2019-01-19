@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="com.example.tangdao.gcharms1" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>集创思教师端</name>
+    <name>集创思学生端</name>
     <description>
-        集创思教师端
+        集创思学生端
     </description>
     <author email="dev@cordova.apache.org" href="http://cordova.io">
-        集创思教师端
+        集创思学生端
     </author>
     <content src="index.html" />
     <access origin="*" />
