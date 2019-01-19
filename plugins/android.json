@@ -21,6 +21,16 @@
     },
     "handwritten-board": {
       "PACKAGE_NAME": "com.example.tangdao.gcharms"
+    },
+    "cordova-plugin-file": {
+      "PACKAGE_NAME": "com.example.tangdao.gcharms1"
+    },
+    "cordova-plugin-file-transfer": {
+      "PACKAGE_NAME": "com.example.tangdao.gcharms1"
+    },
+    "cordova-plugin-file-opener2": {
+      "ANDROID_SUPPORT_V4_VERSION": "27.+",
+      "PACKAGE_NAME": "com.example.tangdao.gcharms1"
     }
   },
   "dependent_plugins": {
