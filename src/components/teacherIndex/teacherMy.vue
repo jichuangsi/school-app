@@ -134,7 +134,6 @@ export default {
 .center {
   width: 100%;
   height: 100%;
-  margin-bottom: 8rem;
   background-color: #f5f5f5;
   padding: 0 3.4rem 0 2.4rem;
   position: relative;
@@ -175,9 +174,9 @@ export default {
   }
   .nav {
     width: 100%;
-    height: 56.7rem;
+    // height: 56.7rem;
     padding-top: 23rem;
-    margin-bottom: 8.2rem;
+    margin-bottom: 10rem;
     ul {
       li {
         width: 100%;
@@ -186,7 +185,7 @@ export default {
         padding-left: 2.5rem;
         padding-right: 2.5rem;
         font-size: 2.6rem;
-        border-bottom: 4px solid #e1e1e2;
+        border-bottom: 2px solid #e1e1e2;
         color: #333333;
         div {
           display: inline-block;
@@ -195,7 +194,8 @@ export default {
           display: inline-block;
           height: 100%;
           float: right;
-          color: #4a4747;
+          color: #888;
+          opacity: 0.6;
           .iconfont {
             font-size: 2.6rem;
           }

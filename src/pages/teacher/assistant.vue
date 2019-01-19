@@ -218,7 +218,7 @@ export default {
       position: absolute;
       top: 3%;
       left: 3%;
-      color:#fff;
+      color:#3591b6;
       font-weight: 700;
   }
     .text {
@@ -269,8 +269,8 @@ export default {
         width: 36.2%;
         position: absolute;
         left: 50%;
-        top: 57%;
-        height: 6.8%;
+        top: 56.2%;
+        height: 5.6%;
         line-height: 5rem;
         text-align: center;
         color: #fff;
@@ -317,8 +317,8 @@ export default {
         width: 36.2%;
         position: absolute;
         left: 50%;
-        top: 66.6%;
-        height: 6.8%;
+        top: 64%;
+        height: 5.6%;
         line-height: 5rem;
         text-align: center;
         color: #fff;
@@ -330,8 +330,8 @@ export default {
         width: 36.2%;
         position: absolute;
         left: 50%;
-        top: 76.2%;
-        height: 6.8%;
+        top: 72%;
+        height: 5.4%;
         line-height: 5rem;
         text-align: center;
         color: #fff;

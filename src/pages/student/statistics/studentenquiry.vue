@@ -649,12 +649,12 @@ export default {
     background-color: #80d59c;
     color: #ffffff;
     font-size: 2rem;
-    padding-left: 2rem;
+    padding-left: 0.5rem;
     display: flex;
     .iconfont{
     font-size: 2rem;
     display: inline-block;
-    padding-right:1rem;
+    padding-right:2rem;
     }
     ul {
       flex: 1;
@@ -789,7 +789,7 @@ export default {
       width: 100%;
       font-size: 2rem;
       margin-top: 3.9rem;
-      overflow: hidden;
+      // overflow: hidden;
       border: 1px solid #b3b3b3;
       tr {
         height: 7.9rem;
