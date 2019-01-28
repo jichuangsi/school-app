@@ -242,6 +242,14 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
       "clobbers": [
         "cordova.plugins.fileOpener2"
       ]
+    },
+    {
+      "id": "cordova-plugin-app-version.AppVersionPlugin",
+      "file": "plugins/cordova-plugin-app-version/www/AppVersionPlugin.js",
+      "pluginId": "cordova-plugin-app-version",
+      "clobbers": [
+        "cordova.getAppVersion"
+      ]
     }
   ];
   module.exports.metadata = {
@@ -254,6 +262,7 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
     "handwritten-board": "1.0.0",
     "cordova-plugin-file": "6.0.1",
     "cordova-plugin-file-transfer": "1.7.1",
-    "cordova-plugin-file-opener2": "2.1.3"
+    "cordova-plugin-file-opener2": "2.1.3",
+    "cordova-plugin-app-version": "0.1.9"
   };
 });
