@@ -8,37 +8,40 @@
   },
   "installed_plugins": {
     "cordova-plugin-whitelist": {
-      "PACKAGE_NAME": "com.example.tangdao.gcharms"
+      "PACKAGE_NAME": "com.jichuangsi.school.student"
     },
     "cordova-plugin-screen-orientation": {
-      "PACKAGE_NAME": "com.example.tangdao.gcharms"
+      "PACKAGE_NAME": "com.jichuangsi.school.student"
     },
     "cordova-plugin-splashscreen": {
-      "PACKAGE_NAME": "com.example.tangdao.gcharms"
+      "PACKAGE_NAME": "com.jichuangsi.school.student"
     },
     "cordova-plugin-bluetoothle": {
-      "PACKAGE_NAME": "com.example.tangdao.gcharms"
+      "PACKAGE_NAME": "com.jichuangsi.school.student"
     },
     "handwritten-board": {
-      "PACKAGE_NAME": "com.example.tangdao.gcharms"
+      "PACKAGE_NAME": "com.jichuangsi.school.student"
     },
     "cordova-plugin-file": {
-      "PACKAGE_NAME": "com.example.tangdao.gcharms1"
+      "PACKAGE_NAME": "com.jichuangsi.school.student"
     },
     "cordova-plugin-file-transfer": {
-      "PACKAGE_NAME": "com.example.tangdao.gcharms1"
+      "PACKAGE_NAME": "com.jichuangsi.school.student"
     },
     "cordova-plugin-file-opener2": {
       "ANDROID_SUPPORT_V4_VERSION": "27.+",
-      "PACKAGE_NAME": "com.example.tangdao.gcharms1"
+      "PACKAGE_NAME": "com.jichuangsi.school.student"
+    },
+    "cordova-plugin-app-version": {
+      "PACKAGE_NAME": "com.jichuangsi.school.student"
     }
   },
   "dependent_plugins": {
     "es6-promise-plugin": {
-      "PACKAGE_NAME": "com.example.tangdao.gcharms"
+      "PACKAGE_NAME": "com.jichuangsi.school.student"
     },
     "cordova-plugin-android-permissions": {
-      "PACKAGE_NAME": "com.example.tangdao.gcharms"
+      "PACKAGE_NAME": "com.jichuangsi.school.student"
     }
   }
 }
