@@ -22,6 +22,7 @@
     import Preview from '../src/components/board/Preview'
     import initialize from '@/utils/board'
     import {mapGetters} from 'vuex'
+    import {checkUpgrade} from '@/utils/upgrade'
 
     export default {
         name: 'App',
@@ -94,6 +95,11 @@
             let exitAppTicker = 0;
             let _this = this;
             document.addEventListener("deviceready", function () {
+
+                cordova.getAppVersion.getPackageName().then(function(packageName) {
+                    checkUpgrade('android', packageName);
+                });
+
                 document.addEventListener("backbutton", function () {
                     console.log(_this.pageUrl);
                     if (_this.pageUrl == '/') {
