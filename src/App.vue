@@ -80,21 +80,28 @@
             }
         },
         created() {
-            console.log("created-userroute:"+this.$store.state.userroute);
-            console.log("created-path:"+this.$route.path);
-                setTimeout(function () {
+                /*setTimeout(function () {
                     try{
-                        initialize();//教师端去掉启动蓝牙检测
+                        initialize();
                         navigator.splashscreen.hide();
                     }catch (e) {
                         console.log(e);
                     }
-                }, 500);
+                }, 500);*/
         },
         mounted() {
             let exitAppTicker = 0;
             let _this = this;
             document.addEventListener("deviceready", function () {
+
+                setTimeout(function () {
+                    try{
+                        initialize();
+                        navigator.splashscreen.hide();
+                    }catch (e) {
+                        console.log(e);
+                    }
+                }, 500);
 
                 cordova.getAppVersion.getPackageName().then(function(packageName) {
                     checkUpgrade('android', packageName);
