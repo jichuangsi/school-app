@@ -419,6 +419,8 @@ export default {
       console.log(res);
       self.topicList = res.data.data.questions;
       self.preview = res.data.data.courseInfo;
+      self.pageShow = true;
+      self.loading = false;
 
       for (let index = 0; index < self.topicList.length; index++) {
         let t = self.topicList[index];
@@ -451,8 +453,6 @@ export default {
             }
           }
         }
-        self.pageShow = true;
-        self.loading = false;
       }
     },
     //计算定时器
