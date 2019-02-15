@@ -12,7 +12,7 @@
           <class-objective :objective="item" @selectAnswer="selectAnswer" @Multipleanswers="Multipleanswers"/>
           <div class="submit_warp" v-if="item.questionStatus !== 'FINISH'">
             <div class="objective_submit" @click="objective_submit(item.questionId)">
-              提交
+              <img :src="btnimg" @touchstart.prevent="touchin2()" @touchend.prevent="cleartime2(item.questionId)" alt="">
             </div>
           </div>
           <reply :reply="reply" :type="item.type" :id="item.questionId" />
@@ -25,9 +25,11 @@
         <div class="subjective_warp" v-if="item.quesetionType ==='subjective'">
           <subjective :subjectiveTopic="item" />
           <div class="button_warp" v-if="item.questionStatus !=='FINISH'">
-            <div class="subjective_submit" v-show="!objectiveAnswer[index].answer" @click="answerQuestions(item.questionId)">开始答题
+            <div class="subjective_submit" v-show="!objectiveAnswer[index].answer" @click="answerQuestions(item.questionId)">
+              <img :src="startimg" @touchstart.prevent="touchin()" @touchend.prevent="cleartime(item.questionId)" alt="">
             </div>
-            <div class="subjective_submit" v-show="objectiveAnswer[index].answer" @click="modifyAnswer(item.questionId)">修改答案
+            <div class="subjective_submit" v-show="objectiveAnswer[index].answer" @click="modifyAnswer(item.questionId)">
+              <img :src="endimg" @touchstart.prevent="touchin1()" @touchend.prevent="cleartime1(item.questionId)"  alt="">
             </div>
           </div>
           <board :subjectiveAnswer="objectiveAnswer" :id="item.questionId" v-show="isAnswer(objectiveAnswer[index].answer)" />
@@ -90,6 +92,9 @@ export default {
   },
   data() {
     return {
+      btnimg: require('../../../assets/提交_未选中.png'),
+      endimg: require('../../../assets/修改答案_未选中.png'),
+      startimg: require('../../../assets/开始答题_未选中.png'),
       AnswerShareList: [],
       AnswerShareshow: false,
       btn: 1,
@@ -551,7 +556,71 @@ export default {
           }
         }
       }
-    }
+    },
+    //长按
+    touchin(){
+        var that=this;
+        this.Loop = setTimeout(function() {
+          that.Loop = 0;
+          //执行长按要执行的内容，如弹出菜单
+          that.startimg = require('../../../assets/开始答题_选中.png')
+        }, 500);
+        return false;
+
+      },
+      cleartime(questionid) {
+        let that = this
+        clearTimeout(this.Loop);
+          that.startimg = require('../../../assets/开始答题_未选中.png')
+        if(that.Loop!=0){
+        //   //这里写要执行的内容（尤如onclick事件）
+        //   that.previewPicture(index)
+        that.answerQuestions(questionid)
+        }
+        return false;
+      },
+    touchin1(){
+        var that=this;
+        this.Loop = setTimeout(function() {
+          that.Loop = 0;
+          //执行长按要执行的内容，如弹出菜单
+          that.endimg = require('../../../assets/修改答案_选中.png')
+        }, 500);
+        return false;
+
+      },
+      cleartime1(questionid) {
+        let that = this
+        clearTimeout(this.Loop);
+          that.endimg = require('../../../assets/修改答案_未选中.png')
+        if(that.Loop!=0){
+        //   //这里写要执行的内容（尤如onclick事件）
+        //   that.previewPicture(index)
+        that.modifyAnswer(questionid)
+        }
+        return false;
+      },
+      touchin2(){
+        var that=this;
+        this.Loop = setTimeout(function() {
+          that.Loop = 0;
+          //执行长按要执行的内容，如弹出菜单
+          that.btnimg = require('../../../assets/提交_选中.png')
+        }, 500);
+        return false;
+
+      },
+      cleartime2(questionid) {
+        let that = this
+        clearTimeout(this.Loop);
+          that.btnimg = require('../../../assets/提交_未选中.png')
+        if(that.Loop!=0){
+        //   //这里写要执行的内容（尤如onclick事件）
+        //   that.previewPicture(index)
+        that.objective_submit(questionid)
+        }
+        return false;
+      }
   },
   beforeDestroy() {
     if (this.timer) {
@@ -741,7 +810,7 @@ export default {
             right: 3.71rem;
             width: 6.57rem;
             height: 2.29rem;
-            border: 2px solid #9a84ff;
+            // border: 2px solid #9a84ff;
             line-height: 2.29rem;
             text-align: center;
             border-radius: 1.145rem;
@@ -778,9 +847,9 @@ export default {
           .subjective_submit {
             position: absolute;
             right: 3.71rem;
-            padding: 0 20px;
+            // padding: 0 20px;
             height: 2.29rem;
-            border: 2px solid #9a84ff;
+            // border: 2px solid #9a84ff;
             line-height: 2.29rem;
             text-align: center;
             border-radius: 1.145rem;
@@ -788,7 +857,7 @@ export default {
             font-size: 18px;
           }
           .subjective_submit:active {
-            box-shadow: 10px 40px 10px rgba(0, 17, 27, 0.1) inset;
+            // box-shadow: 10px 40px 10px rgba(0, 17, 27, 0.1) inset;
           }
         }
         .closeReply {

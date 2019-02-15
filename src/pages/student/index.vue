@@ -142,7 +142,7 @@
                 }
             }
             .link_hover {
-                color: #4caf50;
+                color: #3d72fe;
             }
         }
     }

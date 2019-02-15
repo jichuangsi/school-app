@@ -4,6 +4,8 @@ const apiUrl = 'http://school.jichuangsi.com:81/COURSESERVICE/student/';
 const host = 'http://school.jichuangsi.com:81/CLASSINTERACTION/';
 // const apiUrl = 'http://192.168.54.101:8888/COURSESERVICE/student/';
 // const host = 'http://192.168.54.101:8888/';
+// const apiUrl = 'http://192.168.31.108:8888/COURSESERVICE/student/'
+// const host = 'http://192.168.31.108:8888/CLASSINTERACTION/'
 //课程列表
 export function getList() {
     return axios({

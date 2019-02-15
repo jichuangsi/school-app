@@ -72,19 +72,19 @@
                 //找到to.path和from.path在routerDeep数组中的下标
                 this.pageUrl = this.$route.path;
                 console.log("当前路由:" + this.$route.path);
-                if(this.$route.path=='/studentenquiry'
-                    ||this.$route.path=='/studentIndex'
-                    ||this.$route.path=='/mistakescollection'
-                    ||this.$route.path=='/myShow'){
-                if(!(localStorage.getItem('token'))){
-                    let route = this.$route.path
-                        this.$router.push({ path: "/", name: "login" })
-                    this.$store.state.userroute = route
-                    }
-                    else {
-                        this.$store.state.userroute = ''
-                    }
-                }
+                // if(this.$route.path=='/studentenquiry'
+                //     ||this.$route.path=='/studentIndex'
+                //     ||this.$route.path=='/mistakescollection'
+                //     ||this.$route.path=='/myShow'){
+                // if(!(localStorage.getItem('token'))){
+                //     let route = this.$route.path
+                //         this.$router.push({ path: "/", name: "login" })
+                //     this.$store.state.userroute = route
+                //     }
+                //     else {
+                //         this.$store.state.userroute = ''
+                //     }
+                // }
                 const toDepth = routerDeep.indexOf(to.path);
                 const fromDepth = routerDeep.indexOf(from.path);
                 // console.log('在' + fromDepth);
