@@ -152,8 +152,8 @@
     .top {
       .nav {
         width: 100%;
-        height: 4.7rem;
-        line-height: 4.7rem;
+        height: 3.15rem;
+        line-height: 3.15rem;
     background:url('../../../assets/上方导航栏.png') no-repeat;
     background-size: 100% 110%;
         color: #ffffff;
