@@ -45,7 +45,7 @@
                         此题没有解析
                     </div>
                 </div>
-                <div @click="Selectionclick(item.answer)" class="btn" v-if="!item.answerForStudent"><span>提交答案</span></div>
+                <div @click="Selectionclick(item.answer)" class="btn" v-if="!item.answerForStudent"><span class="submitAnswer">提交答案</span></div>
             </div>
           </div>
             <div class="btn2" @click="btnclick" v-if="Selectionshow==false">{{btn2text}}</div>
@@ -185,7 +185,7 @@
                     this.addTopicList[this.addTopicList.length-1].answerForStudent = this.Selectionanswer;
                     this.Selectiontext = "";
                     this.frequency = this.frequency-1
-                    this.btn2text = '再推一题（剩余'+this.frequency+'次'
+                    this.btn2text = '再推一题（剩余'+this.frequency+'次)'
                     if(this.frequency == 0) {
                         this.btn2text = '返回错题集'
                     }
@@ -287,14 +287,27 @@
           }
           .btn {
               margin-bottom: 2rem;
-              span {
-              right:15px;
-              font-size: 18px;
-              padding: 5px 10px;
-              background-color: #80d59c;
-              color: #fff;
+            //   span {
+            //   right:15px;
+            //   font-size: 18px;
+            //   padding: 5px 10px;
+            //   background-color: #80d59c;
+            //   color: #fff;
+            //   float: right;
+            //   border-radius: 10px;
+            // }
+            .submitAnswer {
+              margin-right:15px;
+              width: 126px;
+              height: 48px;
+              display: inline-block;
               float: right;
-              border-radius: 10px;
+              background: url('../../../assets/按钮.png') no-repeat;
+              background-position: -150px -288px;
+            }
+            .submitAnswer:active{
+              background: url('../../../assets/按钮.png') no-repeat;
+              background-position: -589px -288px;
             }
           }
           .title {
@@ -365,15 +378,23 @@
     }
       .btn2 {
                 display: block;
-                width: 16rem;
-                height: 3rem;
-                line-height: 3rem;
+                // width: 16rem;
+                // height: 3rem;
+                // line-height: 3rem;
+                width: 414px;
+                height: 74px;
+                line-height: 74px;
                 text-align: center;
                 margin: 1rem auto;
                 color:#fff;
                 border-radius: 3rem;
                 font-size: 1.6rem;
-                background: linear-gradient(to right, #08EBD0, #28A1EC);
+                background: url('../../../assets/按钮.png') no-repeat;
+                background-position: -6px -901px;
+              }
+              .btn2:active {
+                background: url('../../../assets/按钮.png') no-repeat;
+                background-position: -445px -901px;
               }
   }
   </style>

@@ -7,13 +7,11 @@
                     <div class="subjective_warp">
                         <subjective :subjectiveTopic="item" :id="item.id"/>
                         <div class="button_warp">
-                            <div class="subjective_submit" v-show="!subjectiveAnswer[index].answer"
+                            <div class="subjective_submit Answerstart" v-show="!subjectiveAnswer[index].answer"
                                  @click="answerQuestions(item.id)">
-                                 <img :src="startimg" @touchstart.prevent="touchin()" @touchend.prevent="cleartime(item.id)" alt="">
                             </div>
-                            <div class="subjective_submit" v-show="subjectiveAnswer[index].answer"
+                            <div class="subjective_submit Answermodify" v-show="subjectiveAnswer[index].answer"
                                  @click="modifyAnswer(item.id)">
-                                 <img :src="endimg" @touchstart.prevent="touchin1()" @touchend.prevent="cleartime1(item.id)"  alt="">
                             </div>
                         </div>
                         <board :subjectiveAnswer="subjectiveAnswer" :id="item.id"/>
@@ -42,8 +40,6 @@
         },
         data() {
             return {
-      endimg: require('../../../assets/修改答案_未选中.png'),
-      startimg: require('../../../assets/开始答题_未选中.png'),
                 loading: true,                      //加载状态
                 pageShow: false,                    //页面显示状态
                 headers: {                           //头部标题显示
@@ -124,50 +120,7 @@
                     store.commit('SET_BLUETOOTH', true);
                     window.HandwrittenBoard.exploration();
                 }
-            },
-    //长按
-    touchin(){
-        var that=this;
-        this.Loop = setTimeout(function() {
-          that.Loop = 0;
-          //执行长按要执行的内容，如弹出菜单
-          that.startimg = require('../../../assets/开始答题_选中.png')
-        }, 500);
-        return false;
-
-      },
-      cleartime(questionid) {
-        let that = this
-        clearTimeout(this.Loop);
-          that.startimg = require('../../../assets/开始答题_未选中.png')
-        if(that.Loop!=0){
-        //   //这里写要执行的内容（尤如onclick事件）
-        //   that.previewPicture(index)
-        that.answerQuestions(questionid)
-        }
-        return false;
-      },
-    touchin1(){
-        var that=this;
-        this.Loop = setTimeout(function() {
-          that.Loop = 0;
-          //执行长按要执行的内容，如弹出菜单
-          that.startimg = require('../../../assets/修改答案_选中.png')
-        }, 500);
-        return false;
-
-      },
-      cleartime1(questionid) {
-        let that = this
-        clearTimeout(this.Loop);
-          that.startimg = require('../../../assets/修改答案_未选中.png')
-        if(that.Loop!=0){
-        //   //这里写要执行的内容（尤如onclick事件）
-        //   that.previewPicture(index)
-        that.modifyAnswer(questionid)
-        }
-        return false;
-      }
+            }
         }
     }
 </script>
@@ -226,14 +179,29 @@
                         .subjective_submit {
                             position: absolute;
                             right: 3.71rem;
-                            padding: 0 20px;
-                            height: 2.29rem;
-                            // border: 2px solid #9A84FF;
-                            line-height: 2.29rem;
-                            text-align: center;
                             border-radius: 1.145rem;
                             color: #9A84FF;
                             font-size: 18px;
+                            .Answerstart {
+                                width: 128px;
+                                height: 38px;
+                                background: url('../../../assets/按钮.png') no-repeat;
+                                background-position: -149px -828px;
+                            }
+                            .Answerstart:active{
+                                background: url('../../../assets/按钮.png') no-repeat;
+                                background-position: -588px -828px;
+                            }
+                            .Answermodify {
+                                width: 128px;
+                                height: 38px;
+                                background: url('../../../assets/按钮.png') no-repeat;
+                                background-position: -149px -453px;
+                            }
+                            .Answermodify:active{
+                                background: url('../../../assets/按钮.png') no-repeat;
+                                background-position: -588px -453px;
+                            }
                         }
                     }
                 }
