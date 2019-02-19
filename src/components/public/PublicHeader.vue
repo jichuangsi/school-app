@@ -54,7 +54,7 @@
         // border: 1px solid transparent;
         .item {
             padding-top: 1px;
-            font-size: 18px;
+            font-size: 1.5rem;//18px;
             color: #ffffff;
         }
         .previous_page {

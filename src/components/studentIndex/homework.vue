@@ -74,7 +74,7 @@
         data() {
             return {
                 header: {                         //头部标题
-                    title: '作业',
+                    title: '习题',
                 },
                 title: '作业簿',                   //标题
                 nowList: [{

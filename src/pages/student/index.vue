@@ -16,6 +16,7 @@
                 <div class="text">{{item.text}}</div>
             </div>
         </div>
+        <Upgrade/>
     </div>
 </template>
 
@@ -24,13 +25,15 @@
     import homework from '../../components/studentIndex/homework'
     import my from '../../components/studentIndex/my'
     import {mapGetters} from 'vuex'
+    import Upgrade from '../../components/public/Upgrade'
 
     export default {
         name: "student",
         components: {
             classroom,
             homework,
-            my
+            my,
+            Upgrade
         },
         data() {
             return {
@@ -41,7 +44,7 @@
                     text: '课堂'
                 }, {
                     icon: '&#xe618;',
-                    text: '作业'
+                    text: '习题'
                 }, {
                     icon: '&#xe616;',
                     text: '我的'
@@ -54,6 +57,9 @@
                 'setState',
                 'isBlueTooth'
             ])
+        },
+        created:{
+
         },
         methods: {
             qwe(val){
