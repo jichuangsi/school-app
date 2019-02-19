@@ -349,17 +349,21 @@
         }
       }
     }
-              .raising {
-                display: block;
-                width: 14rem;
-                height: 3rem;
-                line-height: 3rem;
-                text-align: center;
-                margin: 1rem auto;
-                color:#fff;
-                border-radius: 3rem;
-                font-size: 2rem;
-                background: linear-gradient(to right, #08EBD0, #28A1EC);
-              }
+    .raising {
+      display: block;
+      width: 14rem;
+      height: 3rem;
+      line-height: 3rem;
+      text-align: center;
+      margin: 1rem auto;
+      color:#fff;
+      border-radius: 3rem;
+      font-size: 2rem;
+      background: linear-gradient(to right, #08EBD0, #28A1EC);
+    }
+    .raising:active {
+        background-image: linear-gradient(-166deg, invalid gradient);
+        box-shadow: 0 2px 6px 3px #62D8EF, 0 2px 23px 8px rgba(103,217,255,0.89);
+    }
   }
   </style>

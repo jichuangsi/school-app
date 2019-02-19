@@ -45,7 +45,7 @@
                         此题没有解析
                     </div>
                 </div>
-                <div @click="Selectionclick(item.answer)" class="btn" v-if="!item.answerForStudent"><span class="submitAnswer">提交答案</span></div>
+                <div @click="Selectionclick(item.answer)" class="btn" v-if="!item.answerForStudent"><span class="submitAnswer"></span></div>
             </div>
           </div>
             <div class="btn2" @click="btnclick" v-if="Selectionshow==false">{{btn2text}}</div>
@@ -377,24 +377,20 @@
       }
     }
       .btn2 {
-                display: block;
-                // width: 16rem;
-                // height: 3rem;
-                // line-height: 3rem;
-                width: 414px;
-                height: 74px;
-                line-height: 74px;
-                text-align: center;
-                margin: 1rem auto;
-                color:#fff;
-                border-radius: 3rem;
-                font-size: 1.6rem;
-                background: url('../../../assets/按钮.png') no-repeat;
-                background-position: -6px -901px;
-              }
-              .btn2:active {
-                background: url('../../../assets/按钮.png') no-repeat;
-                background-position: -445px -901px;
-              }
+        display: block;
+        width: 16rem;
+        height: 3rem;
+        line-height: 3rem;
+        text-align: center;
+        margin: 1rem auto;
+        color:#fff;
+        border-radius: 3rem;
+        font-size: 1.6rem;
+        background: linear-gradient(to right, #08EBD0, #28A1EC);
+      }
+      .btn2:active {
+        background-image: linear-gradient(-166deg, invalid gradient);
+        box-shadow: 0 2px 6px 3px #62D8EF, 0 2px 23px 8px rgba(103,217,255,0.89);
+      }
   }
   </style>
