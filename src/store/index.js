@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import app from './modules/app'
 import classList from './modules/student/classList'
+import homeWork from './modules/student/homeWork'
 import incorrectQuestions from './modules/student/incorrectQuestions'
 import login from './modules/login'
 import teacher from './modules/teacher/teacher'
@@ -19,7 +20,8 @@ const store = new Vuex.Store({
         teacher,
         topic,
         bluetooth,
-        incorrectQuestions
+        incorrectQuestions,
+        homeWork
     },
     getters
 });

@@ -325,13 +325,13 @@
                         .teacher {
                             box-sizing: border-box;
                             padding-top: 1.57rem;
-                            font-size: 16px;
+                            font-size: 18px;
                             color: rgba(136, 136, 136, 1);
                             padding-bottom: .5rem;
                         }
                         .time {
                             display: flex;
-                            font-size: 16px;
+                            font-size: 18px;
                             line-height: 30px;
                             color: rgba(136, 136, 136, 1);
                             span:nth-child(1) {

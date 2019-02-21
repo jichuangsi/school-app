@@ -43,12 +43,19 @@
         },
         methods: {
             login(){
-                let a = localStorage.getItem('account')
-                let b = localStorage.getItem('password')
-                if(a&&b){
-                    this.account = a
-                    this.password = b
-                    this.boolean = true
+                if(localStorage.getItem('token')){
+                    this.$router.push({
+                        path: '/studentIndex',
+                        name: 'studentIndex'
+                    })
+                }else{
+                    let a = localStorage.getItem('account')
+                    let b = localStorage.getItem('password')
+                    if(a&&b){
+                        this.account = a
+                        this.password = b
+                        this.boolean = true
+                    }
                 }
             },
             selection () {

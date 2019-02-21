@@ -39,7 +39,7 @@ export default new Router({
                 keepAlive: false,
                 isBack: false
             }
-        }, {
+        },  {
             path: '/objectiveWork',
             name: 'objectiveWork',
             component: () => import('@/pages/student/homeWork/show-objective'), //学生端作业客观题
@@ -47,7 +47,7 @@ export default new Router({
                 keepAlive: false,
                 isBack: false
             }
-        }, {
+        },{
             path: '/subjectiveWork',
             name: 'subjectiveWork',
             component: () => import('@/pages/student/homeWork/show-subjective'), //学生端作业主观题

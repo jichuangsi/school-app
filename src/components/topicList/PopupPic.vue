@@ -15,11 +15,13 @@
         class="btn"
         @click.stop="picimgshow"
       >x</div>
-      <img
-        :src="bigimg"
-        alt=""
-        :class="{'imgwidth':imgwidth,'imgheight':imgheight}"
-      >
+      <div class="img">
+        <img
+          :src="bigimg"
+          alt=""
+          :class="{'imgwidth':imgwidth,'imgheight':imgheight}"
+        >
+      </div>
     </div>
   </div>
 </template>
@@ -66,7 +68,6 @@ export default {
     },
     picimg(src) {
       let self = this;
-      console.log(123)
       self.dsadsa = true;
       if (this.bigimg === "") {
         getQuestionPic(src).then(res => {
@@ -92,15 +93,18 @@ export default {
     background-color: #fff;
     z-index: 101;
     .btn {
-      padding: 1rem 2rem;
+      padding: 3rem 1rem;
       float: right;
       font-size: 2.5rem;
       color: yellowgreen;
     }
+    .img{
+      margin-top: 40%;
+    }
     .imgwidth {
       transform: rotate(90deg);
       width: 100%;
-      height: 100%;
+      height: 50%;
     }
     .imgheight {
       width: 100%;
@@ -112,7 +116,7 @@ export default {
     color: #666;
     position: absolute;
     right: 40%;
-    z-index: 100;
+    //z-index: 100;
     // bottom: 0%
   }
 }

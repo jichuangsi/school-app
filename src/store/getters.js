@@ -1,6 +1,13 @@
 const getters = {
     //学生端课堂数据
     classroomList: state => state.classList.classroomList,
+    //学生端习题数据
+    homeworkList: state => state.homeWork.homeworkList,
+    homeworkId: state => state.homeWork.homeworkId,
+    homeworkName: state => state.homeWork.homeworkName,
+    homeworkCompleted: state => state.homeWork.homeworkCompleted,
+    homeworkObjectiveQs: state => state.homeWork.homeworkObjectiveQs,
+    homeworkSubjectiveQs: state => state.homeWork.homeworkSubjectiveQs,
     //老师端课堂courseId
     userMobile: state => state.login.userMobile,
     //老师端课堂数据

@@ -28,6 +28,9 @@
         watch: {
             subjectiveAnswer: {
                 handler() {
+                    /*console.log("here3");
+                    console.log(this.id);
+                    console.log(this.subjectiveAnswer);*/
                     for (let i = 0; i < this.subjectiveAnswer.length; i++) {
                         if (this.subjectiveAnswer[i].id === this.id && this.subjectiveAnswer[i].answer) {
                             this.answer = 'data:image/png;base64,' + this.subjectiveAnswer[i].answer.replace(",","");

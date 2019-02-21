@@ -1,21 +1,41 @@
 <template>
     <div class="subjectiveWork">
         <classroom-header :header="headers" :jump="jump"/>
-        <div class="subjectiveContent" v-if="pageShow">
-            <swiper ref="mySwiper">
-                <swiper-slide v-for="(item,index) in subjective" :key="index">
-                    <div class="subjective_warp">
-                        <subjective :subjectiveTopic="item" :id="item.id"/>
-                        <div class="button_warp">
-                            <div class="subjective_submit Answerstart" v-show="!subjectiveAnswer[index].answer"
-                                 @click="answerQuestions(item.id)">
+        <div class="subjectiveContent">
+            <swiper ref="mySwiper" :options="swiperOption">
+                <swiper-slide v-for="(item,index) in homeworkSubjectiveQs" :key="index" v-if="pageShow">
+                    <scroll-content ref="myscrollfull" :mescrollValue="mescrollValue">
+                        <div class="subjective_warp">
+                            <!--<subjective :subjectiveTopic="item" :id="item.id"/>-->
+                            <div class="subjective">
+                                <div class="Collection" @click="Collection">
+                                    <img :src="Collectionsrc" alt="">
+                                </div>
+                                <div class="topic_warp">
+                                    <div class="title">主观题-{{index+1}}</div>
+                                    <div class="topic" v-html="item.questionContent">
+                                        {{item.questionContent}}
+                                    </div>
+                                </div>
+                                <PopupPic :questionPic="item.questionPic"/>
+                                <div class="anwers" v-if="homeworkCompleted">
+                                    此题答案为:<span v-html="item.answer"></span>
+                                </div>
+                                <div class="remind" v-html="item.parse" v-if="homeworkCompleted">
+                                </div>
+
                             </div>
-                            <div class="subjective_submit Answermodify" v-show="subjectiveAnswer[index].answer"
-                                 @click="modifyAnswer(item.id)">
+                            <div class="button_warp" v-if="!homeworkCompleted">
+                                <div class="subjective_submit Answerstart" v-show="!subjectiveAnswer[index].answer"
+                                     @click="answerQuestions(item.questionId)">
+                                </div>
+                                <div class="subjective_submit Answermodify" v-show="subjectiveAnswer[index].answer"
+                                     @click="modifyAnswer(item.questionId)">
+                                </div>
                             </div>
+                            <board :subjectiveAnswer="subjectiveAnswer" :id="item.questionId" v-show="subjectiveAnswer[index].answer"/>
                         </div>
-                        <board :subjectiveAnswer="subjectiveAnswer" :id="item.id"/>
-                    </div>
+                    </scroll-content>
                 </swiper-slide>
             </swiper>
         </div>
@@ -25,71 +45,177 @@
 
 <script>
     import classroomHeader from "../../../components/public/PublicHeader"
-    import subjective from "../../../components/topicList/subjective"
     import board from "../../../components/board/Board"
     import Loading from '../../../components/public/Loading'
+    import ScrollContent from '../../../components/public/ScrollContent'
     import {mapGetters} from 'vuex'
     import store from '@/store'
+    import { addFavorQuestion, removeFavorQuestion } from "@/api/student/classroom";
+    import { sendPicByString, sendSubjectiveAnswer, getPicByString } from "@/api/student/homework";
+    import PopupPic from "@/components/topicList/PopupPic";
+    import { Toast,Indicator } from "mint-ui";
 
     export default {
         components: {
             classroomHeader,
-            subjective,
             board,
-            Loading
+            Loading,
+            PopupPic,
+            ScrollContent
         },
         data() {
             return {
                 loading: true,                      //加载状态
                 pageShow: false,                    //页面显示状态
                 headers: {                           //头部标题显示
-                    title: '一课一练-主观题',
+                    title: '',
                     url: '/studentIndex'
                 },
                 jump: {name: '转至客观题', url: '/objectiveWork'},
+                mescrollValue: {up: false, down: false},        //是否需要下拉上拉加载数据
+                Collectionsrc:require('../../../assets/未收藏.png'),
+                Collectiontype:false,
+                swiperOption: {
+                    notNextTick: true,
+                    //循环
+                    loop: false,
+                    //设定初始化时slide的索引
+                    initialSlide: 0,
+                    //自动播放
+                    // autoplay: true,
+                    // autoplay: {
+                    //     delay: 3000,
+                    //     stopOnLastSlide: false,
+                    //     disableOnInteraction: true,
+                    // },
+                    // 设置轮播
+                    //   effect : 'flip',
+                    //滑动速度
+                    speed: 800,
+                    //滑动方向
+                    direction: "horizontal",
+                    //小手掌抓取滑动
+                    // grabCursor : true,
+                    //滑动之后回调函数
+                    on: {
+                        slideChange: function(){
+                            //console.log(this.activeIndex);
+                            //console.log(this.realIndex);
+                        },
+                        slideChangeTransitionStart: function() {
+                            //console.log(this.activeIndex); //切换结束时，告诉我现在是第几个slide
+                            //vm.drawChart(this.realIndex);
+                        }
+                    },
+                    //左右点击
+                    navigation: {
+                        nextEl: ".swiper-button-next",
+                        prevEl: ".swiper-button-prev"
+                    }
+                    //分页器设置
+                    //   pagination: {
+                    //       el: '.swiper-pagination',
+                    //       clickable :true
+                    //   }
+                },
                 subjectiveId: '',                   //主观题id
-                subjective: [
-                    {                     //api获取去内容
-                        id: 1,
-                        title: '主观题-1',
-                        questionContent: '有两根铁丝，第一根用去 米，第二根用去 ，剩下的一样长，两根铁丝和原来相比如何。'
-                    }, {                     //api获取去内容
-                        id: 2,
-                        title: '主观题-2',
-                        questionContent: '有两根铁丝，第一根用去 米，第二根用去 ，剩下的一样长，两根铁丝和原来相比如何。'
-                    }, {                     //api获取去内容
-                        id: 3,
-                        title: '主观题-3',
-                        questionContent: '有两根铁丝，第一根用去 米，第二根用去 ，剩下的一样长，两根铁丝和原来相比如何。'
-                    }],
                 subjectiveAnswer: []
             }
         },
         watch: {
-            subjective: {
+            /*subjective: {
                 handler() {
                     for (let i = 0; i < this.subjective.length; i++) {
                         this.subjectiveAnswer.push({id: this.subjective[i].id, answer: ''})
                     }
+                    console.log("here1");
+                    console.log(this.subjectiveAnswer);
                 },
-                immediate: true,
+                //immediate: true,
                 deep: true
-            },
+            },*/
             boardImg(val) {
-                for (let i = 0; i < this.subjective.length; i++) {
-                    if (this.subjectiveAnswer[i].id === this.subjectiveId) {
-                        this.subjectiveAnswer[i].answer = val;
+                let _this = this;
+                _this.subjectiveAnswer.forEach((answer, index) => {
+                    if (answer.id === _this.subjectiveId) {
+                        answer.answer = val.data;
+                        this.$set(_this.subjectiveAnswer, index, answer);
                     }
-                }
-                console.log(this.objectiveAnswer);
+                });
+                Indicator.open({
+                    text: '答案提交中...',
+                    spinnerType: 'fading-circle'
+                });
+                /*console.log("here2");
+                console.log(_this.subjectiveAnswer);*/
+                //主观题答案存根
+                sendPicByString(val.data)
+                    .then(res => {
+                        Toast({
+                            message: "图片存储成功！",
+                            position: "middle",
+                            duration: 1000
+                        });
+                        let sub = res.data.data;
+                        //提交主观题答案
+                        sendSubjectiveAnswer(
+                            _this.homeworkId,
+                            _this.subjectiveId,
+                            sub
+                        )
+                            .then(res => {
+                                console.log(res);
+                                Toast({
+                                    message: "答案提交成功！",
+                                    position: "middle",
+                                    duration: 1000
+                                });
+                                Indicator.close();
+                                /*for(let i = 0; i < _this.homeworkSubjectiveQs; i++){
+                                    if(_this.homeworkSubjectiveQs[i].questionId === _this.subjectiveId){
+                                        if(_this.homeworkSubjectiveQs[i].answerModelForStudent){
+                                            _this.homeworkSubjectiveQs[i].answerModelForStudent.stubForSubjective = sub;
+                                        }else{
+                                            let answer = {stubForSubjective:sub};
+                                            _this.homeworkSubjectiveQs[i].answerModelForStudent = answer;
+                                        }
+                                        store.commit('SET_HOMEWORKSUBJECTIVEQS', _this.homeworkSubjectiveQs);
+                                        break;
+                                    }
+                                }*/
+                            })
+                            .catch(err => {
+                                Toast({
+                                    message: "答案提交失败！",
+                                    position: "middle",
+                                    duration: 1000
+                                });
+                                console.log(err);
+                            });
+                    })
+                    .catch(err => {
+                        Toast({
+                            message: "图片存储失败！",
+                            position: "middle",
+                            duration: 1000
+                        });
+                        console.log(err);
+                    });
             }
         },
         computed: {
+            swiper() {
+                return this.$refs.mySwiper.swiper
+            },
             //vuex 调用
             ...mapGetters([
                 'isBoard',
                 'isBlueTooth',
-                'boardImg'
+                'boardImg',
+                'homeworkId',
+                'homeworkName',
+                'homeworkCompleted',
+                'homeworkSubjectiveQs'
             ])
         },
         mounted() {
@@ -97,28 +223,125 @@
         },
         methods: {
             getSubjectiveWork() {
+                this.headers.title = this.homeworkName;
+                for (let i = 0; i < this.homeworkSubjectiveQs.length; i++) {
+                    this.subjectiveAnswer.push({id: this.homeworkSubjectiveQs[i].questionId, answer: ''})
+                }
                 this.pageShow = true;
                 this.loading = false;
+                this.initImgs();
+            },
+            initImgs(){
+                for (let i = 0; i < this.homeworkSubjectiveQs.length; i++) {
+                    this.getSubjectiveImg(this.homeworkSubjectiveQs[i]);
+                }
+            },
+            async getSubjectiveImg(t){
+                console.log(t);
+                let self =this;
+                if (t&&t.answerModelForStudent || t.answerModelForTeacher) {
+                    let img = await getPicByString(
+                        t.answerModelForTeacher
+                            ? t.answerModelForTeacher.stubForSubjective
+                            : t.answerModelForStudent.stubForSubjective
+                    );
+                    let i = self.subjectiveAnswer.findIndex(x => {
+                        return x.id === t.questionId;
+                    });
+                    console.log(i);
+                    if(i != -1){
+                        let answer = self.subjectiveAnswer[i];
+                        if (img.data.data) {
+                            answer.answer = img.data.data.content;
+                            self.$set(self.subjectiveAnswer, i, answer);
+                        }
+                    }
+                }
             },
             //开始答题
             answerQuestions(id) {
                 this.subjectiveId = id;
-                if (this.isBoard) {
-                    console.log('调Android手写板');
-                    window.HandwrittenBoard.getBase64img();
-                } else {
-                    store.commit('SET_BLUETOOTH', true);
-                    window.HandwrittenBoard.exploration();
-                }
+                window.HandwrittenBoard.isConnect(
+                    function(res) {
+                        console.log(res);
+                    },
+                    function(res) {
+                        console.log(res);
+                        switch (res.data.status) {
+                            case 0:
+                                store.commit("SET_BLUETOOTH", true);
+                                window.HandwrittenBoard.exploration();
+                                console.log("第一个");
+                                break;
+                            case 2:
+                                window.HandwrittenBoard.getBase64img();
+                                console.log("第二个");
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                );
             },
             //修改答案
-            modifyAnswer() {
-                if (this.isBoard) {
-                    console.log('调Android手写板');
-                    window.HandwrittenBoard.getBase64img();
-                } else {
-                    store.commit('SET_BLUETOOTH', true);
-                    window.HandwrittenBoard.exploration();
+            modifyAnswer(id) {
+                this.subjectiveId = id;
+                let answer = "";
+                for (let i = 0; i < this.subjectiveAnswer.length; i++) {
+                    if (id === this.subjectiveAnswer[i].id) {
+                        answer = this.subjectiveAnswer[i].answer;
+                    }
+                }
+                window.HandwrittenBoard.isConnect(
+                    function(res) {
+                        console.log(res);
+                    },
+                    function(res) {
+                        console.log(res);
+                        switch (res.data.status) {
+                            case 0:
+                                store.commit("SET_BLUETOOTH", true);
+                                window.HandwrittenBoard.exploration();
+                                console.log("第一个");
+                                break;
+                            case 2:
+                                window.HandwrittenBoard.getBase64img(answer);
+                                console.log("第二个");
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                );
+            },
+            //点击收藏
+            Collection(){
+                if(this.Collectiontype){
+                    removeFavorQuestion(this.subjectiveTopic.questionId).then(res => {
+                        if (res.data.code === '0010') {
+                            this.Collectiontype = false
+                            this.Collectionsrc = require('../../../assets/未收藏.png')
+                        }else{
+                            Toast({
+                                message: res.data.msg,
+                                position: "middle",
+                                duration: 1000
+                            });
+                        }
+                    });
+                } else{
+                    addFavorQuestion(this.subjectiveTopic.questionId).then(res => {
+                        if (res.data.code === '0010') {
+                            this.Collectiontype = true
+                            this.Collectionsrc = require('../../../assets/已收藏.png')
+                        }else{
+                            Toast({
+                                message: res.data.msg,
+                                position: "middle",
+                                duration: 1000
+                            });
+                        }
+                    });
                 }
             }
         }
@@ -167,21 +390,71 @@
             .swiper-container {
                 width: 100%;
                 height: 100%;
-                .subjective_warp {
-                    width: 100%;
-                    height: 100%;
-                    padding: 4.29rem 1.14rem 1.14rem;
+                overflow-y: scroll;
+                .mescroll {
                     box-sizing: border-box;
-                    .button_warp {
-                        padding-bottom: 20px;
-                        position: relative;
-                        height: 2.7rem;
-                        .subjective_submit {
-                            position: absolute;
-                            right: 3.71rem;
-                            border-radius: 1.145rem;
-                            color: #9A84FF;
-                            font-size: 18px;
+                    position: absolute;
+                    top: 0rem;
+                    bottom: 0;
+                    padding: 0rem 1rem 0rem;
+                    height: auto !important;
+                    background-color: rgba(255, 255, 255, 1);
+                    .subjective_warp {
+                        width: 100%;
+                        height: 100%;
+                        padding: 4.29rem 1.14rem 1.14rem;
+                        box-sizing: border-box;
+                        .subjective {
+                            width: 100%;
+                            .Collection {
+                                width: 2.5rem;
+                                height: 2.5rem;
+                                position: absolute;
+                                right: 2rem;
+                                z-index: 100;
+                                img{
+                                    width: 100%;
+                                    height: 100%;
+                                }
+                            }
+                            .anwers{
+                                font-size: 18px;
+                                line-height: 24px;
+                                padding: 15px;
+                                span {
+                                    color: red;
+                                }
+                            }
+                            .remind {
+                                font-size: 18px;
+                                line-height: 24px;
+                                padding: 15px;
+                            }
+                            .topic_warp {
+                                position: relative;
+                                .title {
+                                    font-size: 18px;
+                                    color: #69b482;
+                                }
+                                .topic {
+                                    color: #353535;
+                                    font-size: 18px;
+                                    line-height: 34px;
+                                    padding: 0 2.57rem;
+                                }
+                            }
+                        }
+                        .button_warp {
+                            padding-bottom: 20px;
+                            position: relative;
+                            height: 2.7rem;
+                            .subjective_submit {
+                                position: absolute;
+                                right: 3.71rem;
+                                border-radius: 1.145rem;
+                                color: #9A84FF;
+                                font-size: 18px;
+                            }
                             .Answerstart {
                                 width: 128px;
                                 height: 38px;

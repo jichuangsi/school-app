@@ -2,24 +2,26 @@
     <div class="objectiveWork">
         <classroom-header :header="header" :jump="jump"/>
         <div class="objective_content">
-            <div class="class_topic_warp">
-                <div class="objective_warp" v-for="(item,index) in list" :key="index">
-                    <class-objective :objective="item" @selectAnswer="selectAnswer"/>
+            <div class="objectiveTitle">
+                <span class="icon"></span>
+                <span class="title">作业信息</span>
+            </div>
+            <div class="student_msg">
+                <div class="msg">
+                    <div class="name" v-html="homeworkInfo"></div>
+                    <!--<div class="class"><span>班级</span>&nbsp;初一（1）班</div>-->
+                </div>
+                <!--<div class="score"><span>总分</span>&nbsp;80</div>-->
+                <div class="objectiveScore"><span>客观题统计：</span><span>共{{this.objectiveTotal}}题</span><span v-show="homeworkCompleted">，答对{{this.objectiveCorrect}}题</span></div>
+                <div class="subjectiveScore"><span>主观题统计：</span><span>共{{this.subjectiveTotal}}题</span><span v-if="homeworkCompleted">，批改{{this.subjectiveCorrect}}题</span></div>
+                <div class="right submit" @click.stop.passive="show" v-if="!homeworkCompleted"></div>
+            </div>
+            <div class="topic_warp">
+                <div class="objective_warp" v-for="(item,index) in this.homeworkObjectiveQs" :key="index">
+                    <homework-objective :objective="item" :index="index" :completed="homeworkCompleted" @selectAnswer="selectAnswer" @Multipleanswers="Multipleanswers" @objectiveSubmit="objectiveSubmit"/>
                 </div>
             </div>
         </div>
-        <mt-popup v-model="popupVisible">
-            <div class="popup_warp">
-                <div class="img_warp">
-                    <img src="http://pd0qnho0l.bkt.clouddn.com/Group%204.png">
-                </div>
-                <div class="text">是否提交作业</div>
-                <div class="operation">
-                    <div @click="determine">是</div>
-                    <div @click="signOut">否</div>
-                </div>
-            </div>
-        </mt-popup>
         <loading v-if="loading"/>
     </div>
 </template>
@@ -29,80 +31,186 @@
 <script>
     import classroomHeader from "../../../components/public/PublicHeader"
     import Loading from '../../../components/public/Loading'
-    import classObjective from "../../../components/topicList/classObjective"
-    import {MessageBox} from 'mint-ui';
-    import {Indicator} from 'mint-ui';
-    import {Toast} from 'mint-ui';
+    import homeworkObjective from "../../../components/topicList/homeworkObjective"
+    import {mapGetters} from 'vuex'
+    import store from '@/store'
+    import {getHomework, sendObjectiveAnswer,submitHomework} from "@/api/student/homework"
+    import {MessageBox,Indicator,Toast} from 'mint-ui';
 
     export default {
         components: {
             classroomHeader,
-            classObjective,
+            homeworkObjective,
             Loading
         },
         data() {
             return {
                 header: {                       //头部标题
-                    title: '一课一练-客观题',
+                    title: '',
                     url: '/studentIndex'
                 },
-                popupVisible: false,           //提交作业弹出层状态
                 loading: true,                 //加载状态
                 pageShow: false,               //页面状态
                 jump: {name: '转至主观题', url: '/subjectiveWork'},              //头部多加一个按钮
                 objectiveAnswer: [],
-                list: [
-                    {                       //api数据列表
-                        questionId: 1,
-                        title: "客观题-1",
-                        questionContent: '有两根铁丝，第一根用去米，第二根用去 ，剩下的一样长，两根铁丝原来相比（    ）。',
-                        options: ['第一根长', '第二根长', '一样长', '无法确定']
-                    }, {                       //api数据列表
-                        questionId: 2,
-                        title: "客观题-2",
-                        questionContent: '有两根铁丝，第一根用去米，第二根用去 ，剩下的一样长，两根铁丝原来相比（    ）。',
-                        options: ['第一根长', '第二根长', '一样长', '无法确定']
-
-                    }, {                       //api数据列表
-                        questionId: 3,
-                        title: "客观题-3",
-                        questionContent: '有两根铁丝，第一根用去米，第二根用去 ，剩下的一样长，两根铁丝原来相比（    ）。',
-                        options: ['第一根长', '第二根长', '一样长', '无法确定']
-                    }]
+                homeworkInfo: '',
+                objectiveTotal: 0,
+                objectiveCorrect: 0,
+                subjectiveTotal: 0,
+                subjectiveCorrect: 0
             }
         },
-        mounted() {
-            this.objectiveWork();
-            for (let i = 0; i < this.list.length; i++) {
-                this.objectiveAnswer.push({id: this.list[i].questionId, answer: ''})
-            }
+        computed: {
+            //vuex 调用
+            ...mapGetters([
+                'homeworkId',
+                'homeworkName',
+                'homeworkCompleted',
+                'homeworkObjectiveQs',
+                //'homeworkSubjectiveQs',
+                'homeworkList'
+            ]),
+        },
+        created() {
+            this.getHomeworkDetail();
         },
         methods: {
-            objectiveWork() {
-                this.pageShow = true;
-                this.loading = false;
+            getHomeworkDetail(){
+                getHomework(this.homeworkId).then(res=>{
+                    console.log(res.data.data);
+                    let objectiveQs = [];
+                    let subjectiveQs = [];
+                    let count = 0;
+                    let count1 = 0;
+                    let self = this;
+                    res.data.data.questions.forEach((q, index) => {
+                        switch (q.questionType) {
+                            case 'objective' : {
+                                objectiveQs.push(q);
+                                self.objectiveAnswer.push({ id: q.questionId, answer: "" });
+                                if(q.answerModelForStudent
+                                    &&q.answerModelForStudent.answerForObjective
+                                    &&q.answerModelForStudent.result==='CORRECT'){
+                                    count++;
+                                }
+                                break;
+                            }
+                            case 'subjective' : {
+                                subjectiveQs.push(q);
+                                if(q.answerModelForTeacher
+                                    &&q.answerModelForTeacher.stubForSubjective){
+                                    count1++;
+                                }
+                                break;
+                            }
+                        }
+                    });
+                    this.objectiveCorrect = count;
+                    this.subjectiveCorrect = count1;
+                    this.objectiveTotal = objectiveQs.length;
+                    this.subjectiveTotal = subjectiveQs.length;
+                    console.log(this.objectiveCorrect);
+                    console.log(this.objectiveTotal);
+                    console.log(objectiveQs);
+                    console.log(subjectiveQs);
+                    store.commit('SET_HOMEWORKOBJECTIVEQS', objectiveQs);
+                    store.commit('SET_HOMEWORKSUBJECTIVEQS', subjectiveQs);
+                    store.commit('SET_HOMEWORKNAME', res.data.data.homeworkName);
+                    store.commit('SET_HOMEWORKCOMPLETED', res.data.data.completed||res.data.data.homeworkStatus=='FINISH'||res.data.data.homeworkStatus=='COMPLETED');
+                    this.header.title = res.data.data.homeworkName;
+                    this.homeworkInfo = res.data.data.homeworkInfo;
+                    this.pageShow = true;
+                    this.loading = false;
+                }).catch(err=>{
+                    //console.log(err);
+                })
             },
             //提交作业弹出层点击是操作
-            determine() {
-                this.popupVisible = false;
-            },
-            //提交作业弹出层点击否操作
-            signOut() {
-                this.popupVisible = false;
+            async determine() {
+                let res = await submitHomework(this.homeworkId);
+                console.log(res.data);
+                if(res.data.code === '0010'){
+                    for(let i = 0; i < this.homeworkList.length; i++){
+                        if(this.homeworkList[i].homeworkId===this.homeworkId){
+                            this.homeworkList[i].completed = true;
+                            break;
+                        }
+                    }
+                    store.commit('SET_HOMEWORK', this.homeworkList);
+                    store.commit('SET_HOMEWORKCOMPLETED', true);
+                }else{
+                    Toast({
+                        message: "提交失败！",
+                        position: "middle",
+                        duration: 1000
+                    });
+                }
+                //this.popupVisible = false;
             },
             //点击提交按钮显示
             show() {
-                this.popupVisible = true;
-                this.$refs.objective.show();
+                MessageBox.confirm('',
+                    {message: '是否确定提交？',showCancelButton: true
+                }).then(action => {
+                    this.determine();
+                }).catch(err => {
+                    console.log(err)
+                });
+                //this.popupVisible = true;
+                //this.$refs.objective.show();
             },
+            // 单选
             selectAnswer(id, title) {
-                for (let i = 0; i < this.list.length; i++) {
-                    if (this.objectiveAnswer[i].id === id) {
+                if(this.homeworkCompleted) return;
+                for (let i = 0; i < this.objectiveAnswer.length; i++) {
+                    if (this.objectiveAnswer[i].id === id
+                            &&title&&this.objectiveAnswer[i].answer!=title) {
                         this.objectiveAnswer[i].answer = title;
+                        console.log(this.objectiveAnswer[i].answer)
+                        //this.sendObjective(this.objectiveAnswer[i].id, this.objectiveAnswer[i].answer);
+                        break;
                     }
                 }
-                console.log(this.objectiveAnswer);
-            }
+            },
+            // 多选题答案
+            Multipleanswers(id, title){
+                if(this.homeworkCompleted) return;
+                for (let i = 0; i < this.objectiveAnswer.length; i++) {
+                    if (this.objectiveAnswer[i].id === id
+                            &&title&&this.objectiveAnswer[i].answer!=title) {
+                        this.objectiveAnswer[i].answer = title;
+                        console.log(this.objectiveAnswer[i].answer);
+                        //this.sendObjective(this.objectiveAnswer[i].id, this.objectiveAnswer[i].answer);
+                        break;
+                    }
+                }
+            },
+            //客观题点击提交
+            objectiveSubmit(id) {
+                for (let i = 0; i < this.objectiveAnswer.length; i++) {
+                    //答案数组id跟当前选中题目id一致
+                    if (this.objectiveAnswer[i].id === id) {
+                        //当前选中题目的答案为空
+                        if (!this.objectiveAnswer[i].answer) {
+                            return false;
+                        }
+                        this.sendObjective(this.objectiveAnswer[i].id, this.objectiveAnswer[i].answer);
+                    }
+                }
+            },
+            //提交客观题答案
+            async sendObjective(id, answer) {
+                //客观题答案提交
+                let res = await sendObjectiveAnswer(this.homeworkId, id, answer);
+                //console.log(res.data);
+                if(res.data.code!="0010"){
+                    Toast({
+                        message: "答案提交失败！",
+                        position: "middle",
+                        duration: 1000
+                    });
+                }
+            },
         }
     }
 </script>
@@ -121,7 +229,135 @@
         .objective_content {
             padding: 0 1.14rem;
             margin-top: 4.5rem;
-            .class_topic_warp {
+            .objectiveTitle {
+                height: 2rem;
+                position: relative;
+                margin: 2rem 0 1.4rem;
+                .icon {
+                    position: absolute;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    width: .57rem;
+                    height: 1.43rem;
+                    background-color: rgba(128, 213, 156, 1);
+                }
+                .title {
+                    position: absolute;
+                    top: 50%;
+                    margin-left: 1.14rem;
+                    transform: translateY(-50%);
+                    font-size: 24px;
+                    color: rgba(53, 53, 53, 1);
+                }
+            }
+            .student_msg {
+                padding: 2.29rem 3.72rem;
+                .msg {
+                    position: relative;
+                    padding-bottom: 2rem;
+                    display: flex;
+                    font-size: 18px;
+                    justify-content: space-between;
+                    line-height: 1.42rem;
+                    color: #999999;
+                    span {
+                        font-size: 20px;
+                        color: rgba(53, 53, 53, 1);
+                    }
+                    &:before {
+                        content: "";
+                        position: absolute;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        border-bottom: 1px solid rgba(230, 230, 230, 1);
+                        -webkit-transform: scaleY(.5);
+                        -webkit-transform-origin: 0 0;
+                    }
+                }
+                .score {
+                    position: relative;
+                    padding: 1.14rem 0;
+                    color: #69B482;
+                    font-size: 18px;
+                    span {
+                        font-size: 20px;
+                        color: #353535;
+                    }
+                    &:before {
+                        content: "";
+                        position: absolute;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        border-bottom: 1px solid rgba(230, 230, 230, 1);
+                        -webkit-transform: scaleY(.5);
+                        -webkit-transform-origin: 0 0;
+                    }
+                }
+                .objectiveScore {
+                    padding: 1.14rem 0;
+                    span:nth-child(1) {
+                        font-size: 20px;
+                        color: #353535;
+                    }
+                    /*span:nth-child(2) {
+                        font-size: 18px;
+                        color: #999999;
+                    }*/
+                    span:nth-child(2) {
+                        //padding-left: 4.59rem;
+                        font-size: 18px;
+                        color: rgba(105, 180, 130, 1);
+                    }
+                    span:nth-child(3) {
+                        //padding-left: 4.59rem;
+                        font-size: 18px;
+                        color: rgba(105, 180, 130, 1);
+                    }
+                }
+                .subjectiveScore {
+                    //padding-bottom: 2.29rem;
+                    span:nth-child(1) {
+                        font-size: 20px;
+                        color: #353535;
+                    }
+                    span:nth-child(2) {
+                        font-size: 18px;
+                        color: #9c8afc;
+                    }
+                    span:nth-child(3) {
+                        font-size: 18px;
+                        color: #9c8afc;
+                    }
+                }
+                .right {
+                    width: 8.57rem;
+                    height: 3rem;
+                    // background-color: rgba(128, 213, 156, 1);
+                    border-radius: 100px;
+                    text-align: center;
+                    line-height: 3rem;
+                    color: rgba(255, 255, 255, 1);
+                    margin-top: 10px;
+                }
+                .submit {
+                    width: 98px;
+                    height: 38px;
+                    background: url('../../../assets/按钮.png') no-repeat;
+                    background-position: -164px -782px;
+                    // background-color: #69B482;
+                }
+                .submit:active {
+                    width: 126px;
+                    height: 48px;
+                    background: url('../../../assets/按钮.png') no-repeat;
+                    background-position: -603px -782px;
+                    // background-color: #4a9460;
+                    // box-shadow: 0 2px 6px 3px #4a9460;
+                }
+            }
+            .topic_warp {
                 padding: 1.14rem;
                 border-radius: 18px;
                 background-color: white;
@@ -172,7 +408,7 @@
                     font-size: 20px;
                     color: #777777;
                 }
-                div:nth-child(1) {
+                div:nth-child(2) {
                     color: #80d59c;
                 }
             }
