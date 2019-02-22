@@ -176,6 +176,9 @@
                 }
               },
               Selectionclick(answer){
+                if(!this.Selectionanswer){
+                    Toast("请作出的回答再提交！");return;
+                }
                   this.Selectionshow = false
                 //   用于对比当前答案的正确与否
                 //答案正确

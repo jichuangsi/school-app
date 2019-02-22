@@ -8,7 +8,7 @@
                         <div class="subjective_warp">
                             <!--<subjective :subjectiveTopic="item" :id="item.id"/>-->
                             <div class="subjective">
-                                <div class="Collection" @click="Collection">
+                                <div class="Collection" @click="Collection(item.questionId)">
                                     <img :src="Collectionsrc" alt="">
                                 </div>
                                 <div class="topic_warp">
@@ -55,6 +55,7 @@
     import PopupPic from "@/components/topicList/PopupPic";
     import { Toast,Indicator } from "mint-ui";
 
+    let vm = null;
     export default {
         components: {
             classroomHeader,
@@ -98,13 +99,13 @@
                     // grabCursor : true,
                     //滑动之后回调函数
                     on: {
-                        slideChange: function(){
+                        /*slideChange: function(){
                             //console.log(this.activeIndex);
                             //console.log(this.realIndex);
-                        },
-                        slideChangeTransitionStart: function() {
+                        },*/
+                        slideChange: function() {
                             //console.log(this.activeIndex); //切换结束时，告诉我现在是第几个slide
-                            //vm.drawChart(this.realIndex);
+                            vm.initCollection(this.realIndex);
                         }
                     },
                     //左右点击
@@ -171,7 +172,7 @@
                                     duration: 1000
                                 });
                                 Indicator.close();
-                                /*for(let i = 0; i < _this.homeworkSubjectiveQs; i++){
+                                /*for(let i = 0; i < _this.homeworkSubjectiveQs.length; i++){
                                     if(_this.homeworkSubjectiveQs[i].questionId === _this.subjectiveId){
                                         if(_this.homeworkSubjectiveQs[i].answerModelForStudent){
                                             _this.homeworkSubjectiveQs[i].answerModelForStudent.stubForSubjective = sub;
@@ -218,6 +219,9 @@
                 'homeworkSubjectiveQs'
             ])
         },
+        created() {
+            vm = this;
+        },
         mounted() {
             this.getSubjectiveWork();
         },
@@ -227,6 +231,7 @@
                 for (let i = 0; i < this.homeworkSubjectiveQs.length; i++) {
                     this.subjectiveAnswer.push({id: this.homeworkSubjectiveQs[i].questionId, answer: ''})
                 }
+                this.initCollection(0);
                 this.pageShow = true;
                 this.loading = false;
                 this.initImgs();
@@ -237,7 +242,7 @@
                 }
             },
             async getSubjectiveImg(t){
-                console.log(t);
+                //console.log(t);
                 let self =this;
                 if (t&&t.answerModelForStudent || t.answerModelForTeacher) {
                     let img = await getPicByString(
@@ -248,7 +253,7 @@
                     let i = self.subjectiveAnswer.findIndex(x => {
                         return x.id === t.questionId;
                     });
-                    console.log(i);
+                    //console.log(i);
                     if(i != -1){
                         let answer = self.subjectiveAnswer[i];
                         if (img.data.data) {
@@ -315,12 +320,20 @@
                 );
             },
             //点击收藏
-            Collection(){
+            Collection(id){
+                let self = this;
                 if(this.Collectiontype){
-                    removeFavorQuestion(this.subjectiveTopic.questionId).then(res => {
+                    removeFavorQuestion(id).then(res => {
                         if (res.data.code === '0010') {
                             this.Collectiontype = false
                             this.Collectionsrc = require('../../../assets/未收藏.png')
+                            for(let i = 0; i < self.homeworkSubjectiveQs.length; i++){
+                                if(self.homeworkSubjectiveQs[i].questionId === id){
+                                    self.homeworkSubjectiveQs[i].favor = false;
+                                    store.commit('SET_HOMEWORKSUBJECTIVEQS', self.homeworkSubjectiveQs);
+                                    break;
+                                }
+                            }
                         }else{
                             Toast({
                                 message: res.data.msg,
@@ -330,10 +343,17 @@
                         }
                     });
                 } else{
-                    addFavorQuestion(this.subjectiveTopic.questionId).then(res => {
+                    addFavorQuestion(id).then(res => {
                         if (res.data.code === '0010') {
                             this.Collectiontype = true
                             this.Collectionsrc = require('../../../assets/已收藏.png')
+                            for(let i = 0; i < self.homeworkSubjectiveQs.length; i++){
+                                if(self.homeworkSubjectiveQs[i].questionId === id){
+                                    self.homeworkSubjectiveQs[i].favor = true;
+                                    store.commit('SET_HOMEWORKSUBJECTIVEQS', self.homeworkSubjectiveQs);
+                                    break;
+                                }
+                            }
                         }else{
                             Toast({
                                 message: res.data.msg,
@@ -342,6 +362,15 @@
                             });
                         }
                     });
+                }
+            },
+            initCollection(index){
+                //console.log(index);
+                //console.log(this.homeworkSubjectiveQs[index]);
+                if(this.homeworkSubjectiveQs[index].favor){
+                    this.Collectionsrc = require('../../../assets/已收藏.png');
+                }else{
+                    this.Collectionsrc = require('../../../assets/未收藏.png');
                 }
             }
         }
