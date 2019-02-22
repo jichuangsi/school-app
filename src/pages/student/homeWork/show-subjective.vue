@@ -191,6 +191,7 @@
                                     position: "middle",
                                     duration: 1000
                                 });
+                                Indicator.close();
                                 console.log(err);
                             });
                     })
