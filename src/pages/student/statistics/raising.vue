@@ -111,7 +111,12 @@
 
                   let res = await aiPushQuestions(self.incKnowledgeId, self.qtypeId, self.diff);
                   console.log(res);
-                  if(!res.data||!res.data.data||res.data.code!=="0010"){Toast("没有合适题目推送！");return;}
+                  if(!res.data||!res.data.data||res.data.code!=="0010"){
+                      Toast("没有合适题目推送！");
+                      self.pageShow = true;
+                      self.loading = false;
+                      return;
+                  }
                   self.topicList = res.data.data;
                   self.frequency = self.topicList.length;
                   for (let index = 0; index < self.topicList.length; index++) {
@@ -184,6 +189,9 @@
                 //答案正确
                 if(answer==this.Selectionanswer){
                     this.btn2text = '返回错题集'
+                    this.addTopicList[this.addTopicList.length-1].answerForStudent = this.Selectionanswer;
+                    this.Selectiontext = "";
+                    this.frequency = 0;
                 } else {
                     this.addTopicList[this.addTopicList.length-1].answerForStudent = this.Selectionanswer;
                     this.Selectiontext = "";

@@ -97,9 +97,14 @@ export default {
         },
         'objective.favor':{
             handler(curVal,oldVal){
+                //console.log("here");
+                //console.log(this.objective);
                 if(this.objective.favor){
                     this.Collectiontype = true
                     this.Collectionsrc = require('../../assets/已收藏.png')
+                }else{
+                    this.Collectiontype = false
+                    this.Collectionsrc = require('../../assets/未收藏.png')
                 }
             },
             deep: true,
