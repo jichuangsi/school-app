@@ -1,6 +1,9 @@
   <template>
     <div class="My">
         <div class="top">
+            <div class="fl">
+                版本：{{this.appVersion}}
+            </div>
             <h2>个人中心</h2>
             <div class="fr">
                 <router-link to="/myShow">
@@ -76,7 +79,8 @@ export default {
       pageShow: false, //内容状态
       username: "韩梅梅",
       usertext: "学如逆水行舟，不进则退。",
-      userimg: ''
+      userimg: '',
+      appVersion: ''
     };
   },
   mounted() {
@@ -85,27 +89,23 @@ export default {
   methods: {
     //获取数据
     getMy() {
-      this.pageShow = true;
-      this.loading = false;
-      let user = JSON.parse(localStorage.getItem('user'))
+        this.pageShow = true;
+        this.loading = false;
+        let user = JSON.parse(localStorage.getItem('user'))
       if(user.userSex=="FEMALE"){
         this.userimg = require('../../assets/女学生.png')
       }else{
         this.userimg = require('../../assets/男学生.png')
       }
-      this.username = user.userName
-      // let _this = this;
-      // this.api.getMy()
-      //     .then(function (res) {
-      //         _this.pageShow = true;
-      //         _this.loading = false;
-      //     })
-      //     .catch(function (err) {
-      //
-      //     });
+      this.username = user.userName;
+        let _this = this;
+        cordova.getAppVersion.getVersionNumber().then(function (version) {
+            _this.appVersion = version;
+        });
     },
     loginout() {
       localStorage.removeItem('token');
+      localStorage.removeItem('user');
       window.HandwrittenBoard.disconnect();
       this.$router.push({ path: "/", name: "login" })
     }
@@ -121,6 +121,14 @@ export default {
   background-size: 100% 100%;
   overflow: hidden;
   position: relative;
+    .fl {
+        float: left;
+        position: absolute;
+        top: 2.7rem;
+        left: 3.1rem;
+        font-size: 2rem;
+        color: #fff;
+    }
   h2 {
     text-align: center;
     font-size: 3.8rem;
