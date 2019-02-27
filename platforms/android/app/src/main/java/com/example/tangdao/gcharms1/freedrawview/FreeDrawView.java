@@ -14,11 +14,10 @@ import android.support.annotation.FloatRange;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.example.tangdao.gcharms1.R;
+import com.jichuangsi.school.student.R;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -108,7 +107,6 @@ public class FreeDrawView extends View implements View.OnTouchListener {
 
     public void setBitmap(Bitmap bitmap) {
         if (null != bitmap) {
-            Log.d(TAG, "setBitmap —> bitmap");
             mBitmap = bitmap;
             hasBitmap = true;
             invalidate();
@@ -517,9 +515,9 @@ public class FreeDrawView extends View implements View.OnTouchListener {
 
     @Override
     protected synchronized void onDraw(Canvas canvas) {
-        if (hasBitmap) {
-            canvas.drawBitmap(mBitmap, 0, 0, null);
-        }
+//        if (hasBitmap) {
+//            canvas.drawBitmap(mBitmap, 0, 0, null);
+//        }
 
         if (mPaths.size() == 0 && mPoints.size() == 0) {
             return;

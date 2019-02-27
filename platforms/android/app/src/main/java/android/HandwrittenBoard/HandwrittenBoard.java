@@ -1,9 +1,15 @@
 package android.HandwrittenBoard;
 
+import android.Manifest;
 import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
-import android.os.Bundle;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.support.v4.app.ActivityCompat;
+import android.text.TextUtils;
+import android.util.Base64;
+import android.util.Log;
 
 import com.royole.drawinglib.Constant;
 import com.royole.drawinglib.RyDrawingManager;
@@ -19,6 +25,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -111,10 +121,22 @@ public class HandwrittenBoard extends CordovaPlugin implements IScanListener, ID
     private boolean getBase64img(JSONArray params) {
         if (mCallbackContext != null) {
             try {
-                Intent intent = new Intent(cordova.getActivity(), Class.forName("com.example.tangdao.gcharms1" +
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (ActivityCompat.checkSelfPermission(cordova.getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
+                            PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(cordova.getActivity(), new String[]{Manifest.permission
+                                .WRITE_EXTERNAL_STORAGE}, 100);
+                    }
+                }
+                Intent intent = new Intent(cordova.getActivity(), Class.forName("com.jichuangsi.school.student" + "" +
                         ".DrawActivity"));
                 try {
-                    intent.putExtra("baseimg", params.getString(0));
+//                    intent.putExtra("baseimg", params.getString(0));
+                    String base64 = params.getString(0);
+                    if (!TextUtils.isEmpty(base64)) {
+                        String path = encodeBase64String(base64);
+                        intent.putExtra("baseimg", path);
+                    }
                 } catch (Exception e) {
                 }
                 this.cordova.startActivityForResult(this, intent, OPEN_DRAW_PAINT);
@@ -135,7 +157,14 @@ public class HandwrittenBoard extends CordovaPlugin implements IScanListener, ID
                 case Activity.RESULT_OK:
                     String img = intent.getStringExtra("img");
                     Map<String, Object> data = new HashMap<String, Object>();
-                    data.put("data", img);
+//                    data.put("data", img);
+                    try {
+                        String value = encodeBase64File(img);
+                        Log.i("TAG", "img.length()" + value.length());
+                        data.put("data", value);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     mCallbackContext.sendPluginResult(result("getBase64img", PluginResult.Status.OK, "获取图片成功！", data));
                     break;
                 case Activity.RESULT_CANCELED:
@@ -146,6 +175,30 @@ public class HandwrittenBoard extends CordovaPlugin implements IScanListener, ID
                     break;
             }
         }
+    }
+
+    public String encodeBase64String(String base64) throws Exception {
+        File saveFile = new File(cordova.getContext().getExternalCacheDir(), "compress_" + System.currentTimeMillis()
+                + ".png");
+        byte[] bytes = Base64.decode(base64, Base64.DEFAULT);
+        ByteArrayInputStream in = new ByteArrayInputStream(bytes);
+        byte[] buffer = new byte[1024];
+        FileOutputStream out = new FileOutputStream(saveFile);
+        int len = 0;
+        while ((len = in.read(buffer)) != -1) {
+            out.write(buffer, 0, len);
+        }
+        out.close();
+        return saveFile.getAbsolutePath();
+    }
+
+    public String encodeBase64File(String path) throws Exception {
+        File file = new File(path);
+        FileInputStream inputFile = new FileInputStream(file);
+        byte[] buffer = new byte[(int) file.length()];
+        inputFile.read(buffer);
+        inputFile.close();
+        return Base64.encodeToString(buffer, Base64.DEFAULT);
     }
 
     private boolean initialize() {

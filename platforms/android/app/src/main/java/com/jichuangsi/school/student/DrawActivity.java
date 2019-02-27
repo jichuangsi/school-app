@@ -186,6 +186,7 @@ public class DrawActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         if (v == btnMainCancel) {
+            mDbHelper.deleteB(new BlobContentHolder(Constants.BLOB_NAME));
             finish();
         } else if (v == ivMainUndo) {
             drawView.undoLast();
@@ -196,7 +197,7 @@ public class DrawActivity extends AppCompatActivity implements View.OnClickListe
         } else if (v == ivMainClearAll) {
             drawView.clearDraw();
         } else if (v == ivMainRight) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (ActivityCompat.checkSelfPermission(DrawActivity.this, Manifest.permission
                         .WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(DrawActivity.this, new String[]{Manifest.permission
@@ -206,8 +207,8 @@ public class DrawActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }else {
                 drawView.getDrawScreenshot(new MyDrawScreenshot());
-            }
-
+            }*/
+            drawView.getDrawScreenshot(new MyDrawScreenshot());
         } else if (v == ivColorBalck) {
             setPaintColor(0);
         } else if (v == ivColorRed) {

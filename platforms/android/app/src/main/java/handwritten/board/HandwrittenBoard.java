@@ -1,10 +1,19 @@
 package handwritten.board;
 
+import android.Manifest;
 import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
-import android.os.Bundle;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.support.v4.app.ActivityCompat;
+import android.text.TextUtils;
+import android.util.Base64;
+import android.util.Log;
 
+import com.jichuangsi.school.student.Constants.Constants;
+import com.jichuangsi.school.student.data.models.BlobContentHolder;
+import com.jichuangsi.school.student.data.DatabaseHelper;
 import com.royole.drawinglib.Constant;
 import com.royole.drawinglib.RyDrawingManager;
 import com.royole.drawinglib.interfaces.IDrawingDataListener;
@@ -31,6 +40,19 @@ public class HandwrittenBoard extends CordovaPlugin implements IScanListener, ID
     protected CallbackContext mCallbackContext;
     protected List<BluetoothDevice> mBluetoothDevices;
     private static final int OPEN_DRAW_PAINT = 0;
+
+    private DatabaseHelper mDbHelper = null;
+
+    @Override
+    public void pluginInitialize(){
+        mDbHelper = new DatabaseHelper(this.cordova.getContext()) ;
+    }
+
+    @Override
+    public void onDestroy() {
+        mDbHelper.release();
+        mDbHelper = null ;
+    }
 
     protected PluginResult result(String method, PluginResult.Status status, String msg) {
         return result(method, status, msg, null);
@@ -113,11 +135,32 @@ public class HandwrittenBoard extends CordovaPlugin implements IScanListener, ID
     private boolean getBase64img(JSONArray params) {
         if (mCallbackContext != null) {
             try {
-                Intent intent = new Intent(cordova.getActivity(), Class.forName("com.example.tangdao.gcharms1" +
+                /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (ActivityCompat.checkSelfPermission(cordova.getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
+                            PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(cordova.getActivity(), new String[]{Manifest.permission
+                                .WRITE_EXTERNAL_STORAGE}, 100);
+                    }
+                }*/
+                Intent intent = new Intent(cordova.getActivity(), Class.forName("com.jichuangsi.school.student" +
                         ".DrawActivity"));
+                String base64 = "";
                 try {
-                    intent.putExtra("baseimg", params.getString(0));
+//                    intent.putExtra("baseimg", params.getString(0));
+                    base64 = params.getString(0);
+                    if (!TextUtils.isEmpty(base64)) {
+                        /*String path = ImageUtil.encodeBase64String(cordova.getContext(),base64);
+                        intent.putExtra("baseimg", path);*/
+                        Log.i("TAG", "收到前端传来图片");
+                    } else {
+                        Log.i("TAG", "没收到前端传来图片");
+                    }
                 } catch (Exception e) {
+                    Log.i("TAG", "没收到前端传来图片");
+                }finally {
+                    List<BlobContentHolder> bLists = new ArrayList<BlobContentHolder>();
+                    bLists.add(new BlobContentHolder(Constants.BLOB_NAME, Base64.decode(base64, Base64.DEFAULT)));
+                    mDbHelper.insertBlobContent(bLists);
                 }
                 this.cordova.startActivityForResult(this, intent, OPEN_DRAW_PAINT);
             } catch (Exception e) {
@@ -137,7 +180,19 @@ public class HandwrittenBoard extends CordovaPlugin implements IScanListener, ID
                 case Activity.RESULT_OK:
                     String img = intent.getStringExtra("img");
                     Map<String, Object> data = new HashMap<String, Object>();
-                    data.put("data", img);
+//                    data.put("data", img);
+                    try {
+                        /*String value = ImageUtil.encodeBase64File(img);
+                        Log.i("TAG", "img.length()"+value.length());*/
+
+                        byte[] content = mDbHelper.getB(new BlobContentHolder(Constants.BLOB_NAME));
+
+                        data.put("data", Base64.encodeToString(content, Base64.DEFAULT));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }finally{
+                        mDbHelper.deleteB(new BlobContentHolder(Constants.BLOB_NAME));
+                    }
                     mCallbackContext.sendPluginResult(result("getBase64img", PluginResult.Status.OK, "获取图片成功！", data));
                     break;
                 case Activity.RESULT_CANCELED:
@@ -149,6 +204,7 @@ public class HandwrittenBoard extends CordovaPlugin implements IScanListener, ID
             }
         }
     }
+
 
     private boolean initialize() {
         try {

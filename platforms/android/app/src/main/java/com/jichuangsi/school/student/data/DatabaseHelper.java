@@ -7,10 +7,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.jichuangsi.school.student.data.models.BlobContentHolder;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
+
+    private static final String TAG = "JCS.DatabaseHelper:";
 
     private static final String DATABASE_NAME = "jichuangsi.student.db" ;
 
@@ -51,7 +54,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put("name", b.getName());
         values.put("content", b.getContent());
 
-        db.insert(TABLE_BLOB, null, values);
+        long id = db.insert(TABLE_BLOB, null, values);
+
+        Log.d(TAG, "插入图片的id：" + id);
 
     }
 
@@ -76,8 +81,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		String whereClause = "name=?" ;
 		String[] whereArgs = {b.getName()} ;
 		SQLiteDatabase db  = getWritableDatabase() ;
-		db.update(TABLE_BLOB, values, whereClause, whereArgs);
+		int result = db.update(TABLE_BLOB, values, whereClause, whereArgs);
 		db.close();
+
+        Log.d(TAG, "更新图片的结果：" + result);
 	}
 
 
@@ -86,8 +93,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		String whereClause = "name=? " ;
 		String[] whereArgs = {b.getName()} ;
 		SQLiteDatabase db  = getWritableDatabase() ;
-		db.delete(TABLE_BLOB, whereClause, whereArgs);
+		int result = db.delete(TABLE_BLOB, whereClause, whereArgs);
 		db.close();
+
+        Log.d(TAG, "删除图片的结果：" + result);
 	}
 
     public byte[] getB(BlobContentHolder b) {
@@ -99,7 +108,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String[] whereArgs = {b.getName()} ;
         SQLiteDatabase db  = getWritableDatabase() ;
         cursor = db.query(TABLE_BLOB, col, whereClause, whereArgs, null, null, null);
-        if (cursor == null) {
+        Log.d(TAG, "获取图片的结果：" + cursor==null?"null":cursor.getCount()+"");
+        if (cursor == null || cursor.getCount() == 0) {
             db.close();
             return null ;
         }
