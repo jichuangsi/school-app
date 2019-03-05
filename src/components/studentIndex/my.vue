@@ -67,6 +67,7 @@
 </template>
 <script>
 import Loading from "../public/Loading";
+import store from '@/store'
 
 export default {
   name: "my",
@@ -83,7 +84,7 @@ export default {
       appVersion: ''
     };
   },
-  mounted() {
+  activated() {
     this.getMy();
   },
   methods: {
@@ -105,7 +106,9 @@ export default {
     },
     loginout() {
       localStorage.removeItem('token');
-      localStorage.removeItem('user');
+      //localStorage.removeItem('user');
+      store.commit('IS_CNEW', false);
+      store.commit('IS_HNEW', false);
       window.HandwrittenBoard.disconnect();
       this.$router.push({ path: "/", name: "login" })
     }

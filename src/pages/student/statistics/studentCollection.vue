@@ -94,28 +94,45 @@
         methods: {
             async getFavorList() {
                 let self = this;
-                let res = await listFavorQuestions();
-                console.log(res);
-                self.topicList = res.data.data;
-                self.pageShow = true;
-                self.loading = false;
-                for (let index = 0; index < self.topicList.length; index++) {
-                    let t = self.topicList[index];
-                    if (t.questionStatus === "FINISH") {
-                        if (t.quesetionType === "subjective") {
-                            if (t.answerForStudent || t.answerForTeacher) {
-                                let img = await getSubjectPic(
-                                    t.answerForTeacher
-                                        ? t.answerForTeacher.stubForSubjective
-                                        : t.answerForStudent.stubForSubjective
-                                );
-                                if (img.data.data) {
-                                  self.objectiveAnswer.push({ id: t.questionId, answer: img.data.data.content });
+                try{
+                    let res = await listFavorQuestions();
+                    console.log(res);
+                    if(res.data.code === '0010'){
+                        self.topicList = res.data.data;
+                        self.pageShow = true;
+                        self.loading = false;
+                        for (let index = 0; index < self.topicList.length; index++) {
+                            let t = self.topicList[index];
+                            if (t.questionStatus === "FINISH") {
+                                if (t.quesetionType === "subjective") {
+                                    if (t.answerForStudent || t.answerForTeacher) {
+                                        let img = await getSubjectPic(
+                                            t.answerForTeacher
+                                                ? t.answerForTeacher.stubForSubjective
+                                                : t.answerForStudent.stubForSubjective
+                                        );
+                                        if (img.data.data) {
+                                            self.objectiveAnswer.push({ id: t.questionId, answer: img.data.data.content });
+                                        }
+                                    }
                                 }
                             }
                         }
+                    }else{
+                        Toast({
+                            message: res.data.msg,
+                            position: "middle",
+                            duration: 1000
+                        });
                     }
+                }catch (e) {
+                    Toast({
+                        message: '系统繁忙，请稍后再试！',
+                        position: "middle",
+                        duration: 1000
+                    });
                 }
+
             },
             back() {
               this.$router.push({

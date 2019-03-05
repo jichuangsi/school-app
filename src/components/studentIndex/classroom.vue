@@ -2,7 +2,7 @@
 <template>
     <div class="classroomList">
         <public-header :header="header"/>
-        <scroll-content ref="myscrollfull" @load="loadData" @reload="reloadData" v-if="pageShow"
+        <scroll-content ref="myscrollfull" @load="loadData" @reload="reloadData" v-if="pageShow" @init="mescrollInit"
                         :tips="tips">
             <!--<div slot="empty" style="text-align: center">无任何数据</div>-->
             <div class="tips" v-if="classNew"><span class="point"></span><span class="text">老师布置了新题目</span></div>
@@ -82,13 +82,15 @@
                 stompClient: null,
                 subscription: null,
                 token: localStorage.getItem("token"),
-                classId: ''
+                classId: '',
+                mescroll: null,
             }
         },
         computed: {
             //vuex 调用
             ...mapGetters([
-                'classroomList'
+                'classroomList',
+                'isCNew'
             ])
         },
         mounted() {
@@ -101,9 +103,22 @@
                 this.pageShow = true;
                 this.loading = false;
             }
+            //this.connect();
+        },
+        activated(){
+            if(this.isCNew){
+                this.classId = JSON.parse(localStorage.getItem("user")).roles[0].primaryClass.classId;
+                store.commit('SET_HISTORY', []);
+                this.getClassroomList();
+                this.mescroll.resetUpScroll();
+                store.commit('IS_CNEW', false);
+            }
             this.connect();
         },
         methods: {
+            mescrollInit (mescroll) {
+                this.mescroll = mescroll;
+            },
             //页面加载获取数据
             getClassroomList() {
                 this.$store.dispatch('getClassList').then((res) => {
@@ -111,9 +126,19 @@
                     this.loading = false;
                     this.classList = this.classroomList;
                     //this.time()
-                    console.log(this.classList)
+                    //console.log(this.classList)
                 }).catch((err) => {
-                    console.log("err", err);
+                    console.log('err', err);
+                    this.pageShow = true;
+                    this.loading = false;
+                    /*let msg = this.getMsg(err);
+                    if(msg){
+                        Toast({
+                            message: msg,
+                            position: 'middle',
+                            duration: 2000
+                        });
+                    }*/
                 });
             },
             //上拉加载数据
@@ -124,6 +149,7 @@
                             console.log(res.data.data.content);
                             store.commit('SET_HISTORY', res.data.data.content);
                             this.classList = this.classroomList;
+                            this.removeRepeat(this.classList, 'courseId');
                             this.classroomPage = res.data.data.pageCount;
                             if (this.classroomPage === pageIndex) {
                                 this.classroomState = false
@@ -131,7 +157,16 @@
                             this.$refs.myscrollfull.endByPage(res.data.data.pageSize, res.data.data.pageCount);
                         })
                         .catch(err => {
-                            console.log(err);
+                            console.log('err', err);
+                            this.mescroll.endErr();
+                            /*let msg = this.getMsg(err);
+                            if(msg){
+                                Toast({
+                                    message: msg,
+                                    position: 'middle',
+                                    duration: 2000
+                                });
+                            }*/
                         })
                 }, 2000)
             },
@@ -139,9 +174,60 @@
             reloadData() {
                 let _this = this;
                 setTimeout(function () {
-                    _this.getClassroomList();
+
+                    let arr1 = [];
+                    //if(!_this.classroomState){
+                        arr1 = _this.classList;
+                    //}
+                    //console.log(arr1);
+                    //_this.getClassroomList();
+                     _this.$store.dispatch('getClassList').then((res) => {
+                         _this.classList = _this.classroomList;
+                         //if(!_this.classroomState){
+                             let arr2 = _this.classList;
+                             //console.log(arr2);
+                             if(arr1&&arr1.length>0){
+                                 let arr3 = [];
+                                 arr1.forEach((item, index)=>{
+                                     let i = arr2.findIndex(x=>{
+                                         return x.courseId === item.courseId;
+                                     });
+                                     if(i === -1){
+                                         arr3.push(arr1[index]);
+                                     }
+                                     //console.log(arr3);
+                                 });
+                                 let j = arr2.findIndex(x=>{
+                                     return x.courseStatus === 'FINISH';
+                                 });
+                                 arr3.forEach((item, index)=>{
+                                     item.courseStatus = 'FINISH';
+                                     if(j === -1){
+                                         _this.classList.push(item);
+                                     }else{
+                                         _this.classList.splice(j++, 0, item);
+                                     }
+                                 })
+                                 //console.log(_this.classList);
+                                 _this.removeRepeat(_this.classList, 'courseId');
+                             }
+                         //}
+                     }).catch(err=>{
+                         console.log('err', err);
+                         _this.mescroll.endErr();
+                     });
                     _this.$refs.myscrollfull.endSuccess();
                 }, 1000)
+            },
+            removeRepeat(arr, key){
+                for(let i = 0; i < arr.length; i++) {
+                    for(let j = i+1; j < arr.length; j++) {
+                        if(arr[i][key] === arr[j][key]){
+                            arr.splice(j, 1);
+                            j = j-1;  // 关键，因为splice()删除元素之后，会使得数组长度减小，此时如果没有j=j-1的话，会导致相同id项在重复两次以上之后无法进行去重，且会错误删除id没有重复的项。
+                        }
+                    }
+                }
             },
             //把毫秒换算成正常时间
             time(time) {

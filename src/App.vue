@@ -29,7 +29,8 @@
         data() {
             return {
                 transitionName: 'fold-left',
-                pageUrl: ''
+                pageUrl: '',
+                networkTips: null,
             }
         },
         components: {
@@ -151,6 +152,29 @@
                         history.back();
                     }
                 }, false);
+
+                document.addEventListener('offline', function () {
+                    //debugger
+                    //console.log("网络异常，不能连接到服务器！");
+                    if(!_this.networkTips){
+                        _this.networkTips = setInterval(function() {
+                            Toast({
+                                message: '网络异常，不能连接到服务器！',
+                                position: 'middle',
+                                duration: 2000
+                            });
+                        }, 15000);
+                    }
+                }, false);
+                document.addEventListener("online", function(){
+                    clearInterval(_this.networkTips);
+                    Toast({
+                        message: '网络恢复，请重新刷新当前页面！',
+                        position: 'middle',
+                        duration: 2000
+                    });
+                }, false);
+
             }, false);
         },
         methods:{

@@ -15,7 +15,9 @@ const app = {
         //是否升级弹窗
         isPopupUpgrade: false,
         //升级资讯
-        upgradeInfo: {}
+        upgradeInfo: {},
+        isCNew: false,
+        isHNew: false,
     },
 
     mutations: {
@@ -42,6 +44,12 @@ const app = {
         },
         SET_UPGRADE_INFO: (state, obj) => {
             state.upgradeInfo = obj
+        },
+        IS_CNEW: (state, isCNew) => {
+            state.isCNew = isCNew
+        },
+        IS_HNEW: (state, isHNew) => {
+            state.isHNew = isHNew
         },
     },
 

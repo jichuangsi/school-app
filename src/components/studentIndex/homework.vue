@@ -1,7 +1,7 @@
 <template>
     <div class="homeWork">
         <public-header :header="header"/>
-        <scroll-content ref="myscrollfull" @load="loadData" @reload="reloadData" v-if="pageShow"
+        <scroll-content ref="myscrollfull" @load="loadData" @reload="reloadData" v-if="pageShow" @init="mescrollInit"
                         :tips="tips">
             <div slot="empty">无任何数据</div>
             <homeworks v-for="item in workList" :key="item.index"
@@ -36,7 +36,8 @@
                 homeworkState: true,
                 loading: true,                    //加载状态
                 pageShow: false,                  //内容状态
-                tips: "没有更多作业"                //加载完提示
+                tips: "没有更多作业",              //加载完提示
+                mescroll: null,
             }
         },
         components: {
@@ -48,7 +49,8 @@
         computed: {
             //vuex 调用
             ...mapGetters([
-                'homeworkList'
+                'homeworkList',
+                'isHNew'
             ])
         },
         mounted() {
@@ -59,16 +61,37 @@
                 this.loading = false;
             }
         },
+        activated(){
+            if(this.isHNew){
+                store.commit('SET_HOMEWORKHISTORY', []);
+                this.getHomeworkList();
+                this.mescroll.resetUpScroll();
+                store.commit('IS_HNEW', false);
+            }
+        },
         methods: {
+            mescrollInit (mescroll) {
+                this.mescroll = mescroll;
+            },
             //获取数据加载
             getHomeworkList() {
                 this.$store.dispatch('getWrokList').then((res) => {
                     this.pageShow = true;
                     this.loading = false;
                     this.workList = this.homeworkList;
-                    console.log(this.workList)
+                    //console.log(this.workList)
                 }).catch((err) => {
-                    console.log("err", err);
+                    console.log('err', err);
+                    this.pageShow = true;
+                    this.loading = false;
+                    /*let msg = this.getMsg(err);
+                    if(msg){
+                        Toast({
+                            message: msg,
+                            position: 'middle',
+                            duration: 2000
+                        });
+                    }*/
                 });
             },
             //上拉加载
@@ -79,6 +102,7 @@
                             console.log(res.data.data.content);
                             store.commit('SET_HOMEWORKHISTORY', res.data.data.content);
                             this.workList = this.homeworkList;
+                            this.removeRepeat(this.workList, 'homeworkId');
                             this.homeworkPage = res.data.data.pageCount;
                             if (this.homeworkPage === pageIndex) {
                                 this.homeworkState = false
@@ -86,7 +110,16 @@
                             this.$refs.myscrollfull.endByPage(res.data.data.pageSize, res.data.data.pageCount);
                         })
                         .catch(err => {
-                            console.log(err);
+                            console.log('err', err);
+                            this.mescroll.endErr();
+                            /*let msg = this.getMsg(err);
+                            if(msg){
+                                Toast({
+                                    message: msg,
+                                    position: 'middle',
+                                    duration: 2000
+                                });
+                            }*/
                         })
                 }, 2000)
             },
@@ -94,9 +127,60 @@
             reloadData() {
                 let _this = this;
                 setTimeout(function () {
-                    _this.getHomeworkList();
+                    let arr1 = [];
+                    //if(!_this.homeworkState){
+                        arr1 = _this.workList;
+                    //}
+                    //console.log(arr1);
+                    //_this.getHomeworkList();
+                    _this.$store.dispatch('getWrokList').then((res) => {
+                        _this.workList = _this.homeworkList;
+                        //if(!_this.homeworkState){
+                            let arr2 = _this.workList;
+                            //console.log(arr2);
+                            if(arr1&&arr1.length>0){
+                                let arr3 = [];
+                                arr1.forEach((item, index)=>{
+                                    let i = arr2.findIndex(x=>{
+                                        return x.homeworkId === item.homeworkId;
+                                    });
+                                    if(i === -1){
+                                        arr3.push(arr1[index]);
+                                    }
+                                    //console.log(arr3);
+                                });
+                                let j = arr2.findIndex(x=>{
+                                    return x.homeworkStatus === 'FINISH'||x.homeworkStatus === 'COMPLETED';
+                                });
+                                arr3.forEach((item, index)=>{
+                                    item.homeworkStatus = 'FINISH';
+                                    if(j === -1){
+                                        _this.workList.push(item);
+                                    }else{
+                                        _this.workList.splice(j++, 0, item);
+                                    }
+
+                                })
+                                //console.log(_this.workList);
+                                _this.removeRepeat(_this.workList, 'homeworkId');
+                            }
+                        //}
+                    }).catch((err)=>{
+                        console.log(err);
+                        _this.mescroll.endErr();
+                    });
                     _this.$refs.myscrollfull.endSuccess();
                 }, 1000)
+            },
+            removeRepeat(arr, key){
+                for(let i = 0; i < arr.length; i++) {
+                    for(let j = i+1; j < arr.length; j++) {
+                        if(arr[i][key] === arr[j][key]){
+                            arr.splice(j, 1);
+                            j = j-1;  // 关键，因为splice()删除元素之后，会使得数组长度减小，此时如果没有j=j-1的话，会导致相同id项在重复两次以上之后无法进行去重，且会错误删除id没有重复的项。
+                        }
+                    }
+                }
             },
             //把毫秒换算成正常时间
             time(time) {
