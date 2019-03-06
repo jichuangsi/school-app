@@ -14,7 +14,9 @@
                 <!--<div class="score"><span>总分</span>&nbsp;80</div>-->
                 <div class="objectiveScore"><span>客观题统计：</span><span>共{{this.objectiveTotal}}题</span><span v-show="homeworkCompleted">，答对{{this.objectiveCorrect}}题</span></div>
                 <div class="subjectiveScore"><span>主观题统计：</span><span>共{{this.subjectiveTotal}}题</span><span v-if="homeworkCompleted">，批改{{this.subjectiveCorrect}}题</span></div>
-                <div class="right submit" @click.stop.passive="show" v-if="!homeworkCompleted"></div>
+                <div class="clearfix">
+                    <div class="right submit" @click.stop.passive="show" v-if="!homeworkCompleted"></div>
+                </div>
             </div>
             <div class="topic_warp">
                 <div class="objective_warp" v-for="(item,index) in this.homeworkObjectiveQs" :key="index">
@@ -69,7 +71,7 @@
                 'homeworkObjectiveQs',
                 //'homeworkSubjectiveQs',
                 'homeworkList'
-            ]),
+            ])
         },
         created() {
             this.getHomeworkDetail();
@@ -210,7 +212,7 @@
                         duration: 1000
                     });
                 }
-            },
+            }
         }
     }
 </script>
@@ -251,7 +253,7 @@
                 }
             }
             .student_msg {
-                padding: 2.29rem 3.72rem;
+                padding: 2.29rem 2.29rem;
                 .msg {
                     position: relative;
                     padding-bottom: 2rem;
@@ -342,17 +344,19 @@
                     margin-top: 10px;
                 }
                 .submit {
-                    width: 98px;
+                    width: 126px;
                     height: 38px;
+                    float: right;
                     background: url('../../../assets/按钮.png') no-repeat;
-                    background-position: -164px -782px;
+                    background-position: -135px -1491px;
                     // background-color: #69B482;
                 }
                 .submit:active {
                     width: 126px;
-                    height: 48px;
+                    height: 38px;
+                    float: right;
                     background: url('../../../assets/按钮.png') no-repeat;
-                    background-position: -603px -782px;
+                    background-position: -578px -1491px;
                     // background-color: #4a9460;
                     // box-shadow: 0 2px 6px 3px #4a9460;
                 }
