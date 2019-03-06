@@ -22,7 +22,7 @@
             <div class="text" v-html="item">{{item}}</div>
         </div>
         <PopupPic :questionPic="objective.questionPic"/>
-        <div class="right submit" @click.stop.passive="submit(objective.questionId)" v-if="!homeworkCompleted"></div>
+        <div class="clearfix"><div class="right submit" @click.stop.passive="submit(objective.questionId)" v-if="!homeworkCompleted"></div></div>
         <div class="anwers" v-if="completed">
           此题答案为:<span v-html="objective.answer.split('|').join(',')"></span>
         </div>
@@ -70,8 +70,8 @@ export default {
     computed: {
         //vuex 调用
         ...mapGetters([
-            'homeworkCompleted',
-        ]),
+            'homeworkCompleted'
+        ])
     },
     watch:{
         'objective.answerModelForStudent': {  // 这监听对象值的改变 和上面的不一样。
@@ -265,16 +265,20 @@ export default {
         color: rgba(255, 255, 255, 1);
         //margin-top: 10px;
     }
+    .clearfix {
+        // height: 38px;
+    }
     .submit {
         width: 98px;
         height: 38px;
+                    float: right;
         background: url('../../assets/按钮.png') no-repeat;
         background-position: -164px -782px;
         // background-color: #69B482;
     }
     .submit:active {
-        width: 126px;
-        height: 48px;
+        width: 98px;
+        height: 38px;
         background: url('../../assets/按钮.png') no-repeat;
         background-position: -603px -782px;
         // background-color: #4a9460;
