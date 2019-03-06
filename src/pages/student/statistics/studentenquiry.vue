@@ -651,11 +651,12 @@ export default {
     background-size: 100% 110%;
     color: #ffffff;
     font-size: 2rem;
-    padding-left: 1rem;
+    padding-left: 0.5rem;
     display: flex;
     .iconfont{
     font-size: 2rem;
     display: inline-block;
+    padding-right:2rem;
     }
     ul {
       flex: 1;
@@ -664,21 +665,20 @@ export default {
       li {
         display: inline-block;
         text-align: center;
+        padding-left: 1rem;
         span {
           display: inline-block;
           height: 3.15rem;
-          padding: 0rem 1rem;
-          font-size: 1.8rem;
-          opacity: 0.8;
         }
         .color {
           // border-bottom: 4px solid #347cf9;
           background: url('../../../assets/下标识.png') no-repeat;
           background-size: 100% 10%;
           background-position-y: 2.9rem;
-          font-size: 2rem;
-          opacity: 1;
         }
+      }
+      :nth-child(1) {
+        padding-left: 0;
       }
     }
   }

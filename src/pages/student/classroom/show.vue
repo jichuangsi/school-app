@@ -747,8 +747,6 @@ export default {
             font-size: 18px;
           }
           .objective_submit:active {
-            width: 98px;
-            height: 38px;
             background: url('../../../assets/按钮.png') no-repeat;
             background-position: -603px -782px;
           }
