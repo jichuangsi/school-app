@@ -44,7 +44,7 @@
               <div class="anwers">
                 正确答案:<span v-html="item.answer.split('|').join(',')"></span>
               </div>
-              <div class="remindbtn clearfix"><span @click="remindclick(index)">答案解析</span></div>
+              <div class="remindbtn clearfix"><span @click="remindclick(index)" :class="{'remindspan':remindshow}">答案解析</span></div>
               <div class="remind" v-html="item.parse" v-if="item.parse&&remindshow&&remindid==index">
               </div>
               <div class="remind" v-if="!item.parse&&remindshow&&remindid==index">
@@ -274,13 +274,18 @@
             // position: absolute;
             span {
               right:15px;
-              font-size: 18px;
-              padding: 5px 10px;
+              font-size: 22px;
+              padding: 10px 20px;
               background-color: #80d59c;
               color: #fff;
               float: right;
-              border-top-left-radius: 10px;
-              border-top-right-radius: 10px;
+              // border-top-left-radius: 10px;
+              // border-top-right-radius: 10px;
+              border-radius: 21px;
+            }
+            .remindspan {
+              border-bottom-left-radius: 0px;
+              border-bottom-right-radius: 0px;
             }
           }
           .title {

@@ -45,7 +45,7 @@
                         此题没有解析
                     </div>
                 </div>
-                <div @click="Selectionclick(item.answer)" class="btn" v-if="!item.answerForStudent"><span class="submitAnswer"></span></div>
+                <div @click="Selectionclick(item.answer)" class="btn clearfix" v-if="!item.answerForStudent"><span class="submitAnswer"></span></div>
             </div>
           </div>
             <div class="btn2" @click="btnclick" v-if="Selectionshow==false">{{btn2text}}</div>
