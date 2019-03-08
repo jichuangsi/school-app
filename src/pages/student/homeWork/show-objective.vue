@@ -225,9 +225,8 @@
         right: 0;
         bottom: 0;
         overflow: auto;
-        background-color: #F7F7F7;
+        // background-color: #F7F7F7;
         /*background-color: #1b1b1b;*/
-
         .objective_content {
             padding: 0 1.14rem;
             margin-top: 4.5rem;

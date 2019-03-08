@@ -114,7 +114,7 @@
         </swiper>
 
       </div>
-      <div class="boxnav">
+      <div class="boxnav clearfix">
           <div class="clearfix" @click="mistakescollection(item.name,item.id)" v-for="(item,index) in involvenav" :key="index">
               <div class="fl">{{item.name}}</div>
               <div class="fr">
@@ -248,13 +248,18 @@ export default {
 
 <style scoped lang="scss">
 .mistakescollection {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background: url('../../../assets/allbj.png') no-repeat;
   .top {
+    background: url('../../../assets/allbj.png') no-repeat;
     .nav {
       width: 100%;
       height: 3.15rem;
       line-height: 3.15rem;
-    background:url('../../../assets/上方导航栏.png') no-repeat;
-    background-size: 100% 110%;
+        background:url('../../../assets/上方导航栏.png') no-repeat;
+        background-size: 100% 110%;
       color: #ffffff;
       font-size: 2rem;
         position: relative;

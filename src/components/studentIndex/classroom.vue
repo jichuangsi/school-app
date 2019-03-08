@@ -341,6 +341,7 @@
         left: 0;
         right: 0;
         bottom: 0;
+        background: url('../../assets/allbj.png') no-repeat;
         .mescroll {
             box-sizing: border-box;
             position: absolute;
@@ -389,6 +390,7 @@
                 padding: 1.43rem 1.43rem;
                 background-color: white;
                 border-radius: 18px;
+                box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.18);
                 .subject {
                     display: flex;
                     .subject_img {
