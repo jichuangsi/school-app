@@ -20,14 +20,14 @@
           {{item.questionContent}}
         </div>
         <div class="select clearfix" v-for="(item1,index) in item.options" :key="index" v-if="item.answer.length==1">
-          <div class="round">
+          <div class="round" v-if="item.answerForStudent">
             <span class="point" v-if="item.answerForStudent.answerForObjective === conversion(index)"></span>
           </div>
           <div class="option">{{conversion(index)}}.</div>
           <div class="text" v-html="item1">{{item1}}</div>
         </div>
         <div class="select clearfix" v-for="(item2,index) in item.options" :key="index" v-if="item.answer.length>1">
-          <div class="round" >
+          <div class="round" v-if="item.answerForStudent">
             <span class="point" v-for="(item3,index1) in item.answerForStudent.answerForObjective.split('|')" :key="index1" v-if="item3 === conversion(index)"></span>
           </div>
           <div class="option">{{conversion(index)}}.</div>
