@@ -132,6 +132,7 @@
                 let res = await submitHomework(this.homeworkId);
                 console.log(res.data);
                 if(res.data.code === '0010'){
+                    console.log(132)
                     for(let i = 0; i < this.homeworkList.length; i++){
                         if(this.homeworkList[i].homeworkId===this.homeworkId){
                             this.homeworkList[i].completed = true;
@@ -152,7 +153,7 @@
             //点击提交按钮显示
             show() {
                 MessageBox.confirm('',
-                    {message: '是否确定提交？',showCancelButton: true
+                    {message: '是否确定提交全部题目？',showCancelButton: true
                 }).then(action => {
                     this.determine();
                 }).catch(err => {
@@ -208,6 +209,12 @@
                 if(res.data.code!="0010"){
                     Toast({
                         message: "答案提交失败！",
+                        position: "middle",
+                        duration: 1000
+                    });
+                }else {
+                     Toast({
+                        message: "答案提交成功！",
                         position: "middle",
                         duration: 1000
                     });

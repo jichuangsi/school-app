@@ -12,6 +12,7 @@
                                     <img :src="Collectionsrc" alt="">
                                 </div>
                                 <div class="topic_warp">
+                                    <div class="centertext">左右滑动切换题目</div>
                                     <div class="title">主观题-{{index+1}}</div>
                                     <div class="topic" v-html="item.questionContent">
                                         {{item.questionContent}}
@@ -462,6 +463,13 @@
                             }
                             .topic_warp {
                                 position: relative;
+                                .centertext {
+                                    text-align: center;
+                                    margin-top: 1rem;
+                                    font-size: 20px;
+                                    color: #3d72fe;
+                                    font-weight: 600;
+                                }
                                 .title {
                                     font-size: 18px;
                                     color: #69b482;
