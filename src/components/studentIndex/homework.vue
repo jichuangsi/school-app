@@ -67,6 +67,8 @@
                 this.getHomeworkList();
                 this.mescroll.resetUpScroll();
                 store.commit('IS_HNEW', false);
+            }else{
+                this.checkComplete(this.workList);
             }
         },
         methods: {
@@ -79,6 +81,7 @@
                     this.pageShow = true;
                     this.loading = false;
                     this.workList = this.homeworkList;
+                    this.checkComplete(this.workList);
                     //console.log(this.workList)
                 }).catch((err) => {
                     console.log('err', err);
@@ -163,6 +166,7 @@
                                 })
                                 //console.log(_this.workList);
                                 _this.removeRepeat(_this.workList, 'homeworkId');
+                                _this.checkComplete(_this.workList);
                             }
                         //}
                     }).catch((err)=>{
@@ -181,6 +185,17 @@
                         }
                     }
                 }
+            },
+            checkComplete(arr){
+              let count = 0;
+              arr.forEach((item, index)=>{
+                  if(!item.completed) count++;
+              });
+              if(count === 0){
+                  this.$emit("messageout",{"message": null, "type": 2});
+              }else{
+                  this.$emit("message",{"message": count, "type": 2});
+              }
             },
             //把毫秒换算成正常时间
             time(time) {

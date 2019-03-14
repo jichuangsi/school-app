@@ -12,8 +12,8 @@
                     <!--<div class="class"><span>班级</span>&nbsp;初一（1）班</div>-->
                 </div>
                 <!--<div class="score"><span>总分</span>&nbsp;80</div>-->
-                <div class="objectiveScore"><span>客观题统计：</span><span>共{{this.objectiveTotal}}题</span><span v-show="homeworkCompleted">，答对{{this.objectiveCorrect}}题</span></div>
-                <div class="subjectiveScore"><span>主观题统计：</span><span>共{{this.subjectiveTotal}}题</span><span v-if="homeworkCompleted">，批改{{this.subjectiveCorrect}}题</span></div>
+                <div class="objectiveScore"><span>客观题统计：</span><span>共{{this.objectiveTotal}}题</span><span v-show="!homeworkCompleted">，已提交{{this.objectiveCorrect}}题</span><span v-show="homeworkCompleted">，答对{{this.objectiveCorrect}}题</span></div>
+                <div class="subjectiveScore"><span>主观题统计：</span><span>共{{this.subjectiveTotal}}题</span><span v-show="!homeworkCompleted">，已提交{{this.subjectiveCorrect}}题</span><span v-show="homeworkCompleted">，批改{{this.subjectiveCorrect}}题</span></div>
                 <div class="clearfix">
                     <div class="right submit" @click.stop.passive="show" v-if="!homeworkCompleted"></div>
                 </div>
@@ -59,7 +59,8 @@
                 objectiveTotal: 0,
                 objectiveCorrect: 0,
                 subjectiveTotal: 0,
-                subjectiveCorrect: 0
+                subjectiveCorrect: 0,
+                objectiveSubmitted: []
             }
         },
         computed: {
@@ -79,7 +80,16 @@
         methods: {
             getHomeworkDetail(){
                 getHomework(this.homeworkId).then(res=>{
-                    console.log(res.data.data);
+                    //console.log(res.data.data);
+                    if(res.data.code!=='0010'){
+                        //console.log(res.data.msg);
+                        Toast({
+                            message:  "加载出错，请重新进入！",
+                            position: "middle",
+                            duration: 1000
+                        });
+                        return;
+                    }
                     let objectiveQs = [];
                     let subjectiveQs = [];
                     let count = 0;
@@ -89,18 +99,28 @@
                         switch (q.questionType) {
                             case 'objective' : {
                                 objectiveQs.push(q);
-                                self.objectiveAnswer.push({ id: q.questionId, answer: "" });
-                                if(q.answerModelForStudent
+                                if(this.homeworkCompleted&&q.answerModelForStudent
                                     &&q.answerModelForStudent.answerForObjective
                                     &&q.answerModelForStudent.result==='CORRECT'){
                                     count++;
+                                    this.objectiveAnswer.push({ id: q.questionId, answer: q.answerModelForStudent.answerForObjective, modify: false });
+                                }else if(!this.homeworkCompleted&&q.answerModelForStudent
+                                    &&q.answerModelForStudent.answerForObjective){
+                                    count++;
+                                    this.objectiveSubmitted.push(q.questionId);
+                                    this.objectiveAnswer.push({ id: q.questionId, answer: q.answerModelForStudent.answerForObjective, modify: false });
+                                }else{
+                                    this.objectiveAnswer.push({ id: q.questionId, answer: "", modify: false });
                                 }
                                 break;
                             }
                             case 'subjective' : {
                                 subjectiveQs.push(q);
-                                if(q.answerModelForTeacher
+                                if(this.homeworkCompleted&&q.answerModelForTeacher
                                     &&q.answerModelForTeacher.stubForSubjective){
+                                    count1++;
+                                }else if(!this.homeworkCompleted&&q.answerModelForStudent
+                                    &&q.answerModelForStudent.stubForSubjective){
                                     count1++;
                                 }
                                 break;
@@ -111,10 +131,10 @@
                     this.subjectiveCorrect = count1;
                     this.objectiveTotal = objectiveQs.length;
                     this.subjectiveTotal = subjectiveQs.length;
-                    console.log(this.objectiveCorrect);
-                    console.log(this.objectiveTotal);
-                    console.log(objectiveQs);
-                    console.log(subjectiveQs);
+                    //console.log(this.objectiveCorrect);
+                    //console.log(this.objectiveTotal);
+                    //console.log(objectiveQs);
+                    //console.log(subjectiveQs);
                     store.commit('SET_HOMEWORKOBJECTIVEQS', objectiveQs);
                     store.commit('SET_HOMEWORKSUBJECTIVEQS', subjectiveQs);
                     store.commit('SET_HOMEWORKNAME', res.data.data.homeworkName);
@@ -130,9 +150,9 @@
             //提交作业弹出层点击是操作
             async determine() {
                 let res = await submitHomework(this.homeworkId);
-                console.log(res.data);
+                //console.log(res.data);
                 if(res.data.code === '0010'){
-                    console.log(132)
+                    //console.log(132)
                     for(let i = 0; i < this.homeworkList.length; i++){
                         if(this.homeworkList[i].homeworkId===this.homeworkId){
                             this.homeworkList[i].completed = true;
@@ -141,6 +161,21 @@
                     }
                     store.commit('SET_HOMEWORK', this.homeworkList);
                     store.commit('SET_HOMEWORKCOMPLETED', true);
+                    await getHomework(this.homeworkId).then(res=>{
+                        let count = this.objectiveCorrect = 0;
+                        if(res.data.code==='0010'){
+                            res.data.data.questions.forEach((q, index) => {
+                                if (q.questionType==='objective') {
+                                    if(this.homeworkCompleted&&q.answerModelForStudent
+                                        &&q.answerModelForStudent.answerForObjective
+                                        &&q.answerModelForStudent.result==='CORRECT'){
+                                        count++;
+                                    }
+                                }
+                            })
+                            this.objectiveCorrect = count;
+                        }
+                    });
                 }else{
                     Toast({
                         message: "提交失败！",
@@ -169,7 +204,8 @@
                     if (this.objectiveAnswer[i].id === id
                             &&title&&this.objectiveAnswer[i].answer!=title) {
                         this.objectiveAnswer[i].answer = title;
-                        console.log(this.objectiveAnswer[i].answer)
+                        this.objectiveAnswer[i].modify = true;
+                        //console.log(this.objectiveAnswer[i].answer)
                         //this.sendObjective(this.objectiveAnswer[i].id, this.objectiveAnswer[i].answer);
                         break;
                     }
@@ -182,7 +218,8 @@
                     if (this.objectiveAnswer[i].id === id
                             &&title&&this.objectiveAnswer[i].answer!=title) {
                         this.objectiveAnswer[i].answer = title;
-                        console.log(this.objectiveAnswer[i].answer);
+                        this.objectiveAnswer[i].modify = true;
+                        //console.log(this.objectiveAnswer[i].answer);
                         //this.sendObjective(this.objectiveAnswer[i].id, this.objectiveAnswer[i].answer);
                         break;
                     }
@@ -195,6 +232,15 @@
                     if (this.objectiveAnswer[i].id === id) {
                         //当前选中题目的答案为空
                         if (!this.objectiveAnswer[i].answer) {
+                            return false;
+                        }
+                        if(!this.objectiveAnswer[i].modify){
+                            console.log(this.objectiveAnswer);
+                            Toast({
+                                message: "已提交相同答案！",
+                                position: "middle",
+                                duration: 1000
+                            });
                             return false;
                         }
                         this.sendObjective(this.objectiveAnswer[i].id, this.objectiveAnswer[i].answer);
@@ -218,6 +264,18 @@
                         position: "middle",
                         duration: 1000
                     });
+                    let i = this.objectiveSubmitted.findIndex(x=>{
+                        return x === id;
+                    });
+                    if(i===-1){
+                        this.objectiveSubmitted.push(id);
+                        this.objectiveCorrect = this.objectiveSubmitted.length;
+                    }
+                    let j = this.objectiveAnswer.findIndex(x=>{
+                        return x.id === id;
+                    });
+                    this.objectiveAnswer[j].modify = false;
+                    //console.log(this.objectiveAnswer);
                 }
             }
         }
@@ -323,6 +381,11 @@
                         font-size: 18px;
                         color: rgba(105, 180, 130, 1);
                     }
+                    span:nth-child(4) {
+                        //padding-left: 4.59rem;
+                        font-size: 18px;
+                        color: rgba(105, 180, 130, 1);
+                    }
                 }
                 .subjectiveScore {
                     //padding-bottom: 2.29rem;
@@ -335,6 +398,10 @@
                         color: #9c8afc;
                     }
                     span:nth-child(3) {
+                        font-size: 18px;
+                        color: #9c8afc;
+                    }
+                    span:nth-child(4) {
                         font-size: 18px;
                         color: #9c8afc;
                     }

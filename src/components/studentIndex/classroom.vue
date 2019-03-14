@@ -251,7 +251,7 @@
             goClassroom(Id, courseName) {
                         if (Id === this.current) {
                             this.newborder = 0
-                            this.$emit("messageout",null)
+                            this.$emit("messageout",{"message": null, "type": 1})
                         }
                 this.$router.push({
                     path: '@/pages/student/classroom/show',
@@ -316,7 +316,7 @@
                             let first = this.classList.splice(index_i,1)[0]
                             this.classList.unshift(first)
                             this.newborder = 1
-                            this.$emit("message","提示")
+                            this.$emit("message",{"message": "提示", "type": 1})
                             Toast({
                                 message: this.classList[0].courseName + '上课了',
                                 position: 'middle',

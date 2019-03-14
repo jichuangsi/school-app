@@ -1,8 +1,8 @@
 <template>
     <div class="student">
         <classroom v-show="linkState === 0" v-on:message="zxc($event)" v-on:messageout="qwe($event)"/>
-        <homework v-show="linkState === 1"/>
-        <my v-show="linkState === 2"/>
+        <homework v-show="linkState === 1" v-on:message="zxc($event)" v-on:messageout="qwe($event)"/>
+        <my v-show="linkState === 2" v-on:message="zxc($event)" v-on:messageout="qwe($event)"/>
         <div class="footers">
             <div
                     class="link"
@@ -11,7 +11,10 @@
                     :key="item.index"
                     @click="State(index)"
             >
-                <div class="msg" v-if="index==0&&Message"></div>
+                <!--<div :class="{msgC:Type === 1,msgH:Type === 2,msgM:Type === 3}" v-if="linkState!=2&&Message"></div>-->
+                <div class="msgC" v-if="index === 0&&Message1"></div>
+                <div class="msgH" v-if="index === 0&&Message2">{{Message2}}</div>
+                <div class="msgM" v-if="index === 0&&Message3"></div>
                 <span class="iconfont icon" v-html="item.icon"></span>
                 <div class="text">{{item.text}}</div>
             </div>
@@ -37,7 +40,10 @@
         },
         data() {
             return {
-                Message : '',
+                Message1 : '',
+                Message2 : '',
+                Message3 : '',
+                Type : '',
                 linkState: 0,
                 footerArr: [{
                     icon: '&#xe617;',
@@ -63,10 +69,22 @@
         },
         methods: {
             qwe(val){
-                this.Message = val
+                /*this.Message = val.message;
+                this.Type = val.type;*/
+                switch (val.type) {
+                    case 1: this.Message1 = val.message;break;
+                    case 2: this.Message2 = val.message;break;
+                    case 3: this.Message3 = val.message;break;
+                }
             },
-            zxc(val){
-                this.Message = val
+            zxc(val){console.log(val);
+                /*this.Message = val.message;
+                this.Type = val.type;*/
+                switch (val.type) {
+                    case 1: this.Message1 = val.message;break;
+                    case 2: this.Message2 = val.message;break;
+                    case 3: this.Message3 = val.message;break;
+                }
             },
             State(index) {
                 this.linkState = index;
@@ -138,7 +156,7 @@
                     line-height: 28px;
                     font-size: 20px;
                 }
-                .msg {
+                .msgC {
                     position: absolute;
                     width: 10px;
                     height: 10px;
@@ -147,6 +165,29 @@
                     left: 54%;
                     background-color: red;
                     z-index: 2;
+                    color: white;
+                }
+                .msgH {
+                    position: absolute;
+                    width: 10px;
+                    height: 10px;
+                    border-radius: 50%;
+                    top: 10%;
+                    left: 153%;
+                    background-color: red;
+                    z-index: 2;
+                    color: white;
+                }
+                .msgM {
+                    position: absolute;
+                    width: 10px;
+                    height: 10px;
+                    border-radius: 50%;
+                    top: 10%;
+                    left: 200%;
+                    background-color: red;
+                    z-index: 2;
+                    color: white;
                 }
             }
             .link_hover {
