@@ -535,6 +535,7 @@ export default {
             let val = self.topicList[i];
             if (val.questionId === classData.data.questionId) {
               getSubjectPic(classData.data.picPath).then(res => {
+                console.log(res)
                 if (res.data.data) {
                   let img =
                     "data:image/png;base64," +
@@ -574,7 +575,7 @@ export default {
     height: 100%;
     position: fixed;
     background-color: #fff;
-    z-index: 1000;
+    z-index: 2000;
     top: 0;
     .btnout {
       font-size: 4rem;

@@ -5,6 +5,9 @@
         <scroll-content ref="myscrollfull" @load="loadData" @reload="reloadData" v-if="pageShow" @init="mescrollInit"
                         :tips="tips">
             <!--<div slot="empty" style="text-align: center">无任何数据</div>-->
+            <div class="navbox">
+                <div v-for="(item,index) in nav" :key="index" :class="{navcolor:navindex == index}" @click="navclick(item,index)">{{item}}</div>
+            </div>
             <div class="tips" v-if="classNew"><span class="point"></span><span class="text">老师布置了新题目</span></div>
             <!--今天的课堂-->
             
@@ -12,6 +15,7 @@
                     class="list"
                     :class="{nowClass:item.courseStatus === 'PROGRESS',newClass:newborder==1&&index==0}"
                     v-for="(item,index) in classList" :key="index"
+                    v-if="item.subjectName == navtext || navtext == '全科'"
                     @click="goClassroom(item.courseId,item.courseName)"
             >
                 <div class="subject">
@@ -63,6 +67,9 @@
         },
         data() {
             return {
+                navtext:'全科',
+                navindex:0,
+                nav: ['全科', '语文', '数学', '英语', '政治', '地理', '历史', '生物', '物理', '化学'],
                 current: '',
                 newborder: 0,
                 //课堂页码
@@ -116,6 +123,11 @@
             this.connect();
         },
         methods: {
+            //选择科目
+            navclick(item,index) {
+                this.navindex = index
+                this.navtext = item
+            },
             mescrollInit (mescroll) {
                 this.mescroll = mescroll;
             },
@@ -342,6 +354,22 @@
         right: 0;
         bottom: 0;
         background: url('../../assets/allbj.png') no-repeat;
+        .navbox {
+            margin-top: 20px;
+            div {
+                font-size: 18px;
+                display: inline-block;
+                padding: 5px 10px;
+                text-decoration:underline;
+                margin-left: 10px;
+            }
+            .navcolor {
+                color:#fff;
+                background-color: #5ea6ec;
+                border-radius: 5px;
+                text-decoration:none;
+            }
+        }
         .mescroll {
             box-sizing: border-box;
             position: absolute;

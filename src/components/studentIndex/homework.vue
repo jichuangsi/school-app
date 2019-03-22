@@ -3,8 +3,12 @@
         <public-header :header="header"/>
         <scroll-content ref="myscrollfull" @load="loadData" @reload="reloadData" v-if="pageShow" @init="mescrollInit"
                         :tips="tips">
+            <div class="navbox">
+                <div v-for="(item,index) in nav" :key="index" :class="{navcolor:navindex == index}" @click="navclick(item,index)">{{item}}</div>
+            </div>
             <div slot="empty">无任何数据</div>
             <homeworks v-for="item in workList" :key="item.index"
+                    v-if="item.subjectName == navtext || navtext == '全科'"
                            :studentHomework="item"/>
                 <div class="history" v-if="homeworkState">上拉查看历史信息</div>
         </scroll-content>
@@ -26,6 +30,9 @@
     export default {
         data() {
             return {
+                navtext:'全科',
+                navindex:0,
+                nav: ['全科', '语文', '数学', '英语', '政治', '地理', '历史', '生物', '物理', '化学'],
                 header: {                         //头部标题
                     title: '习题',
                 },
@@ -72,6 +79,11 @@
             }
         },
         methods: {
+            //选择科目
+            navclick(item,index) {
+                this.navindex = index
+                this.navtext = item
+            },
             mescrollInit (mescroll) {
                 this.mescroll = mescroll;
             },
@@ -219,6 +231,23 @@
         right: 0;
         bottom: 0;
         //background-color: white;
+        
+        .navbox {
+            margin-top: 20px;
+            div {
+                font-size: 18px;
+                display: inline-block;
+                padding: 5px 10px;
+                text-decoration:underline;
+                margin-left: 10px;
+            }
+            .navcolor {
+                color:#fff;
+                background-color: #5ea6ec;
+                border-radius: 5px;
+                text-decoration:none;
+            }
+        }
         .mescroll {
             box-sizing: border-box;
             position: absolute;
