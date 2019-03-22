@@ -37,8 +37,8 @@ var HandwrittenBoard = {
     disconnect: function () {
         cordova.exec(this.Handler, this.Handler, 'HandwrittenBoard', 'disconnect', []);
     },
-    getBase64img: function (base64img) {
-        cordova.exec(this.Handler, this.Handler, 'HandwrittenBoard', 'getBase64img', base64img ? [base64img] : []);
+    getBase64img: function (q) {
+        cordova.exec(this.Handler, this.Handler, 'HandwrittenBoard', 'getBase64img', [q.base64img, q.content, q.pic]);
     },
 };
 module.exports = HandwrittenBoard;
