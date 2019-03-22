@@ -19,6 +19,7 @@ function onInitialize(res) {
 function onExploration(res) {
     //window.HandwrittenBoard.exploration() 回調函數
     //res 裡面保存了所有藍牙設備
+    //console.log("device res===" + res);
     if (res) {
         let arr = [];
         for (var key in res) {
@@ -29,7 +30,35 @@ function onExploration(res) {
                 })
             }
         }
-        store.commit('SET_BLUETOOTH_LIST', arr);
+
+        //console.log("bluetooth===" + localStorage.getItem("bluetooth"));
+        if(localStorage.getItem("bluetooth")){
+            let i = arr.findIndex(x => {
+                //console.log("key===" + x.key + ",val===" + x.val);
+                return x.val === localStorage.getItem("bluetooth");
+            });
+            //console.log("position===" + i);
+            if(i === -1){
+                Toast(
+                    {
+                        message: '请打开专用蓝牙设备!',
+                        position: 'bottom',
+                        duration: 1000
+                    });
+                store.commit('SET_BLUETOOTH_LIST', []);
+            }else{
+                window.HandwrittenBoard.connect(localStorage.getItem("bluetooth"));
+            }
+        }else{
+            store.commit('SET_BLUETOOTH_LIST', arr);
+        }
+    }else{
+        Toast(
+            {
+                message: '请确认专用蓝牙设备已打开!',
+                position: 'bottom',
+                duration: 1000
+            });
     }
 }
 

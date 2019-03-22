@@ -24,9 +24,9 @@
         <div class="subjective_warp" v-if="item.quesetionType ==='subjective'">
           <subjective :subjectiveTopic="item" />
           <div class="button_warp" v-if="item.questionStatus !=='FINISH'">
-            <div class="subjective_submit Answerstart" v-show="!objectiveAnswer[index].answer" @click="answerQuestions(item.questionId)">
+            <div class="subjective_submit Answerstart" v-show="!objectiveAnswer[index].answer" @click="answerQuestions(item.questionId, item.questionContent, item.questionPic)">
             </div>
-            <div class="subjective_submit Answermodify" v-show="objectiveAnswer[index].answer" @click="modifyAnswer(item.questionId)">
+            <div class="subjective_submit Answermodify" v-show="objectiveAnswer[index].answer" @click="modifyAnswer(item.questionId, item.questionContent, item.questionPic)">
             </div>
           </div>
           <board :subjectiveAnswer="objectiveAnswer" :id="item.questionId" v-show="isAnswer(objectiveAnswer[index].answer)" />
@@ -223,7 +223,7 @@ export default {
       }
     },
     //开始回答
-    answerQuestions(id) {
+    answerQuestions(id, content, pic) {
       this.subjectiveId = id;
       window.HandwrittenBoard.isConnect(
         function(res) {
@@ -233,12 +233,13 @@ export default {
           console.log(res);
           switch (res.data.status) {
             case 0:
-              store.commit("SET_BLUETOOTH", true);
+              if(!localStorage.getItem("bluetooth")) store.commit("SET_BLUETOOTH", true);
               window.HandwrittenBoard.exploration();
               console.log("第一个");
               break;
             case 2:
-              window.HandwrittenBoard.getBase64img();
+              var q = {content:content,pic:pic,base64img:""};
+              window.HandwrittenBoard.getBase64img(q);
               console.log("第二个");
               break;
             default:
@@ -272,7 +273,7 @@ export default {
       });
     },
     //修改答案
-    modifyAnswer(id) {
+    modifyAnswer(id, content, pic) {
       this.subjectiveId = id;
       let answer = "";
       for (let i = 0; i < this.objectiveAnswer.length; i++) {
@@ -293,7 +294,8 @@ export default {
               console.log("第一个");
               break;
             case 2:
-              window.HandwrittenBoard.getBase64img(answer);
+              var q = {content:content,pic:pic,base64img:answer};
+              window.HandwrittenBoard.getBase64img(q);
               console.log("第二个");
               break;
             default:
