@@ -1,7 +1,7 @@
 <template>
     <div class="subjectiveWork">
         <classroom-header :header="headers" :jump="jump"/>
-        <div class="subjectiveContent">
+        <div class="subjectiveContent" v-if="Answerimgshow">
             <swiper ref="mySwiper" :options="swiperOption">
                 <swiper-slide v-for="(item,index) in homeworkSubjectiveQs" :key="index" v-if="pageShow">
                     <scroll-content ref="myscrollfull" :mescrollValue="mescrollValue">
@@ -11,8 +11,8 @@
                                 <div class="Collection" @click="Collection(item.questionId)">
                                     <img :src="Collectionsrc" alt="">
                                 </div>
-                                <div class="topic_warp">
-                                    <div class="centertext">左右滑动切换题目</div>
+                                <div class="centertext">左右滑动切换题目</div>
+                                <div class="topic_warp" :id="'qc'+item.questionId">
                                     <div class="title">主观题-{{index+1}}</div>
                                     <div class="topic" v-html="item.questionContent">
                                         {{item.questionContent}}
@@ -28,10 +28,10 @@
                             </div>
                             <div class="button_warp" v-if="!homeworkCompleted">
                                 <div class="subjective_submit Answerstart" v-show="!subjectiveAnswer[index].answer"
-                                     @click="answerQuestions(item.questionId)">
+                                     @click="answerQuestions(item.questionId, item.questionContent, item.questionPic)">
                                 </div>
                                 <div class="subjective_submit Answermodify" v-show="subjectiveAnswer[index].answer"
-                                     @click="modifyAnswer(item.questionId)">
+                                     @click="modifyAnswer(item.questionId, item.questionContent, item.questionPic)">
                                 </div>
                             </div>
                             <board :subjectiveAnswer="subjectiveAnswer" :id="item.questionId" v-show="subjectiveAnswer[index].answer"/>
@@ -55,6 +55,7 @@
     import { sendPicByString, sendSubjectiveAnswer, getPicByString } from "@/api/student/homework";
     import PopupPic from "@/components/topicList/PopupPic";
     import { Toast,Indicator } from "mint-ui";
+    import html2canvas from 'html2canvas';
 
     let vm = null;
     export default {
@@ -67,6 +68,8 @@
         },
         data() {
             return {
+                Answerimgshow:true,
+                objectiveAnswerbtn:false,
                 loading: true,                      //加载状态
                 pageShow: false,                    //页面显示状态
                 headers: {                           //头部标题显示
@@ -247,6 +250,8 @@
                 //console.log(t);
                 let self =this;
                 if (t&&t.answerModelForStudent || t.answerModelForTeacher) {
+                    self.Answerimgshow = false
+                    self.loading = true;
                     let img = await getPicByString(
                         t.answerModelForTeacher
                             ? t.answerModelForTeacher.stubForSubjective
@@ -261,65 +266,112 @@
                         if (img.data.data) {
                             answer.answer = img.data.data.content;
                             self.$set(self.subjectiveAnswer, i, answer);
+                            self.Answerimgshow = true
+                            self.loading = false;
                         }
                     }
                 }
             },
             //开始答题
-            answerQuestions(id) {
-                this.subjectiveId = id;
-                window.HandwrittenBoard.isConnect(
-                    function(res) {
-                        console.log(res);
-                    },
-                    function(res) {
-                        console.log(res);
-                        switch (res.data.status) {
-                            case 0:
-                                store.commit("SET_BLUETOOTH", true);
-                                window.HandwrittenBoard.exploration();
-                                console.log("第一个");
-                                break;
-                            case 2:
-                                window.HandwrittenBoard.getBase64img();
-                                console.log("第二个");
-                                break;
-                            default:
-                                break;
+            answerQuestions(id, content, pic) {
+                if(!this.objectiveAnswerbtn){
+                    this.objectiveAnswerbtn = true;
+                }else{
+                    return;
+                }
+                Indicator.open({
+                    text: "正在启动手写板...",
+                    spinnerType: "fading-circle"
+                });
+                let self = this;
+                html2canvas(document.getElementById('qc'+id),{
+                    useCORS: true,
+                    logging:true
+                    //backgroundColor: null
+                }).then((canvas) => {
+                    let dataURL = canvas.toDataURL("image/png").replace("data:image/png;base64,", "");
+                    //console.log(dataURL)
+                    self.subjectiveId = id;
+                    window.HandwrittenBoard.isConnect(
+                        function(res) {
+                            console.log(res);
+                        },
+                        function(res) {
+                            console.log(res);
+                            Indicator.close();
+                            switch (res.data.status) {
+                                case 0:
+                                    store.commit("SET_BLUETOOTH", true);
+                                    window.HandwrittenBoard.exploration();
+                                    console.log("第一个");
+                                    self.objectiveAnswerbtn = false;
+                                    break;
+                                case 2:
+                                    var q = {content:dataURL,pic:pic,base64img:""};
+                                    window.HandwrittenBoard.getBase64img(q);
+                                    console.log("第二个");
+                                    self.objectiveAnswerbtn = false;
+                                    break;
+                                default:
+                                    break;
+                            }
                         }
-                    }
-                );
+                    );
+                });
             },
             //修改答案
-            modifyAnswer(id) {
-                this.subjectiveId = id;
-                let answer = "";
-                for (let i = 0; i < this.subjectiveAnswer.length; i++) {
-                    if (id === this.subjectiveAnswer[i].id) {
-                        answer = this.subjectiveAnswer[i].answer;
-                    }
+            modifyAnswer(id, content, pic) {
+                if(!this.objectiveAnswerbtn){
+                    this.objectiveAnswerbtn = true;
+                }else{
+                    return;
                 }
-                window.HandwrittenBoard.isConnect(
-                    function(res) {
-                        console.log(res);
-                    },
-                    function(res) {
-                        console.log(res);
-                        switch (res.data.status) {
-                            case 0:
-                                store.commit("SET_BLUETOOTH", true);
-                                window.HandwrittenBoard.exploration();
-                                console.log("第一个");
-                                break;
-                            case 2:
-                                window.HandwrittenBoard.getBase64img(answer);
-                                console.log("第二个");
-                                break;
-                            default:
-                                break;
+                Indicator.open({
+                    text: "正在启动手写板...",
+                    spinnerType: "fading-circle"
+                });
+                let self = this;
+                html2canvas(document.getElementById('qc'+id),{
+                    useCORS: true,
+                    logging:true
+                    //backgroundColor: null
+                }).then((canvas) => {
+                    let dataURL = canvas.toDataURL("image/png").replace("data:image/png;base64,", "");
+                    //console.log(dataURL)
+
+                    self.subjectiveId = id;
+                    let answer = "";
+                    for (let i = 0; i < this.subjectiveAnswer.length; i++) {
+                        if (id === this.subjectiveAnswer[i].id) {
+                            answer = this.subjectiveAnswer[i].answer;
                         }
                     }
-                );
+                    window.HandwrittenBoard.isConnect(
+                        function(res) {
+                            console.log(res);
+                        },
+                        function(res) {
+                            console.log(res);
+                            Indicator.close();
+                            switch (res.data.status) {
+                                case 0:
+                                    store.commit("SET_BLUETOOTH", true);
+                                    window.HandwrittenBoard.exploration();
+                                    console.log("第一个");
+                                    self.objectiveAnswerbtn = false;
+                                    break;
+                                case 2:
+                                    var q = {content:dataURL,pic:pic,base64img:answer};
+                                    window.HandwrittenBoard.getBase64img(q);
+                                    console.log("第二个");
+                                    self.objectiveAnswerbtn = false;
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    );
+                });
             },
             //点击收藏
             Collection(id){
@@ -461,15 +513,16 @@
                                 line-height: 24px;
                                 padding: 15px;
                             }
+                            .centertext {
+                                text-align: center;
+                                margin-top: 1rem;
+                                font-size: 20px;
+                                color: #3d72fe;
+                                font-weight: 600;
+                            }
                             .topic_warp {
                                 position: relative;
-                                .centertext {
-                                    text-align: center;
-                                    margin-top: 1rem;
-                                    font-size: 20px;
-                                    color: #3d72fe;
-                                    font-weight: 600;
-                                }
+                                padding-top: 5px;
                                 .title {
                                     font-size: 18px;
                                     color: #69b482;

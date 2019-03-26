@@ -1,5 +1,5 @@
 <template>
-    <div class="subjective">
+    <div class="subjective" :id="'qc'+subjectiveTopic.questionId">
       <div class="Collection" @click="Collection" v-if="subjectiveTopic.questionStatus == 'FINISH'">
         <img :src="Collectionsrc" alt="">
       </div>
@@ -109,6 +109,7 @@ export default {
 <style lang="scss" scoped>
 .subjective {
   width: 100%;
+  padding-top: 5px;
   .Collection {
     width: 2.5rem;
     height: 2.5rem;

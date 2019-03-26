@@ -146,6 +146,7 @@ export default {
 
 <style lang="scss" scoped>
 .topic_warp {
+    padding-top: 5px;
     /*.bigimg {
     position: fixed;
     top: 0;

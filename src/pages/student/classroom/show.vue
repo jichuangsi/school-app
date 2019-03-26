@@ -6,7 +6,7 @@
       <div class="time">{{hours}}:{{minutes}}</div>
       <!--预习要点-->
       <preview-points :preview="preview" v-if="preview" />
-      <div class="class_topic_warp" v-for="(item,index) in showTopicList" :key="index">
+      <div class="class_topic_warp" v-for="(item,index) in showTopicList" :key="index" v-if="Answerimgshow">
         <!--客观题-->
         <div class="objective_warp" v-if="item.quesetionType==='objective'">
           <class-objective :objective="item" @selectAnswer="selectAnswer" @Multipleanswers="Multipleanswers"/>
@@ -74,6 +74,7 @@ import { mapGetters } from "vuex";
 import store from "@/store";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
+import html2canvas from 'html2canvas'
 // import topic from "../../../store/modules/teacher/topic";
 
 export default {
@@ -89,6 +90,8 @@ export default {
   },
   data() {
     return {
+      Answerimgshow:true,
+      objectiveAnswerbtn:false,
       AnswerShareList: [],
       AnswerShareshow: false,
       btn: 1,
@@ -224,29 +227,51 @@ export default {
     },
     //开始回答
     answerQuestions(id, content, pic) {
-      this.subjectiveId = id;
-      window.HandwrittenBoard.isConnect(
-        function(res) {
-          console.log(res);
-        },
-        function(res) {
-          console.log(res);
-          switch (res.data.status) {
-            case 0:
-              if(!localStorage.getItem("bluetooth")) store.commit("SET_BLUETOOTH", true);
-              window.HandwrittenBoard.exploration();
-              console.log("第一个");
-              break;
-            case 2:
-              var q = {content:content,pic:pic,base64img:""};
-              window.HandwrittenBoard.getBase64img(q);
-              console.log("第二个");
-              break;
-            default:
-              break;
-          }
+        if(!this.objectiveAnswerbtn){
+            this.objectiveAnswerbtn = true;
+        }else{
+            return;
         }
-      );
+        Indicator.open({
+            text: "正在启动手写板...",
+            spinnerType: "fading-circle"
+        });
+        let self = this;
+        html2canvas(document.getElementById('qc'+id),{
+            useCORS: true,
+            logging:true
+            //backgroundColor: null
+        }).then((canvas) => {
+            let dataURL = canvas.toDataURL("image/png").replace("data:image/png;base64,","");
+            //console.log(dataURL)
+
+            self.subjectiveId = id;
+            window.HandwrittenBoard.isConnect(
+                function(res) {
+                    console.log(res);
+                },
+                function(res) {
+                    console.log(res);
+                    Indicator.close();
+                    switch (res.data.status) {
+                        case 0:
+                            if(!localStorage.getItem("bluetooth")) store.commit("SET_BLUETOOTH", true);
+                            window.HandwrittenBoard.exploration();
+                            console.log("第一个");
+                            self.objectiveAnswerbtn = false;
+                            break;
+                        case 2:
+                            var q = {content:dataURL,pic:pic,base64img:""};
+                            window.HandwrittenBoard.getBase64img(q);
+                            console.log("第二个");
+                            self.objectiveAnswerbtn = false;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            );
+        });
     },
     //添加题目
     addTopic(topicId) {
@@ -274,35 +299,57 @@ export default {
     },
     //修改答案
     modifyAnswer(id, content, pic) {
-      this.subjectiveId = id;
-      let answer = "";
-      for (let i = 0; i < this.objectiveAnswer.length; i++) {
-        if (id === this.objectiveAnswer[i].id) {
-          answer = this.objectiveAnswer[i].answer;
+        if(!this.objectiveAnswerbtn){
+            this.objectiveAnswerbtn = true;
+        }else{
+            return;
         }
-      }
-      window.HandwrittenBoard.isConnect(
-        function(res) {
-          console.log(res);
-        },
-        function(res) {
-          console.log(res);
-          switch (res.data.status) {
-            case 0:
-              store.commit("SET_BLUETOOTH", true);
-              window.HandwrittenBoard.exploration();
-              console.log("第一个");
-              break;
-            case 2:
-              var q = {content:content,pic:pic,base64img:answer};
-              window.HandwrittenBoard.getBase64img(q);
-              console.log("第二个");
-              break;
-            default:
-              break;
-          }
-        }
-      );
+        Indicator.open({
+            text: "正在启动手写板...",
+            spinnerType: "fading-circle"
+        });
+        let self = this;
+        html2canvas(document.getElementById('qc'+id),{
+            useCORS: true,
+            logging:true
+            //backgroundColor: null
+        }).then((canvas) => {
+            let dataURL = canvas.toDataURL("image/png").replace("data:image/png;base64,","");
+            //console.log(dataURL)
+
+            self.subjectiveId = id;
+            let answer = "";
+            for (let i = 0; i < this.objectiveAnswer.length; i++) {
+                if (id === this.objectiveAnswer[i].id) {
+                    answer = this.objectiveAnswer[i].answer;
+                }
+            }
+            window.HandwrittenBoard.isConnect(
+                function(res) {
+                    console.log(res);
+                },
+                function(res) {
+                    console.log(res);
+                    Indicator.close();
+                    switch (res.data.status) {
+                        case 0:
+                            store.commit("SET_BLUETOOTH", true);
+                            window.HandwrittenBoard.exploration();
+                            console.log("第一个");
+                            self.objectiveAnswerbtn = false;
+                            break;
+                        case 2:
+                            var q = {content:dataURL,pic:pic,base64img:answer};
+                            window.HandwrittenBoard.getBase64img(q);
+                            console.log("第二个");
+                            self.objectiveAnswerbtn = false;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            );
+        });
     },
     //选择题答案
     // 单选
@@ -429,6 +476,8 @@ export default {
           self.addTopic(t.questionId);
         }
         if (t.answerForStudent) {
+          self.Answerimgshow = false;
+          self.loading = true;
           if (t.quesetionType === "objective") {
             self.reply.push({
               id: t.questionId,
@@ -449,6 +498,8 @@ export default {
                 if (img.data.data) {
                   answer.answer = img.data.data.content;
                   self.$set(self.objectiveAnswer, i, answer);
+                  self.Answerimgshow = true;
+                  self.loading = false;
                 }
               }
             }
