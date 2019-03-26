@@ -21,7 +21,7 @@
           </div>
         </div>
         <!--主观题-->
-        <div class="subjective_warp" v-if="item.quesetionType ==='subjective'">
+        <div class="subjective_warp" v-if="item.quesetionType ==='subjective'" @click="canvas(index)">
           <subjective :subjectiveTopic="item" />
           <div class="button_warp" v-if="item.questionStatus !=='FINISH'">
             <div class="subjective_submit Answerstart" v-show="!objectiveAnswer[index].answer" @click="answerQuestions(item.questionId, item.questionContent, item.questionPic)">
@@ -48,6 +48,9 @@
       </div>
     </div>
     <loading v-if="loading" />
+    <div class="imgbox" v-if="imgboxshow">
+      <img :src="imgsrc" alt="">
+    </div>
   </div>
 </template>
 
@@ -92,6 +95,8 @@ export default {
     return {
       Answerimgshow:true,
       objectiveAnswerbtn:false,
+      imgboxshow:false,
+      imgsrc:'',
       AnswerShareList: [],
       AnswerShareshow: false,
       btn: 1,
@@ -210,6 +215,16 @@ export default {
     ...mapGetters(["isBoard", "isBlueTooth", "boardImg"])
   },
   methods: {
+    canvas(){
+      html2canvas(document.getElementsByClassName('subjective_warp')[1],{
+        backgroundColor: null
+    }).then((canvas) => {
+        let dataURL = canvas.toDataURL("image/png");
+        console.log(dataURL)
+        this.imgsrc = dataURL
+        this.imgboxshow = true
+    });
+    },
     Answerbtn(){
       this.AnswerShareshow = true;
     },
@@ -870,5 +885,12 @@ export default {
       }
     }
   }
+}
+.imgbox {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 100px;
+  height: 0px;
 }
 </style>
