@@ -14,7 +14,7 @@
         android:padding="20dp">
 
         <ImageView
-            android:id="@+id/iv_color_black"
+            android:id="@+id/iv_question_content"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_alignParentStart="true"
@@ -22,6 +22,22 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
+            android:clickable="true"
+            android:contentDescription="@string/title"
+            android:focusable="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/default_question_content"
+            />
+
+        <ImageView
+            android:id="@+id/iv_color_black"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignBaseline="@id/iv_question_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_toEndOf="@id/iv_question_content"
             android:clickable="true"
             android:contentDescription="@string/black"
             android:focusable="true"
