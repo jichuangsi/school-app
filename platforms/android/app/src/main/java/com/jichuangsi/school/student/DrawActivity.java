@@ -1,12 +1,16 @@
 package com.jichuangsi.school.student;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -57,6 +61,8 @@ public class DrawActivity extends AppCompatActivity implements View.OnClickListe
     private ImageView ivColorRed;
     //黑色色块
     private ImageView ivColorBalck;
+    //题目详情
+    private ImageView ivQuestionContent;
 
     private FreeDrawView drawView;
     private RyDrawingManager mRyDrawingManager;
@@ -121,9 +127,9 @@ public class DrawActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
 
-        byte[] content = mDbHelper.getB(new BlobContentHolder(Constants.BLOB_NAME));
-        if(content!=null){
-            Bitmap bitmap = BitmapFactory.decodeByteArray(content, 0, content.length);
+        byte[] ac = mDbHelper.getB(new BlobContentHolder(Constants.BLOB_NAME));
+        if(ac!=null){
+            Bitmap bitmap = BitmapFactory.decodeByteArray(ac, 0, ac.length);
             drawView.setBackground(new BitmapDrawable(DrawActivity.this.getResources(), bitmap));
         }
 
@@ -187,6 +193,7 @@ public class DrawActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         if (v == btnMainCancel) {
             mDbHelper.deleteB(new BlobContentHolder(Constants.BLOB_NAME));
+            mDbHelper.deleteB(new BlobContentHolder(Constants.BLOB_NAME1));
             finish();
         } else if (v == ivMainUndo) {
             drawView.undoLast();
@@ -213,6 +220,10 @@ public class DrawActivity extends AppCompatActivity implements View.OnClickListe
             setPaintColor(0);
         } else if (v == ivColorRed) {
             setPaintColor(1);
+        } else if (v == ivQuestionContent) {
+            CustomDialogFragment dialog = new CustomDialogFragment();
+            dialog.setContext(DrawActivity.this);
+            dialog.show(getSupportFragmentManager(), "dialog");
         }
     }
 
@@ -285,6 +296,9 @@ public class DrawActivity extends AppCompatActivity implements View.OnClickListe
 
         ivColorRed = findViewById(R.id.iv_color_red);
         ivColorRed.setOnClickListener(this);
+
+        ivQuestionContent = findViewById(R.id.iv_question_content);
+        ivQuestionContent.setOnClickListener(this);
     }
 
     @Override
@@ -376,4 +390,5 @@ public class DrawActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     }
+
 }

@@ -145,21 +145,30 @@ public class HandwrittenBoard extends CordovaPlugin implements IScanListener, ID
                 Intent intent = new Intent(cordova.getActivity(), Class.forName("com.jichuangsi.school.student" +
                         ".DrawActivity"));
                 String base64 = "";
+                String content = "";
                 try {
 //                    intent.putExtra("baseimg", params.getString(0));
                     base64 = params.getString(0);
                     if (!TextUtils.isEmpty(base64)) {
                         /*String path = ImageUtil.encodeBase64String(cordova.getContext(),base64);
                         intent.putExtra("baseimg", path);*/
-                        Log.i("TAG", "收到前端传来图片");
+                        Log.i("TAG", "收到前端传来答案图片");
                     } else {
-                        Log.i("TAG", "没收到前端传来图片");
+                        Log.i("TAG", "没收到前端传来答案图片");
                     }
+                    content = params.getString(1);
+                    if (!TextUtils.isEmpty(content)) {
+                        Log.i("TAG", "收到前端传来题目图片");
+                    } else {
+                        Log.i("TAG", "没收到前端传来题目图片");
+                    }
+                    intent.putExtra("pic", params.getString(2));
                 } catch (Exception e) {
                     Log.i("TAG", "没收到前端传来图片");
                 }finally {
                     List<BlobContentHolder> bLists = new ArrayList<BlobContentHolder>();
                     bLists.add(new BlobContentHolder(Constants.BLOB_NAME, Base64.decode(base64, Base64.DEFAULT)));
+                    bLists.add(new BlobContentHolder(Constants.BLOB_NAME1, Base64.decode(content, Base64.DEFAULT)));
                     mDbHelper.insertBlobContent(bLists);
                 }
                 this.cordova.startActivityForResult(this, intent, OPEN_DRAW_PAINT);
@@ -192,6 +201,7 @@ public class HandwrittenBoard extends CordovaPlugin implements IScanListener, ID
                         e.printStackTrace();
                     }finally{
                         mDbHelper.deleteB(new BlobContentHolder(Constants.BLOB_NAME));
+                        mDbHelper.deleteB(new BlobContentHolder(Constants.BLOB_NAME1));
                     }
                     mCallbackContext.sendPluginResult(result("getBase64img", PluginResult.Status.OK, "获取图片成功！", data));
                     break;

@@ -64,7 +64,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db  = getWritableDatabase() ;
         db.beginTransaction();
         for(BlobContentHolder o : list){
-            insertB(o, db) ;
+            String col[] = {"id"};
+            String whereClause = "name=?";
+            String[] whereArgs = {o.getName()} ;
+            Cursor cursor = db.query(TABLE_BLOB, col, whereClause, whereArgs, null, null, null);
+            if (cursor == null || cursor.getCount() == 0) {
+                insertB(o, db) ;
+            }else{
+                ContentValues values = new ContentValues();
+                values.put("name", o.getName());
+                values.put("content", o.getContent());
+                String whereClause1 = "name=?" ;
+                String[] whereArgs1 = {o.getName()} ;
+                int result = db.update(TABLE_BLOB, values, whereClause, whereArgs);
+            }
         }
         db.setTransactionSuccessful();
         db.endTransaction();
