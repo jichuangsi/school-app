@@ -1,7 +1,7 @@
 <template>
     <div class="subjectiveWork">
         <classroom-header :header="headers" :jump="jump"/>
-        <div class="subjectiveContent" v-if="Answerimgshow">
+        <div class="subjectiveContent">
             <swiper ref="mySwiper" :options="swiperOption">
                 <swiper-slide v-for="(item,index) in homeworkSubjectiveQs" :key="index" v-if="pageShow">
                     <scroll-content ref="myscrollfull" :mescrollValue="mescrollValue">
@@ -26,7 +26,7 @@
                                 </div>
 
                             </div>
-                            <div class="button_warp" v-if="!homeworkCompleted">
+                            <div class="button_warp" v-if="!homeworkCompleted&&subjectiveAnswer[index].show">
                                 <div class="subjective_submit Answerstart" v-show="!subjectiveAnswer[index].answer"
                                      @click="answerQuestions(item.questionId, item.questionContent, item.questionPic)">
                                 </div>
@@ -68,7 +68,6 @@
         },
         data() {
             return {
-                Answerimgshow:true,
                 objectiveAnswerbtn:false,
                 loading: true,                      //加载状态
                 pageShow: false,                    //页面显示状态
@@ -234,7 +233,7 @@
             getSubjectiveWork() {
                 this.headers.title = this.homeworkName;
                 for (let i = 0; i < this.homeworkSubjectiveQs.length; i++) {
-                    this.subjectiveAnswer.push({id: this.homeworkSubjectiveQs[i].questionId, answer: ''})
+                    this.subjectiveAnswer.push({id: this.homeworkSubjectiveQs[i].questionId, answer: '', show: false})
                 }
                 this.initCollection(0);
                 this.pageShow = true;
@@ -250,8 +249,6 @@
                 //console.log(t);
                 let self =this;
                 if (t&&t.answerModelForStudent || t.answerModelForTeacher) {
-                    self.Answerimgshow = false
-                    self.loading = true;
                     let img = await getPicByString(
                         t.answerModelForTeacher
                             ? t.answerModelForTeacher.stubForSubjective
@@ -265,10 +262,18 @@
                         let answer = self.subjectiveAnswer[i];
                         if (img.data.data) {
                             answer.answer = img.data.data.content;
+                            answer.show = true;
                             self.$set(self.subjectiveAnswer, i, answer);
-                            self.Answerimgshow = true
-                            self.loading = false;
                         }
+                    }
+                }else {
+                    let i = self.subjectiveAnswer.findIndex(x => {
+                        return x.id === t.questionId;
+                    });
+                    if(i != -1){
+                        let answer = self.subjectiveAnswer[i];
+                        answer.show = true;
+                        self.$set(self.subjectiveAnswer, i, answer);
                     }
                 }
             },

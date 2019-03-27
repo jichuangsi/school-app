@@ -6,7 +6,7 @@
       <div class="time">{{hours}}:{{minutes}}</div>
       <!--预习要点-->
       <preview-points :preview="preview" v-if="preview" />
-      <div class="class_topic_warp" v-for="(item,index) in showTopicList" :key="index" v-if="Answerimgshow">
+      <div class="class_topic_warp" v-for="(item,index) in showTopicList" :key="index">
         <!--客观题-->
         <div class="objective_warp" v-if="item.quesetionType==='objective'">
           <class-objective :objective="item" @selectAnswer="selectAnswer" @Multipleanswers="Multipleanswers"/>
@@ -21,9 +21,9 @@
           </div>
         </div>
         <!--主观题-->
-        <div class="subjective_warp" v-if="item.quesetionType ==='subjective'" @click="canvas(index)">
+        <div class="subjective_warp" v-if="item.quesetionType ==='subjective'">
           <subjective :subjectiveTopic="item" />
-          <div class="button_warp" v-if="item.questionStatus !=='FINISH'">
+          <div class="button_warp" v-if="item.questionStatus !=='FINISH'&&objectiveAnswer[index].show">
             <div class="subjective_submit Answerstart" v-show="!objectiveAnswer[index].answer" @click="answerQuestions(item.questionId, item.questionContent, item.questionPic)">
             </div>
             <div class="subjective_submit Answermodify" v-show="objectiveAnswer[index].answer" @click="modifyAnswer(item.questionId, item.questionContent, item.questionPic)">
@@ -48,9 +48,6 @@
       </div>
     </div>
     <loading v-if="loading" />
-    <div class="imgbox" v-if="imgboxshow">
-      <img :src="imgsrc" alt="">
-    </div>
   </div>
 </template>
 
@@ -93,10 +90,7 @@ export default {
   },
   data() {
     return {
-      Answerimgshow:true,
       objectiveAnswerbtn:false,
-      imgboxshow:false,
-      imgsrc:'',
       AnswerShareList: [],
       AnswerShareshow: false,
       btn: 1,
@@ -215,16 +209,6 @@ export default {
     ...mapGetters(["isBoard", "isBlueTooth", "boardImg"])
   },
   methods: {
-    canvas(){
-      html2canvas(document.getElementsByClassName('subjective_warp')[1],{
-        backgroundColor: null
-    }).then((canvas) => {
-        let dataURL = canvas.toDataURL("image/png");
-        console.log(dataURL)
-        this.imgsrc = dataURL
-        this.imgboxshow = true
-    });
-    },
     Answerbtn(){
       this.AnswerShareshow = true;
     },
@@ -308,7 +292,7 @@ export default {
               return;
           }
           self.showTopicList.push(tmp);
-          self.objectiveAnswer.push({ id: topic.questionId, answer: "" });
+          self.objectiveAnswer.push({ id: topic.questionId, answer: "", show: false });
         }
       });
     },
@@ -490,9 +474,7 @@ export default {
         if (t.questionStatus != "NOTSTART") {
           self.addTopic(t.questionId);
         }
-        if (t.answerForStudent) {
-          self.Answerimgshow = false;
-          self.loading = true;
+        /*if (t.answerForStudent) {
           if (t.quesetionType === "objective") {
             self.reply.push({
               id: t.questionId,
@@ -512,15 +494,62 @@ export default {
                 let answer = self.objectiveAnswer[i];
                 if (img.data.data) {
                   answer.answer = img.data.data.content;
+                  answer.show = true;
                   self.$set(self.objectiveAnswer, i, answer);
-                  self.Answerimgshow = true;
-                  self.loading = false;
                 }
               }
             }
           }
-        }
+        }else{
+            let i = self.objectiveAnswer.findIndex(x => {
+                return x.id === t.questionId;
+            });
+            if(i != -1){
+                let answer = self.objectiveAnswer[i];
+                answer.show = true;
+                self.$set(self.objectiveAnswer, i, answer);
+            }
+        }*/
       }
+        for (let index = 0; index < self.topicList.length; index++) {
+            let t = self.topicList[index];
+            if (t.answerForStudent) {
+                if (t.quesetionType === "objective") {
+                    self.reply.push({
+                        id: t.questionId,
+                        answer: [t.answerForStudent.answerForObjective]
+                    });
+                } else {
+                    if (t.answerForStudent || t.answerForTeacher) {
+                        let img = await getSubjectPic(
+                            t.answerForTeacher
+                                ? t.answerForTeacher.stubForSubjective
+                                : t.answerForStudent.stubForSubjective
+                        );
+                        let i = self.objectiveAnswer.findIndex(x => {
+                            return x.id === t.questionId;
+                        });
+                        if(i != -1){
+                            let answer = self.objectiveAnswer[i];
+                            if (img.data.data) {
+                                answer.answer = img.data.data.content;
+                                answer.show = true;
+                                self.$set(self.objectiveAnswer, i, answer);
+                            }
+                        }
+                    }
+                }
+            }else{
+                let i = self.objectiveAnswer.findIndex(x => {
+                    return x.id === t.questionId;
+                });
+                if(i != -1){
+                    let answer = self.objectiveAnswer[i];
+                    answer.show = true;
+                    self.$set(self.objectiveAnswer, i, answer);
+                }
+            }
+        }
     },
     //计算定时器
     time() {
@@ -885,12 +914,5 @@ export default {
       }
     }
   }
-}
-.imgbox {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 100px;
-  height: 0px;
 }
 </style>
