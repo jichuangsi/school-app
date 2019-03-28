@@ -24,13 +24,17 @@
         <div class="title">班级</div>
         <div class="text">{{this.user.primaryClass}}</div>
       </div>
+      <div class="row" @click="setclick()">
+        <div class="title">蓝牙设备</div>
+        <div class="text">{{this.id}}</div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
   import PublicHeader from "../../../components/public/PublicHeader"
-
+  import { MessageBox } from 'mint-ui';
   export default {
     name: "myShow",
     components: {
@@ -44,11 +48,13 @@
         },
         userimg: '',
         username:'韩梅梅',
-          user: {name:'',school:'',grade:'',primaryClass:''}
+        user: {name:'',school:'',grade:'',primaryClass:''},
+        id:'' //蓝牙设备
       }
     },
     mounted(){
       this.getstudent()
+      this.id = localStorage.getItem("bluetooth")?localStorage.getItem("bluetooth"):''
     },
     methods:{
       getstudent(){
@@ -68,6 +74,15 @@
         }
 
 
+      },
+      setclick() {
+        MessageBox.prompt('请输入蓝牙设备').then(({ value, action }) => {
+          console.log(value)
+          this.id = value
+          localStorage.setItem('bluetooth',value)
+        }).catch(e=>{
+          console.log(e)
+        })
       }
     }
   }
