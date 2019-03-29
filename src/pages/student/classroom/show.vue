@@ -203,6 +203,7 @@ export default {
     }
     this.time();
     this.connect();
+    this.connectfile()
   },
   computed: {
     //vuex 调用
@@ -648,6 +649,41 @@ export default {
           }
         }
       }
+    },
+    connectfile() {
+      let socket = new SockJS("http://192.168.31.154:8888/websocket/course");
+
+      // 获取 STOMP 子协议的客户端对象
+      let stompClient = Stomp.over(socket);
+      stompClient.heartbeat.outgoing = 400000; // client will send heartbeats every 40000ms
+      stompClient.heartbeat.incoming = 0; // client does not want to receive heartbeats from the server
+      
+      let _this = this;
+      // 向服务器发起websocket连接并发送CONNECT帧
+      stompClient.connect({
+          login: 'mylogin',
+          passcode: 'mypasscode',
+          // additional header
+          userId: 'curUserId',
+          accessToken: _this.token
+        },
+        function connectCallback(frame) {
+          // 连接成功时（服务器响应 CONNECTED 帧）的回调方法
+          console.log("连接成功");
+          let subHeader = {
+            userId: 'curUserId',
+            accessToken: _this.token
+          }; //订阅时的头信息
+          //订阅消息
+            stompClient.subscribe('/topic/publish/student/' + '123', function(response) {
+              console.log(response)+'这是一段webstock'
+            }, subHeader);
+        },
+        function errorCallBack(error) {
+          // 连接失败时（服务器响应 ERROR 帧）的回调方法
+          console.log("连接失败");
+        }
+      );
     }
   },
   beforeDestroy() {
@@ -853,6 +889,7 @@ export default {
           margin-top: 2.5rem;
           text-align: center;
           .text {
+            font-size: 22px;
             padding: 0.14rem 1.4rem;
             border-radius: 100px;
             color: rgba(203, 203, 203, 1);
@@ -905,6 +942,7 @@ export default {
           margin-top: 2.5rem;
           text-align: center;
           .text {
+            font-size: 22px;
             padding: 0.14rem 1.4rem;
             border-radius: 100px;
             color: rgba(203, 203, 203, 1);

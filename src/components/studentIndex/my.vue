@@ -109,7 +109,7 @@ export default {
       //localStorage.removeItem('user');
       store.commit('IS_CNEW', false);
       store.commit('IS_HNEW', false);
-      window.HandwrittenBoard.disconnect();
+    //   window.HandwrittenBoard.disconnect();
       this.$router.push({ path: "/", name: "login" })
     }
   }

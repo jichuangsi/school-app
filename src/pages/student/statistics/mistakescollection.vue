@@ -297,7 +297,7 @@ export default {
       height: 11rem;
       margin: 0 auto;
       border-radius: 1rem;
-      box-shadow: 0.3rem 0.3rem 0.3rem #b2b2b2;
+      box-shadow: inset 0rem 0rem 0.3rem #b2b2b2, 0.3rem 0.3rem 0.3rem #b2b2b2;
       padding: 1rem;
       background-color: #ffffff;
       img {
@@ -332,7 +332,7 @@ export default {
           line-height: 5rem;
           font-size: 1.6rem;
         border-radius: 1rem;
-        box-shadow: 0.2rem 0.2rem 0.2rem #b2b2b2;
+        box-shadow: inset 0rem 0rem 0.3rem #b2b2b2, 0.2rem 0.2rem 0.2rem #b2b2b2;
         margin-bottom: 1rem;
       background-color: #ffffff;
         .fl {

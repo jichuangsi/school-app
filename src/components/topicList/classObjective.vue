@@ -181,7 +181,7 @@ export default {
     }
   }
   .anwers{
-   font-size: 18px;
+   font-size: 22px;
     padding: 15px;
     line-height: 24px;
     span {
@@ -189,13 +189,13 @@ export default {
     }
   }
   .remind {
-    font-size: 18px;
+    font-size: 22px;
     line-height: 24px;
     padding: 15px;
   }
   .title {
     padding-bottom: 0.57rem;
-    font-size: 18px;
+    font-size: 24px;
     line-height: 1.79rem;
     color: rgba(105, 180, 130, 1);
   }
@@ -203,12 +203,12 @@ export default {
   .item {
     padding: 0 3.71rem;
     line-height: 2.43rem;
-    font-size: 18px;
+    font-size: 22px;
   }
 
   .topic {
     line-height: 2.43rem;
-    font-size: 18px;
+    font-size: 22px;
     padding: 0 3.71rem;
   }
 
@@ -245,7 +245,7 @@ export default {
       line-height: 1.79rem;
       padding-left: 0.57rem;
       padding-right: 0.79rem;
-      font-size: 20px;
+      font-size: 22px;
       color: rgba(105, 180, 130, 1);
       // float: left;
     }
@@ -254,7 +254,7 @@ export default {
       display: inline-block;
       height: 3rem;
       line-height: 1.79rem;
-      font-size: 18px;
+      font-size: 22px;
       color: rgba(53, 53, 53, 1);
       // float: left;
     }

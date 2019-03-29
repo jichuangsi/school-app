@@ -1,37 +1,37 @@
 <template>
-    <div class="homeworkList">
+    <div class="testList">
         <div class="task_content">
-            <div class="task_warp" :class="{progress:studentHomework.homeworkStatus==='PROGRESS'}">
+            <div class="task_warp" :class="{progress:studenttest.testStatus==='PROGRESS'}">
                 <div class="task" :class="{
-                green:studentHomework.homeworkStatus==='PROGRESS',
-                gray:studentHomework.homeworkStatus=='FINISH'||studentHomework.homeworkStatus=='COMPLETED'}">
-                    <div class="homeworkInfo" @click.stop.passive="goHomework(studentHomework.homeworkId)">
+                green:studenttest.testStatus==='PROGRESS',
+                gray:studenttest.testStatus=='FINISH'||studenttest.testStatus=='COMPLETED'}">
+                    <div class="testInfo" @click.stop.passive="gotest(studenttest.testId)">
                         <div class="subject">
                             <div class="subject_img">
-                                <img src="../../../public/images/classroom.png" v-if="studentHomework.subjectId==null">
-                                <img src="../../assets/语文_03.png" v-if="studentHomework.subjectId==1">
-                                <img src="../../assets/数学_03.png" v-if="studentHomework.subjectId==2">
-                                <img src="../../assets/英语_03.png" v-if="studentHomework.subjectId==3">
-                                <img src="../../assets/历史_03.png" v-if="studentHomework.subjectId==4">
-                                <img src="../../assets/地理_03.png" v-if="studentHomework.subjectId==5">
-                                <img src="../../assets/政治_03.png" v-if="studentHomework.subjectId==6">
-                                <img src="../../assets/生物_03.png" v-if="studentHomework.subjectId==7">
-                                <img src="../../assets/物理_03.png" v-if="studentHomework.subjectId==8">
-                                <img src="../../assets/化学_03.png" v-if="studentHomework.subjectId==9">
+                                <img src="../../../public/images/classroom.png" v-if="studenttest.subjectId==null">
+                                <img src="../../assets/语文_03.png" v-if="studenttest.subjectId==1">
+                                <img src="../../assets/数学_03.png" v-if="studenttest.subjectId==2">
+                                <img src="../../assets/英语_03.png" v-if="studenttest.subjectId==3">
+                                <img src="../../assets/历史_03.png" v-if="studenttest.subjectId==4">
+                                <img src="../../assets/地理_03.png" v-if="studenttest.subjectId==5">
+                                <img src="../../assets/政治_03.png" v-if="studenttest.subjectId==6">
+                                <img src="../../assets/生物_03.png" v-if="studenttest.subjectId==7">
+                                <img src="../../assets/物理_03.png" v-if="studenttest.subjectId==8">
+                                <img src="../../assets/化学_03.png" v-if="studenttest.subjectId==9">
                             </div>
                         </div>
-                        <div class="homeworkInfo0">
-                            <div class="homeworkInfo1">
-                                <div class="task_name">{{studentHomework.homeworkName}}
+                        <div class="testInfo0">
+                            <div class="testInfo1">
+                                <div class="task_name">{{studenttest.testName}}
                                     <span class="task_status">({{tips()}})</span>
                                 </div>
                             </div>
-                            <div class="homeworkInfo2">
-                                <div class="item">发布时间:{{time(studentHomework.homeworkPublishTime)}}</div>
-                                <div class="teacher">老师:{{studentHomework.teacherName}}</div>
+                            <div class="testInfo2">
+                                <div class="item">发布时间:{{time(studenttest.testPublishTime)}}</div>
+                                <div class="teacher">老师:{{studenttest.teacherName}}</div>
                             </div>
-                            <div class="homeworkInfo3">
-                                <div class="item">结束时间:{{time(studentHomework.homeworkEndTime)}}</div>
+                            <div class="testInfo3">
+                                <div class="item">结束时间:{{time(studenttest.testEndTime)}}</div>
                             </div>
                         </div>
                     </div>
@@ -46,9 +46,9 @@
     import store from '@/store'
 
     export default {
-        name: "homeworkList",
+        name: "testlist",
         props: {
-            studentHomework: {
+            studenttest: {
                 type: Object,
                 default: function () {
                     return {}
@@ -62,7 +62,7 @@
             ])*/
         },
         mounted(){
-            console.log(this.studentHomework)
+            console.log(this.studenttest)
         },
         methods: {
             time(time) {
@@ -76,19 +76,19 @@
                 return month + '月' + day + '日\t' + hours + ':' + minutes;
             },
             //进入课堂
-            goHomework(homeworkId) {
-                store.commit('SET_HOMEWORKID', homeworkId);
-                console.log(homeworkId);
+            gotest(testId) {
+                store.commit('SET_TESTID', testId);
+                console.log(testId);
                 this.$router.push({
-                    path: '@/pages/student/homeWork/show-objective',
-                    name: 'objectiveWork'
+                    path: '@/pages/student/test/test-objective',
+                    name: 'tesobjective'
                 })
             },
             tips(){
-                if(this.studentHomework.homeworkStatus=='FINISH'||this.studentHomework.homeworkStatus=='COMPLETED'){
+                if(this.studenttest.testStatus=='FINISH'||this.studenttest.testStatus=='COMPLETED'){
                     return "终止提交";
                 }else{
-                    if (this.studentHomework.completed){
+                    if (this.studenttest.completed){
                         return "已完成";
                     } else {
                         return "待完成"
@@ -102,7 +102,7 @@
 <!--教师端课目信息-->
 
 <style lang="scss">
-    .homeworkList {
+    .testList {
         .task_content {
             padding-bottom: 0rem;
             .title {
@@ -114,7 +114,7 @@
                 color: rgba(238, 199, 32, 1);
             }
             .progress {
-                box-shadow: inset 0 0px 10px rgba(0, 0, 0, 0.18), 0 2px 10px 0 rgba(0, 0, 0, 0.3);
+                box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.18);
             }
             .task_warp {
                 //position: relative;
@@ -130,7 +130,6 @@
                 //padding: 1.43rem 1.43rem;
                 background-color: white;
                 border-radius: 18px;
-                box-shadow: inset 0 0px 10px rgba(0, 0, 0, 0.18), 0 2px 10px 0 rgba(0, 0, 0, 0.3);
                 .task {
                     width: 100%;
                     border-radius: 18px;
@@ -146,7 +145,7 @@
                     font-size: 16px;
                     border-radius: 16px;*/
                     //height: 11rem;
-                    .homeworkInfo{
+                    .testInfo{
                         width: 100%;
                         display: flex;
                         padding: 1rem 1rem;
@@ -162,11 +161,10 @@
                                 }
                             }
                         }
-                        .homeworkInfo0{
+                        .testInfo0{
                             width: 100%;
-                            font-size: 22px;
-                            .homeworkInfo1{
-                                font-size: 24px;
+                            font-size: 18px;
+                            .testInfo1{
                                 padding-top: 1.57rem;
                                 .task_name {
                                     /*overflow: hidden;
@@ -179,7 +177,7 @@
                                     }
                                 }
                             }
-                            .homeworkInfo2{
+                            .testInfo2{
                                 padding-top: 1.57rem;
                                 color: rgba(136, 136, 136, 1);
                                 .teacher {
@@ -197,7 +195,7 @@
                                     float: left;
                                 }
                             }
-                            .homeworkInfo3{
+                            .testInfo3{
                                 padding-top: 2.2rem;
                                 width: 100%;
                                 .item {

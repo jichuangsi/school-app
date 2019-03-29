@@ -238,6 +238,38 @@ export default new Router({
                 keepAlive: false,
                 isBack: false
             }
+        }, {
+            path: '/testindex',
+            name: 'testindex',
+            component: () => import('@/components/studentIndex/testindex'), //学生端考试首页
+            meta: {
+                keepAlive: false,
+                isBack: false
+            }
+        }, {
+            path: '/tesobjective',
+            name: 'tesobjective',
+            component: () => import('@/pages/student/test/test-objective'), //学生端考试客观题
+            meta: {
+                keepAlive: false,
+                isBack: false
+            }
+        },  {
+            path: '/testObjective',
+            name: 'testObjective',
+            component: () => import('@/components/test/testObjective'), //学生端考试客观题题目
+            meta: {
+                keepAlive: false,
+                isBack: false
+            }
+        }, {
+            path: '/testsubjective',
+            name: 'testsubjective',
+            component: () => import('@/pages/student/test/test-subjective'), //学生端考试主观题
+            meta: {
+                keepAlive: false,
+                isBack: false
+            }
         }
     ]
 })

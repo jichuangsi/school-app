@@ -122,7 +122,7 @@ export default {
     }
   }
   .anwers{
-   font-size: 18px;
+   font-size: 22px;
     line-height: 24px;
     padding: 15px;
     span {
@@ -130,7 +130,7 @@ export default {
     }
   }
   .remind {
-    font-size: 18px;
+    font-size: 22px;
     line-height: 24px;
     padding: 15px;
   }
@@ -167,12 +167,12 @@ export default {
   .topic_warp {
     position: relative;
     .title {
-      font-size: 18px;
+      font-size: 24px;
       color: #69b482;
     }
     .topic {
       color: #353535;
-      font-size: 18px;
+      font-size: 22px;
       line-height: 34px;
       padding: 0 2.57rem;
     }

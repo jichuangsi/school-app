@@ -435,13 +435,13 @@
                         .name {
                             box-sizing: border-box;
                             padding-top: 1.57rem;
-                            font-size: 20px;
+                            font-size: 24px;
                             color: rgba(53, 53, 53, 1);
                         }
                         .teacher {
                             box-sizing: border-box;
                             padding-top: 1.57rem;
-                            font-size: 18px;
+                            font-size: 22px;
                             color: rgba(136, 136, 136, 1);
                             padding-bottom: .5rem;
                         }
@@ -458,7 +458,7 @@
                     }
                 }
                 .subjectState {
-                    font-size: 18px;
+                    font-size: 22px;
                     color: rgba(142, 120, 240, 1);
                 }
                 .processing {
@@ -491,7 +491,7 @@
                 }
             }
             .nowClass {
-                box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.18);
+                box-shadow: inset 0 0px 10px rgba(0, 0, 0, 0.18), 0 2px 10px 0 rgba(0, 0, 0, 0.3);
             }
             .newClass {
                 border: 1px solid #80d59c;

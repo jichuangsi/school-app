@@ -1,5 +1,5 @@
 <template>
-    <div class="objectiveWork">
+    <div class="testobjective">
         <classroom-header :header="header" :jump="jump"/>
         <div class="objective_content">
             <div class="objectiveTitle">
@@ -8,19 +8,19 @@
             </div>
             <div class="student_msg">
                 <div class="msg">
-                    <div class="name" v-html="homeworkInfo"></div>
+                    <div class="name" v-html="testInfo"></div>
                     <!--<div class="class"><span>班级</span>&nbsp;初一（1）班</div>-->
                 </div>
                 <!--<div class="score"><span>总分</span>&nbsp;80</div>-->
-                <div class="objectiveScore"><span>客观题统计：</span><span>共{{this.objectiveTotal}}题</span><span v-show="!homeworkCompleted">，已提交{{this.objectiveCorrect}}题</span><span v-show="homeworkCompleted">，答对{{this.objectiveCorrect}}题</span></div>
-                <div class="subjectiveScore"><span>主观题统计：</span><span>共{{this.subjectiveTotal}}题</span><span v-show="!homeworkCompleted">，已提交{{this.subjectiveCorrect}}题</span><span v-show="homeworkCompleted">，批改{{this.subjectiveCorrect}}题</span></div>
+                <div class="objectiveScore"><span>客观题统计：</span><span>共{{this.objectiveTotal}}题</span><span v-show="!testCompleted">，已提交{{this.objectiveCorrect}}题</span><span v-show="testCompleted">，答对{{this.objectiveCorrect}}题</span></div>
+                <div class="subjectiveScore"><span>主观题统计：</span><span>共{{this.subjectiveTotal}}题</span><span v-show="!testCompleted">，已提交{{this.subjectiveCorrect}}题</span><span v-show="testCompleted">，批改{{this.subjectiveCorrect}}题</span></div>
                 <div class="clearfix">
-                    <div class="right submit" @click.stop.passive="show" v-if="!homeworkCompleted"></div>
+                    <div class="right submit" @click.stop.passive="show" v-if="!testCompleted"></div>
                 </div>
             </div>
             <div class="topic_warp">
-                <div class="objective_warp" v-for="(item,index) in this.homeworkObjectiveQs" :key="index">
-                    <homework-objective :objective="item" :index="index" :completed="homeworkCompleted" @selectAnswer="selectAnswer" @Multipleanswers="Multipleanswers" @objectiveSubmit="objectiveSubmit"/>
+                <div class="objective_warp" v-for="(item,index) in this.testObjectiveQs" :key="index">
+                    <test-objective :objective="item" :index="index" :completed="testCompleted" @selectAnswer="selectAnswer" @Multipleanswers="Multipleanswers" @objectiveSubmit="objectiveSubmit"/>
                 </div>
             </div>
         </div>
@@ -33,29 +33,29 @@
 <script>
     import classroomHeader from "../../../components/public/PublicHeader"
     import Loading from '../../../components/public/Loading'
-    import homeworkObjective from "../../../components/topicList/homeworkObjective"
+    import testObjective from "../../../components/test/testObjective"
     import {mapGetters} from 'vuex'
     import store from '@/store'
-    import {getHomework, sendObjectiveAnswer,submitHomework} from "@/api/student/homework"
+    import {gettest, sendObjectiveAnswer,submittest} from "@/api/student/test"
     import {MessageBox,Indicator,Toast} from 'mint-ui';
 
     export default {
         components: {
             classroomHeader,
-            homeworkObjective,
+            testObjective,
             Loading
         },
         data() {
             return {
                 header: {                       //头部标题
                     title: '',
-                    url: '/studentIndex'
+                    url: '/testindex'
                 },
                 loading: true,                 //加载状态
                 pageShow: false,               //页面状态
-                jump: {name: '转至主观题', url: '/subjectiveWork'},              //头部多加一个按钮
+                jump: {name: '转至主观题', url: '/testsubjective'},              //头部多加一个按钮
                 objectiveAnswer: [],
-                homeworkInfo: '',
+                testInfo: '',
                 objectiveTotal: 0,
                 objectiveCorrect: 0,
                 subjectiveTotal: 0,
@@ -66,21 +66,21 @@
         computed: {
             //vuex 调用
             ...mapGetters([
-                'homeworkId',
-                'homeworkName',
-                'homeworkCompleted',
-                'homeworkObjectiveQs',
-                //'homeworkSubjectiveQs',
-                'homeworkList'
+                'testId',
+                'testName',
+                'testCompleted',
+                'testObjectiveQs',
+                //'testSubjectiveQs',
+                'testList'
             ])
         },
         created() {
-            this.getHomeworkDetail();
+            this.gettestDetail();
         },
         methods: {
-            getHomeworkDetail(){
-                getHomework(this.homeworkId).then(res=>{
-                    //console.log(res.data.data);
+            gettestDetail(){
+                gettest(this.testId).then(res=>{
+                    console.log(res.data.data);
                     if(res.data.code!=='0010'){
                         //console.log(res.data.msg);
                         Toast({
@@ -99,12 +99,12 @@
                         switch (q.questionType) {
                             case 'objective' : {
                                 objectiveQs.push(q);
-                                if(this.homeworkCompleted&&q.answerModelForStudent
+                                if(this.testCompleted&&q.answerModelForStudent
                                     &&q.answerModelForStudent.answerForObjective
                                     &&q.answerModelForStudent.result==='CORRECT'){
                                     count++;
                                     this.objectiveAnswer.push({ id: q.questionId, answer: q.answerModelForStudent.answerForObjective, modify: false });
-                                }else if(!this.homeworkCompleted&&q.answerModelForStudent
+                                }else if(!this.testCompleted&&q.answerModelForStudent
                                     &&q.answerModelForStudent.answerForObjective){
                                     count++;
                                     this.objectiveSubmitted.push(q.questionId);
@@ -116,10 +116,10 @@
                             }
                             case 'subjective' : {
                                 subjectiveQs.push(q);
-                                if(this.homeworkCompleted&&q.answerModelForTeacher
+                                if(this.testCompleted&&q.answerModelForTeacher
                                     &&q.answerModelForTeacher.stubForSubjective){
                                     count1++;
-                                }else if(!this.homeworkCompleted&&q.answerModelForStudent
+                                }else if(!this.testCompleted&&q.answerModelForStudent
                                     &&q.answerModelForStudent.stubForSubjective){
                                     count1++;
                                 }
@@ -135,12 +135,12 @@
                     //console.log(this.objectiveTotal);
                     //console.log(objectiveQs);
                     //console.log(subjectiveQs);
-                    store.commit('SET_HOMEWORKOBJECTIVEQS', objectiveQs);
-                    store.commit('SET_HOMEWORKSUBJECTIVEQS', subjectiveQs);
-                    store.commit('SET_HOMEWORKNAME', res.data.data.homeworkName);
-                    store.commit('SET_HOMEWORKCOMPLETED', res.data.data.completed||res.data.data.homeworkStatus=='FINISH'||res.data.data.homeworkStatus=='COMPLETED');
-                    this.header.title = res.data.data.homeworkName;
-                    this.homeworkInfo = res.data.data.homeworkInfo;
+                    store.commit('SET_TESTOBJECTIVEQS', objectiveQs);
+                    store.commit('SET_TESTSUBJECTIVEQS', subjectiveQs);
+                    store.commit('SET_TESTNAME', res.data.data.testName);
+                    store.commit('SET_TESTCOMPLETED', res.data.data.completed||res.data.data.testStatus=='FINISH'||res.data.data.testStatus=='COMPLETED');
+                    this.header.title = res.data.data.testName;
+                    this.testInfo = res.data.data.testInfo;
                     this.pageShow = true;
                     this.loading = false;
                 }).catch(err=>{
@@ -149,24 +149,24 @@
             },
             //提交作业弹出层点击是操作
             async determine() {
-                let res = await submitHomework(this.homeworkId);
+                let res = await submittest(this.testId);
                 //console.log(res.data);
                 if(res.data.code === '0010'){
                     //console.log(132)
-                    for(let i = 0; i < this.homeworkList.length; i++){
-                        if(this.homeworkList[i].homeworkId===this.homeworkId){
-                            this.homeworkList[i].completed = true;
+                    for(let i = 0; i < this.testList.length; i++){
+                        if(this.testList[i].testId===this.testId){
+                            this.testList[i].completed = true;
                             break;
                         }
                     }
-                    store.commit('SET_HOMEWORK', this.homeworkList);
-                    store.commit('SET_HOMEWORKCOMPLETED', true);
-                    await getHomework(this.homeworkId).then(res=>{
+                    store.commit('SET_TEST', this.testList);
+                    store.commit('SET_TESTCOMPLETED', true);
+                    await gettest(this.testId).then(res=>{
                         let count = this.objectiveCorrect = 0;
                         if(res.data.code==='0010'){
                             res.data.data.questions.forEach((q, index) => {
                                 if (q.questionType==='objective') {
-                                    if(this.homeworkCompleted&&q.answerModelForStudent
+                                    if(this.testCompleted&&q.answerModelForStudent
                                         &&q.answerModelForStudent.answerForObjective
                                         &&q.answerModelForStudent.result==='CORRECT'){
                                         count++;
@@ -199,7 +199,7 @@
             },
             // 单选
             selectAnswer(id, title) {
-                if(this.homeworkCompleted) return;
+                if(this.testCompleted) return;
                 for (let i = 0; i < this.objectiveAnswer.length; i++) {
                     if (this.objectiveAnswer[i].id === id
                             &&title&&this.objectiveAnswer[i].answer!=title) {
@@ -213,7 +213,7 @@
             },
             // 多选题答案
             Multipleanswers(id, title){
-                if(this.homeworkCompleted) return;
+                if(this.testCompleted) return;
                 for (let i = 0; i < this.objectiveAnswer.length; i++) {
                     if (this.objectiveAnswer[i].id === id
                             &&title&&this.objectiveAnswer[i].answer!=title) {
@@ -250,7 +250,7 @@
             //提交客观题答案
             async sendObjective(id, answer) {
                 //客观题答案提交
-                let res = await sendObjectiveAnswer(this.homeworkId, id, answer);
+                let res = await sendObjectiveAnswer(this.testId, id, answer);
                 //console.log(res.data);
                 if(res.data.code!="0010"){
                     Toast({
@@ -283,7 +283,7 @@
 </script>
 
 <style lang="scss" scoped>
-    .objectiveWork {
+    .testobjective {
         position: absolute;
         top: 0;
         left: 0;
@@ -322,7 +322,7 @@
                     position: relative;
                     padding-bottom: 2rem;
                     display: flex;
-                    font-size: 22px;
+                    font-size: 18px;
                     justify-content: space-between;
                     line-height: 1.42rem;
                     color: #999999;

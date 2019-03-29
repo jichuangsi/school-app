@@ -8,6 +8,13 @@ const getters = {
     homeworkCompleted: state => state.homeWork.homeworkCompleted,
     homeworkObjectiveQs: state => state.homeWork.homeworkObjectiveQs,
     homeworkSubjectiveQs: state => state.homeWork.homeworkSubjectiveQs,
+    //学生端考试数据
+    testList: state => state.homeWork.testList,
+    testId: state => state.homeWork.testId,
+    testName: state => state.homeWork.testName,
+    testCompleted: state => state.homeWork.testCompleted,
+    testObjectiveQs: state => state.homeWork.testObjectiveQs,
+    testSubjectiveQs: state => state.homeWork.testSubjectiveQs,
     //老师端课堂courseId
     userMobile: state => state.login.userMobile,
     //老师端课堂数据

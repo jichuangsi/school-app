@@ -1,9 +1,9 @@
 <template>
-    <div class="subjectiveWork">
+    <div class="testsubjective">
         <classroom-header :header="headers" :jump="jump"/>
         <div class="subjectiveContent">
             <swiper ref="mySwiper" :options="swiperOption">
-                <swiper-slide v-for="(item,index) in homeworkSubjectiveQs" :key="index" v-if="pageShow">
+                <swiper-slide v-for="(item,index) in testSubjectiveQs" :key="index" v-if="pageShow">
                     <scroll-content ref="myscrollfull" :mescrollValue="mescrollValue">
                         <div class="subjective_warp">
                             <!--<subjective :subjectiveTopic="item" :id="item.id"/>-->
@@ -19,14 +19,14 @@
                                     </div>
                                 </div>
                                 <PopupPic :questionPic="item.questionPic"/>
-                                <div class="anwers" v-if="homeworkCompleted">
+                                <div class="anwers" v-if="testCompleted">
                                     此题答案为:<span v-html="item.answer"></span>
                                 </div>
-                                <div class="remind" v-html="item.parse" v-if="homeworkCompleted">
+                                <div class="remind" v-html="item.parse" v-if="testCompleted">
                                 </div>
 
                             </div>
-                            <div class="button_warp" v-if="!homeworkCompleted&&subjectiveAnswer[index].show">
+                            <div class="button_warp" v-if="!testCompleted&&subjectiveAnswer[index].show">
                                 <div class="subjective_submit Answerstart" v-show="!subjectiveAnswer[index].answer"
                                      @click="answerQuestions(item.questionId, item.questionContent, item.questionPic)">
                                 </div>
@@ -52,7 +52,7 @@
     import {mapGetters} from 'vuex'
     import store from '@/store'
     import { addFavorQuestion, removeFavorQuestion } from "@/api/student/classroom";
-    import { sendPicByString, sendSubjectiveAnswer, getPicByString } from "@/api/student/homework";
+    import { sendPicByString, sendSubjectiveAnswer, getPicByString } from "@/api/student/test";
     import PopupPic from "@/components/topicList/PopupPic";
     import { Toast,Indicator } from "mint-ui";
     import html2canvas from 'html2canvas';
@@ -73,9 +73,9 @@
                 pageShow: false,                    //页面显示状态
                 headers: {                           //头部标题显示
                     title: '',
-                    url: '/studentIndex'
+                    url: '/testindex'
                 },
-                jump: {name: '转至客观题', url: '/objectiveWork'},
+                jump: {name: '转至客观题', url: '/tesobjective'},
                 mescrollValue: {up: false, down: false},        //是否需要下拉上拉加载数据
                 Collectionsrc:require('../../../assets/未收藏.png'),
                 Collectiontype:false,
@@ -163,7 +163,7 @@
                         let sub = res.data.data;
                         //提交主观题答案
                         sendSubjectiveAnswer(
-                            _this.homeworkId,
+                            _this.testId,
                             _this.subjectiveId,
                             sub
                         )
@@ -217,23 +217,23 @@
                 'isBoard',
                 'isBlueTooth',
                 'boardImg',
-                'homeworkId',
-                'homeworkName',
-                'homeworkCompleted',
-                'homeworkSubjectiveQs'
+                'testId',
+                'testName',
+                'testCompleted',
+                'testSubjectiveQs'
             ])
         },
         created() {
             vm = this;
         },
         mounted() {
-            this.getSubjectiveWork();
+            this.gettestsubjective();
         },
         methods: {
-            getSubjectiveWork() {
-                this.headers.title = this.homeworkName;
-                for (let i = 0; i < this.homeworkSubjectiveQs.length; i++) {
-                    this.subjectiveAnswer.push({id: this.homeworkSubjectiveQs[i].questionId, answer: '', show: false})
+            gettestsubjective() {
+                this.headers.title = this.testName;
+                for (let i = 0; i < this.testSubjectiveQs.length; i++) {
+                    this.subjectiveAnswer.push({id: this.testSubjectiveQs[i].questionId, answer: '', show: false})
                 }
                 this.initCollection(0);
                 this.pageShow = true;
@@ -241,8 +241,8 @@
                 this.initImgs();
             },
             initImgs(){
-                for (let i = 0; i < this.homeworkSubjectiveQs.length; i++) {
-                    this.getSubjectiveImg(this.homeworkSubjectiveQs[i]);
+                for (let i = 0; i < this.testSubjectiveQs.length; i++) {
+                    this.getSubjectiveImg(this.testSubjectiveQs[i]);
                 }
             },
             async getSubjectiveImg(t){
@@ -386,10 +386,10 @@
                         if (res.data.code === '0010') {
                             this.Collectiontype = false
                             this.Collectionsrc = require('../../../assets/未收藏.png')
-                            for(let i = 0; i < self.homeworkSubjectiveQs.length; i++){
-                                if(self.homeworkSubjectiveQs[i].questionId === id){
-                                    self.homeworkSubjectiveQs[i].favor = false;
-                                    store.commit('SET_HOMEWORKSUBJECTIVEQS', self.homeworkSubjectiveQs);
+                            for(let i = 0; i < self.testSubjectiveQs.length; i++){
+                                if(self.testSubjectiveQs[i].questionId === id){
+                                    self.testSubjectiveQs[i].favor = false;
+                                    store.commit('SET_TESTSUBJECTIVEQS', self.testSubjectiveQs);
                                     break;
                                 }
                             }
@@ -406,10 +406,10 @@
                         if (res.data.code === '0010') {
                             this.Collectiontype = true
                             this.Collectionsrc = require('../../../assets/已收藏.png')
-                            for(let i = 0; i < self.homeworkSubjectiveQs.length; i++){
-                                if(self.homeworkSubjectiveQs[i].questionId === id){
-                                    self.homeworkSubjectiveQs[i].favor = true;
-                                    store.commit('SET_HOMEWORKSUBJECTIVEQS', self.homeworkSubjectiveQs);
+                            for(let i = 0; i < self.testSubjectiveQs.length; i++){
+                                if(self.testSubjectiveQs[i].questionId === id){
+                                    self.testSubjectiveQs[i].favor = true;
+                                    store.commit('SET_TESTSUBJECTIVEQS', self.testSubjectiveQs);
                                     break;
                                 }
                             }
@@ -426,7 +426,7 @@
             initCollection(index){
                 //console.log(index);
                 //console.log(this.homeworkSubjectiveQs[index]);
-                if(this.homeworkSubjectiveQs[index].favor){
+                if(this.testSubjectiveQs[index].favor){
                     this.Collectionsrc = require('../../../assets/已收藏.png');
                 }else{
                     this.Collectionsrc = require('../../../assets/未收藏.png');
@@ -437,7 +437,7 @@
 </script>
 
 <style lang="scss" scoped>
-    .subjectiveWork {
+    .testsubjective {
         position: absolute;
         top: 0;
         left: 0;
@@ -529,12 +529,12 @@
                                 position: relative;
                                 padding-top: 5px;
                                 .title {
-                                    font-size: 24px;
+                                    font-size: 18px;
                                     color: #69b482;
                                 }
                                 .topic {
                                     color: #353535;
-                                    font-size: 22px;
+                                    font-size: 18px;
                                     line-height: 34px;
                                     padding: 0 2.57rem;
                                 }
