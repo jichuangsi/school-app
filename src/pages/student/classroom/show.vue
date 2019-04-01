@@ -5,7 +5,7 @@
       <!--时间-->
       <div class="time">{{hours}}:{{minutes}}</div>
       <!--预习要点-->
-      <preview-points :preview="preview" v-if="preview" />
+      <preview-points :preview="preview" :attachmentsfile="attachments" v-if="preview" />
       <div class="class_topic_warp" v-for="(item,index) in showTopicList" :key="index">
         <!--客观题-->
         <div class="objective_warp" v-if="item.quesetionType==='objective'">
@@ -90,6 +90,7 @@ export default {
   },
   data() {
     return {
+      attachments:[],
       objectiveAnswerbtn:false,
       AnswerShareList: [],
       AnswerShareshow: false,
@@ -651,7 +652,7 @@ export default {
       }
     },
     connectfile() {
-      let socket = new SockJS("http://192.168.31.154:8888/websocket/course");
+      let socket = new SockJS(this.wsUrl + "/websocket/course");
 
       // 获取 STOMP 子协议的客户端对象
       let stompClient = Stomp.over(socket);
@@ -675,8 +676,9 @@ export default {
             accessToken: _this.token
           }; //订阅时的头信息
           //订阅消息
-            stompClient.subscribe('/topic/publish/student/' + '123', function(response) {
+            stompClient.subscribe('/topic/publish/student/' + _this.course, function(response) {
               console.log(response)+'这是一段webstock'
+              this.attachments = JSON.parse(response.body).data
             }, subHeader);
         },
         function errorCallBack(error) {

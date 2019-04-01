@@ -40,6 +40,9 @@
                 </swiper-slide>
             </swiper>
         </div>
+        <div class="textmessage" v-if="textmessage">
+            此习题没有主观题
+        </div>
         <loading v-if="loading"/>
     </div>
 </template>
@@ -68,6 +71,7 @@
         },
         data() {
             return {
+                textmessage : false,
                 objectiveAnswerbtn:false,
                 loading: true,                      //加载状态
                 pageShow: false,                    //页面显示状态
@@ -235,10 +239,17 @@
                 for (let i = 0; i < this.homeworkSubjectiveQs.length; i++) {
                     this.subjectiveAnswer.push({id: this.homeworkSubjectiveQs[i].questionId, answer: '', show: false})
                 }
-                this.initCollection(0);
-                this.pageShow = true;
-                this.loading = false;
-                this.initImgs();
+                if(this.subjectiveAnswer.length>0){
+                    this.initCollection(0);
+                    this.pageShow = true;
+                    this.loading = false;
+                    this.textmessage = false
+                    this.initImgs();
+                }else {
+                    this.pageShow = true;
+                    this.loading = false;
+                    this.textmessage = true
+                }
             },
             initImgs(){
                 for (let i = 0; i < this.homeworkSubjectiveQs.length; i++) {
@@ -576,5 +587,11 @@
                 }
             }
         }
+    }
+    .textmessage {
+        margin-top: 80px;
+        font-size: 24px;
+        color: #666;
+        text-align: center;
     }
 </style>

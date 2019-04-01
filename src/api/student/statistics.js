@@ -1,11 +1,11 @@
-import axios from 'axios'
+import axios from '../../utils/axios'
 
 //const apiUrl = 'http://api.jichuangsi.com/COURSESERVICE/student/';
 //const host = 'http://api.jichuangsi.com/CLASSINTERACTION/';
 // const apiUrl = '/COURSESERVICE/student/';
 // const host = '/CLASSINTERACTION/';
 
-const apiurl = 'http://192.168.31.154:8082/result/student/'
+const apiurl = '/result/student/'
 
 //课堂
 export function getCourseSubjectResult(subjectname) {

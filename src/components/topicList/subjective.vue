@@ -169,6 +169,7 @@ export default {
     .title {
       font-size: 24px;
       color: #69b482;
+    padding-bottom: 0.57rem;
     }
     .topic {
       color: #353535;
