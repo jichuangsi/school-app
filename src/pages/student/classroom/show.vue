@@ -468,6 +468,7 @@ export default {
       console.log(res);
       self.topicList = res.data.data.questions;
       self.preview = res.data.data.courseInfo;
+      self.attachments = res.data.data.attachments;
       self.pageShow = true;
       self.loading = false;
 
@@ -678,7 +679,10 @@ export default {
           //订阅消息
             stompClient.subscribe('/topic/publish/student/' + _this.course, function(response) {
               console.log(response)+'这是一段webstock'
-              this.attachments = JSON.parse(response.body).data
+              let res = JSON.parse(response.body).data   
+              if(res){
+                _this.attachments = res.attachments
+              }
             }, subHeader);
         },
         function errorCallBack(error) {
