@@ -4,8 +4,8 @@
         <div class="item">
             {{preview}}
         </div>
-        <div class="row" v-for="(item,index) in attachmentsfile" :key="index" v-if="item.publisFlag == '1' || item.sub == attachmentsstatus">附件 &nbsp;
-          <a @click.capture="downloadAttachment4App(item)">{{item.name}},{{attachmentsstatus}}</a>
+        <div class="row" v-for="(item,index) in attachmentsfile" :key="index" v-if="item.publishFlag == '1' || item.sub == attachmentsstatus">附件 &nbsp;
+          <a @click.capture="downloadAttachment4App(item)">{{item.name}}</a>
         </div>
     </div>
 </template>
