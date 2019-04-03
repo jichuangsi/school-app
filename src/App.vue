@@ -59,7 +59,9 @@
                 if(this.$route.path=='/studentenquiry'
                     ||this.$route.path=='/studentIndex'
                     ||this.$route.path=='/mistakescollection'
-                    ||this.$route.path=='/myShow'){
+                    ||this.$route.path=='/myShow'
+                    ||this.$route.path=='/testIndex'
+                ){
                     if(!(localStorage.getItem('token'))){
                          let route = this.$route.path
                          this.$router.push({ path: "/", name: "login" })

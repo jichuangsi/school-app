@@ -14,7 +14,10 @@
 
 <script>
     import '../../../src/assets/styles/topicList.scss'
-    import { Toast } from "mint-ui";
+    import { Indicator, Toast } from "mint-ui";
+    import {
+        getAttachment
+    } from '@/api/teacher/classroom'
 
     export default {
         name: 'previewPoints',
@@ -43,13 +46,26 @@
         data() {
             return {
                 title: '预习要点',
+                ready: false
             }
         },
         mounted() {
             console.log(this.attachmentsfile)+'这个数据'
+            this.initialize();
         },
         methods:{
-            
+            initialize() {
+                let _this = this;
+                document.addEventListener(
+                    'deviceready',
+                    _this.onDeviceReady.bind(this),
+                    false
+                );
+            },
+            // deviceready Event Handler
+            onDeviceReady() {
+                this.ready = true;
+            },
             // 创建文件路径
             downloadAttachment4App(attachmentInfo) {
                 let _this = this;
