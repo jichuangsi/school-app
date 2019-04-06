@@ -45,6 +45,7 @@
                 pageShow: false,                  //内容状态
                 tips: "没有更多作业",              //加载完提示
                 mescroll: null,
+                tabFired: false
             }
         },
         components: {
@@ -62,13 +63,27 @@
         },
         mounted() {
             if (this.homeworkList.length === 0) {
-                this.getHomeworkList();
+                let _self = this;
+                let networkState = navigator.connection.type;
+                //console.log(networkState);
+                if (networkState === "unknown") {
+                    document.addEventListener("online", function(){
+                        //console.log(_self.tabFired);
+                        if(!_self.tabFired){
+                            _self.getHomeworkList();
+                            _self.tabFired = true;
+                        }
+                    });
+                }else{
+                    this.getHomeworkList();
+                }
             } else {
                 this.pageShow = true;
                 this.loading = false;
             }
         },
         activated(){
+            this.tabFired = false;
             if(this.isHNew){
                 store.commit('SET_HOMEWORKHISTORY', []);
                 this.getHomeworkList();
@@ -96,7 +111,7 @@
                     this.checkComplete(this.workList);
                     //console.log(this.workList)
                 }).catch((err) => {
-                    console.log('err', err);
+                    console.log('err in getHomeworkList', err);
                     this.pageShow = true;
                     this.loading = false;
                     /*let msg = this.getMsg(err);

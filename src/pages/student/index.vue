@@ -64,8 +64,7 @@
                 'isBlueTooth'
             ])
         },
-        created:{
-
+        mounted(){
         },
         methods: {
             qwe(val){
@@ -88,6 +87,15 @@
             },
             State(index) {
                 this.linkState = index;
+            },
+            switchTab(tab){
+                let _self = this;
+                switch (tab) {
+                    case '0': _self.linkState = 0; break;
+                    case '1': _self.linkState = 1; break;
+                    case '2': _self.linkState = 2; break;
+                    default: _self.linkState = 0;
+                }
             }
         },
         beforeRouteEnter(to, from, next) {
@@ -99,6 +107,7 @@
             }
         },
         activated() {
+            if(this.$route.query.tab) this.switchTab(this.$route.query.tab);
             if (!this.$route.meta.isBack) {
                 setTimeout(function () {
                     // initialize();
@@ -106,7 +115,7 @@
             }
             // 恢复成默认的false，避免isBack一直是true，导致下次无法获取数据
             this.$route.meta.isBack = false
-        }
+        },
     }
 
 </script>

@@ -91,6 +91,7 @@
                 token: localStorage.getItem("token"),
                 classId: '',
                 mescroll: null,
+                tabFired: false
             }
         },
         computed: {
@@ -105,7 +106,20 @@
             // 判断vuex里面是否有数据
             this.classId = JSON.parse(localStorage.getItem("user")).roles[0].primaryClass.classId;
             if (this.classroomList.length === 0) {
-                this.getClassroomList();
+                let _self = this;
+                let networkState = navigator.connection.type;
+                //console.log(networkState);
+                if (networkState === "unknown") {
+                    document.addEventListener("online", function(){
+                        //console.log(_self.tabFired);
+                        if(!_self.tabFired){
+                            _self.getClassroomList();
+                            _self.tabFired = true;
+                        }
+                    });
+                }else{
+                    this.getClassroomList();
+                }
             } else {
                 this.pageShow = true;
                 this.loading = false;
@@ -113,6 +127,7 @@
             //this.connect();
         },
         activated(){
+            this.tabFired = false;
             if(this.isCNew){
                 this.classId = JSON.parse(localStorage.getItem("user")).roles[0].primaryClass.classId;
                 store.commit('SET_HISTORY', []);
@@ -140,7 +155,7 @@
                     //this.time()
                     //console.log(this.classList)
                 }).catch((err) => {
-                    console.log('err', err);
+                    console.log('err in getClassroomList', err);
                     this.pageShow = true;
                     this.loading = false;
                     /*let msg = this.getMsg(err);

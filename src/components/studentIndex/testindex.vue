@@ -46,6 +46,7 @@
                 pageShow: false,                  //内容状态
                 tips: "没有更多考试",              //加载完提示
                 mescroll: null,
+                tabFired: false
             }
         },
         components: {
@@ -62,9 +63,21 @@
             ])
         },
         mounted() {
-            console.log()
             if (this.testList.length === 0) {
-                this.gettestList();
+                let _self = this;
+                let networkState = navigator.connection.type;
+                //console.log(networkState);
+                if (networkState === "unknown") {
+                    document.addEventListener("online", function(){
+                        //console.log(_self.tabFired);
+                        if(!_self.tabFired){
+                            _self.gettestList();
+                            _self.tabFired = true;
+                        }
+                    });
+                }else{
+                    this.gettestList();
+                }
             } else {
                 this.pageShow = true;
                 this.loading = false;
@@ -72,6 +85,7 @@
             }
         },
         activated(){
+            this.tabFired = false;
             if(this.isHNew){
                 store.commit('SET_TESTHISTORY', []);
                 this.gettestList();
