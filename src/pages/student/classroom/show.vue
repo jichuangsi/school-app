@@ -67,9 +67,10 @@ import {
   getSubjectPic,
   sendObjectiveAnswer,
   sendSubjectiveAnswer,
-  sendSubjectPicByString
+  sendSubjectPicByString,
+  raceAnswer
 } from "@/api/student/classroom";
-import { Indicator, Toast } from "mint-ui";
+import { MessageBox,Indicator, Toast } from "mint-ui";
 import { mapGetters } from "vuex";
 import store from "@/store";
 import SockJS from "sockjs-client";
@@ -606,6 +607,15 @@ export default {
           },
           subHeader
         );
+        //监听的路径以及回调。返回的subscription用于取消订阅
+        // _this.subscription1 = _this.stompClient.subscribe(
+        //   "/pubRaceQuestion/" + _this.course,
+        //   function(response) {
+        //     console.log(response)
+            
+        //   },
+        //   subHeader
+        // );
       });
     },
     //订阅课堂
@@ -650,6 +660,17 @@ export default {
               });
             }
           }
+        }
+        if(classData.data.wsType === "RACE") {
+          MessageBox.confirm('是否抢答?').then(action => {
+            var id = JSON.parse(localStorage.getItem('user')).userId
+            var timestamp=new Date().getTime()
+            console.log(id)
+            raceAnswer(classData.data.courseId,timestamp).then(res=>{
+              console.log(res)
+            })
+            console.log(timestamp)
+          })
         }
       }
     },

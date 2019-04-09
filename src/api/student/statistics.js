@@ -5,7 +5,7 @@ import axios from '../../utils/axios'
 // const apiUrl = '/COURSESERVICE/student/';
 // const host = '/CLASSINTERACTION/';
 
-const apiurl = '/COURSESERVICE/result/student/'
+const apiurl = '/COURSESTATISTICS/result/student/'
 
 //课堂
 export function getCourseSubjectResult(subjectname) {

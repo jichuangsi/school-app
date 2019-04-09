@@ -43,8 +43,8 @@
         top: 0;
         z-index: 1005;
         width: 100%;
-        height: 3.15rem;
-        line-height: 3.15rem;
+        height: 4.4rem;
+        line-height: 4.4rem;
         // padding: 0 1.14rem;
         box-sizing: border-box;
         // background-color: rgba(128, 213, 156, 1);
@@ -54,7 +54,7 @@
         // border: 1px solid transparent;
         .item {
             padding-top: 1px;
-            font-size: 1.5rem;//18px;
+            font-size: 1.8rem;//18px;
             color: #ffffff;
         }
         .previous_page {

@@ -193,3 +193,11 @@ export function aiPushQuestions(knowledgeId, qtypeId, diff) {
         //headers: {'accessToken': localStorage.getItem('token')}
     });
 }
+//进入课堂
+export function raceAnswer(courseId,raceId) {
+    return axios({
+        method: 'post',
+        url: `${host}raceAnswer/${courseId}/${raceId}`,
+        //headers: {'accessToken': localStorage.getItem('token')}
+    });
+}

@@ -151,8 +151,8 @@ export default {
 .top {
   .nav {
     width: 100%;
-    height: 3.15rem;
-    line-height: 3.15rem;
+    height: 4.4rem;
+    line-height: 4.4rem;
     // background-color: #80d59c;
     background:url('../../../assets/上方导航栏.png') no-repeat;
     background-size: 100% 110%;
@@ -166,14 +166,14 @@ export default {
     }
     ul {
       flex: 1;
-      height: 3.15rem;
+      height: 4.4rem;
       overflow: hidden;
       li {
         display: inline-block;
         text-align: center;
         span {
           display: inline-block;
-          height: 3.15rem;
+          height: 4.4rem;
           padding: 0rem 1rem;
           font-size: 1.8rem;
           opacity: 0.8;
@@ -182,7 +182,7 @@ export default {
           // border-bottom: 4px solid #347cf9;
           background: url('../../../assets/下标识.png') no-repeat;
           background-size: 100% 10%;
-          background-position-y: 2.9rem;
+          background-position-y: 4rem;
           font-size: 2rem;
           opacity: 1;
         }
