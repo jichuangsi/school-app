@@ -239,7 +239,7 @@ export default new Router({
                 isBack: false
             }
         }, {
-            path: '/testindex',
+            path: '/testIndex',
             name: 'testindex',
             component: () => import('@/components/studentIndex/testindex'), //学生端考试首页
             meta: {

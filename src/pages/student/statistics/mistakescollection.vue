@@ -187,7 +187,8 @@ export default {
         //       el: '.swiper-pagination',
         //       clickable :true
         //   }
-      }
+      },
+        tabFired: false
       // swiperSlides: [1, 2, 3, 4]
     };
   },
@@ -195,7 +196,23 @@ export default {
         vm = this;
     },
     mounted(){
-      this.getIncorrectQuestions(1);
+        let _self = this;
+        let networkState = navigator.connection.type;
+        //console.log(networkState);
+        if (networkState === "unknown") {
+            document.addEventListener("online", function(){
+                //console.log(_self.tabFired);
+                if(!_self.tabFired){
+                    _self.getIncorrectQuestions(1);
+                    _self.tabFired = true;
+                }
+            });
+        }else{
+            this.getIncorrectQuestions(1);
+        }
+    },
+    activated(){
+        this.tabFired = false;
     },
   methods: {
       getIncorrectQuestions(subjectId, knowledgeId){
@@ -256,8 +273,8 @@ export default {
     background: url('../../../assets/allbj.png') no-repeat;
     .nav {
       width: 100%;
-      height: 3.15rem;
-      line-height: 3.15rem;
+      height: 4.4rem;
+      line-height: 4.4rem;
         background:url('../../../assets/上方导航栏.png') no-repeat;
         background-size: 100% 110%;
       color: #ffffff;

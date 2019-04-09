@@ -13,6 +13,7 @@ const homeWork = {
       // 考试
       testId: '',
       testList: [],
+      historyTestData: [],
       testObjectiveQs: [],
       testSubjectiveQs: [],
       testName: '',
@@ -36,11 +37,11 @@ const homeWork = {
     },
     SET_HOMEWORK: (state, homeworkList) => {
         state.homeworkList = homeworkList;
-        state.homeworkList = state.homeworkList.concat(state.historyData);
+        if(state.homeworkList) state.homeworkList = state.homeworkList.concat(state.historyData);
     },
       SET_HOMEWORKHISTORY: (state, historyData) => {
         state.historyData = historyData;
-        state.homeworkList = state.homeworkList.concat(historyData)
+        if(state.homeworkList) state.homeworkList = state.homeworkList.concat(historyData)
     },
     // 考试
     SET_TESTOBJECTIVEQS: (state, testObjectiveQs) => {
@@ -60,11 +61,11 @@ const homeWork = {
     },
     SET_TEST: (state, testList) => {
         state.testList = testList;
-        state.testList = state.testList.concat(state.historyData);
+        if(state.testList) state.testList = state.testList.concat(state.historyTestData);
     },
-    SET_TESTHISTORY: (state, historyData) => {
-        state.historyData = historyData;
-        state.testList = state.testList.concat(historyData)
+    SET_TESTHISTORY: (state, historyTestData) => {
+        state.historyTestData = historyTestData;
+        if(state.testList) state.testList = state.testList.concat(historyTestData)
     }
   },
   actions: {

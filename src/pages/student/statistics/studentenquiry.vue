@@ -79,13 +79,31 @@ export default {
       tableth: ['知识模块', '权重占比', '您的正确率', '全班平均正确率'],
       tabletd: [],
       dataname:[],
-      datalist:[]
+      datalist:[],
+        tabFired: false
     }
   },
   mounted () {
-    this.drawLine()
-    this.getdata()
+      let _self = this;
+      let networkState = navigator.connection.type;
+      //console.log(networkState);
+      if (networkState === "unknown") {
+          document.addEventListener("online", function(){
+              //console.log(_self.tabFired);
+              if(!_self.tabFired){
+                  _self.drawLine();
+                  _self.getdata();
+                  _self.tabFired = true;
+              }
+          });
+      }else{
+          this.drawLine();
+          this.getdata();
+      }
   },
+    activated(){
+        this.tabFired = false;
+    },
   methods: {
     getdata(){
       let arr = []

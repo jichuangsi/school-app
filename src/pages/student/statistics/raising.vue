@@ -225,8 +225,8 @@
     .top {
       .nav {
         width: 100%;
-        height: 3.15rem;
-        line-height: 3.15rem;
+          height: 4.4rem;
+          line-height: 4.4rem;
     background:url('../../../assets/上方导航栏.png') no-repeat;
     background-size: 100% 110%;
         color: #ffffff;

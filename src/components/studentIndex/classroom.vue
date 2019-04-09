@@ -105,7 +105,7 @@
             // this.getClassroomList();
             // 判断vuex里面是否有数据
             this.classId = JSON.parse(localStorage.getItem("user")).roles[0].primaryClass.classId;
-            if (this.classroomList.length === 0) {
+            if (!this.classroomList||this.classroomList.length === 0) {
                 let _self = this;
                 let networkState = navigator.connection.type;
                 //console.log(networkState);
@@ -128,6 +128,7 @@
         },
         activated(){
             this.tabFired = false;
+            //console.log("isCNew:" + this.isCNew);
             if(this.isCNew){
                 this.classId = JSON.parse(localStorage.getItem("user")).roles[0].primaryClass.classId;
                 store.commit('SET_HISTORY', []);

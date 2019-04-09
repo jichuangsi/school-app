@@ -58,12 +58,31 @@ export default {
       tabletd: [],
       
       dataname:[],
-      datalist:[]
+      datalist:[],
+        tabFired: false
     }
   },
   mounted () {
-    this.drawLine()
+      let _self = this;
+      let networkState = navigator.connection.type;
+      //console.log(networkState);
+      if (networkState === "unknown") {
+          document.addEventListener("online", function(){
+              //console.log(_self.tabFired);
+              if(!_self.tabFired){
+                  _self.drawLine();
+                  _self.getdata();
+                  _self.tabFired = true;
+              }
+          });
+      }else{
+          this.drawLine();
+          this.getdata();
+      }
   },
+    activated(){
+        this.tabFired = false;
+    },
   methods: {
     getdata(){
       let arr = []

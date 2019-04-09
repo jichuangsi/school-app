@@ -62,7 +62,7 @@
             ])
         },
         mounted() {
-            if (this.homeworkList.length === 0) {
+            if (!this.homeworkList||this.homeworkList.length === 0) {
                 let _self = this;
                 let networkState = navigator.connection.type;
                 //console.log(networkState);
@@ -84,6 +84,7 @@
         },
         activated(){
             this.tabFired = false;
+            //console.log("isHNew:" + this.isHNew);
             if(this.isHNew){
                 store.commit('SET_HOMEWORKHISTORY', []);
                 this.getHomeworkList();
@@ -216,7 +217,7 @@
             checkComplete(arr){
               let count = 0;
               arr.forEach((item, index)=>{
-                  if(!item.completed) count++;
+                  if(item.homeworkStatus==='PROGRESS'&&!item.completed) count++;
               });
               if(count === 0){
                   this.$emit("messageout",{"message": null, "type": 2});

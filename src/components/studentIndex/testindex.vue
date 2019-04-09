@@ -59,11 +59,12 @@
             //vuex 调用
             ...mapGetters([
                 'testList',
-                'isHNew'
+                'isTNew'
             ])
         },
         mounted() {
-            if (this.testList.length === 0) {
+            //console.log(this.testList)
+            if (!this.testList||this.testList.length === 0) {
                 let _self = this;
                 let networkState = navigator.connection.type;
                 //console.log(networkState);
@@ -86,11 +87,11 @@
         },
         activated(){
             this.tabFired = false;
-            if(this.isHNew){
+            if(this.isTNew){
                 store.commit('SET_TESTHISTORY', []);
                 this.gettestList();
                 this.mescroll.resetUpScroll();
-                store.commit('IS_HNEW', false);
+                store.commit('IS_TNEW', false);
             }else{
                 this.checkComplete(this.workList);
             }
@@ -107,14 +108,14 @@
             //获取数据加载
             gettestList() {
                 this.$store.dispatch('getTestList').then((res) => {
-                    console.log(res)
+                    //console.log(res)
                     this.pageShow = true;
                     this.loading = false;
                     this.workList = this.testList;
                     this.checkComplete(this.workList);
                     //console.log(this.workList)
                 }).catch((err) => {
-                    console.log('err', err);
+                    console.log('err in getTestList' + err);
                     this.pageShow = true;
                     this.loading = false;
                     /*let msg = this.getMsg(err);

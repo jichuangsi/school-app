@@ -49,5 +49,6 @@ const getters = {
     upgradeInfo: state => state.app.upgradeInfo,
     isCNew: state => state.app.isCNew,
     isHNew: state => state.app.isHNew,
+    isTNew: state => state.app.isTNew,
 };
 export default getters

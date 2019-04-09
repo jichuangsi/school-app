@@ -7,13 +7,13 @@ const classList = {
     },
     mutations: {
         SET_TODAY: (state, todayData) => {
-            console.log(state.historyData);
+            //console.log(state.historyData);
             state.classroomList = todayData;
-            state.classroomList = state.classroomList.concat(state.historyData)
+            if(state.classroomList) state.classroomList = state.classroomList.concat(state.historyData)
         },
         SET_HISTORY: (state, historyData) => {
             state.historyData = historyData;
-            state.classroomList = state.classroomList.concat(historyData)
+            if(state.classroomList) state.classroomList = state.classroomList.concat(historyData)
         }
     },
     actions: {

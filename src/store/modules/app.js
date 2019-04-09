@@ -18,6 +18,7 @@ const app = {
         upgradeInfo: {},
         isCNew: false,
         isHNew: false,
+        isTNew: false,
     },
 
     mutations: {
@@ -50,6 +51,9 @@ const app = {
         },
         IS_HNEW: (state, isHNew) => {
             state.isHNew = isHNew
+        },
+        IS_TNEW: (state, isTNew) => {
+            state.isTNew = isTNew
         },
     },
 
