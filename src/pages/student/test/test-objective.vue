@@ -298,7 +298,7 @@
             .objectiveTitle {
                 height: 2rem;
                 position: relative;
-                margin: 2rem 0 1.4rem;
+                margin: 5.5rem 0 1.4rem;
                 .icon {
                     position: absolute;
                     top: 50%;
@@ -421,7 +421,7 @@
                     height: 38px;
                     float: right;
                     background: url('../../../assets/按钮.png') no-repeat;
-                    background-position: -135px -1491px;
+                    background-position: -135px -2553px;
                     // background-color: #69B482;
                 }
                 .submit:active {
@@ -429,7 +429,7 @@
                     height: 38px;
                     float: right;
                     background: url('../../../assets/按钮.png') no-repeat;
-                    background-position: -578px -1491px;
+                    background-position: -578px -2553px;
                     // background-color: #4a9460;
                     // box-shadow: 0 2px 6px 3px #4a9460;
                 }

@@ -20,7 +20,7 @@
     right: 0;
     bottom: 0;
     left: 0;
-    z-index: 0;
+    z-index: 101;
     background-color: white;
     .mint-spinner-fading-circle {
       position: absolute;

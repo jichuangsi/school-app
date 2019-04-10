@@ -298,7 +298,7 @@
             .objectiveTitle {
                 height: 2rem;
                 position: relative;
-                margin: 2rem 0 1.4rem;
+                margin: 5.5rem 0 1.4rem;
                 .icon {
                     position: absolute;
                     top: 50%;
