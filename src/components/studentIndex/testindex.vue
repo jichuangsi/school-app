@@ -251,7 +251,7 @@
         //background-color: white;
         
         .navbox {
-            margin-top: 20px;
+            margin-top: 40px;
             div {
                 font-size: 18px;
                 display: inline-block;

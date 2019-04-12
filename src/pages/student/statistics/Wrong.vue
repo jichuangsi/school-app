@@ -176,8 +176,8 @@
         width: 100%;
         height: 4.4rem;
         line-height: 4.4rem;
-    background:url('../../../assets/上方导航栏.png') no-repeat;
-    background-size: 100% 110%;
+      background:url('../../../assets/上方导航栏.png') no-repeat;
+      background-size: 100% 110%;
         color: #ffffff;
         font-size: 2rem;
           position: relative;
@@ -189,7 +189,12 @@
           left: 2rem;
         }
         .text {
+          width: 80%;
+            white-space: nowrap;
+            text-overflow:ellipsis;
+            overflow: hidden;
           text-align: center;
+          margin: 0 auto;
         }
       }
     }
@@ -256,7 +261,7 @@
           background-color: white;
           box-sizing: border-box;
           .anwers {
-            font-size: 18px;
+            font-size: 22px;
             padding: 15px;
             line-height: 24px;
             span {
@@ -264,8 +269,8 @@
             }
           }
           .remind {
-            font-size: 18px;
-            line-height: 24px;
+            font-size: 22px;
+            line-height: 28px;
             padding: 15px;
             border: 1px solid #80d59c;
             // margin-top: 28px;
@@ -301,7 +306,7 @@
           }
           .topic {
             line-height: 2.43rem;
-            font-size: 18px;
+            font-size: 22px;
             padding: 0 3.71rem;
           }
           .select {
@@ -337,7 +342,7 @@
               line-height: 1.79rem;
               padding-left: 0.57rem;
               padding-right: 0.79rem;
-              font-size: 20px;
+              font-size: 24px;
               color: rgba(105, 180, 130, 1);
               // float: left;
             }
@@ -346,7 +351,7 @@
               display: inline-block;
               height: 3rem;
               line-height: 1.79rem;
-              font-size: 18px;
+              font-size: 22px;
               color: rgba(53, 53, 53, 1);
               // float: left;
             }

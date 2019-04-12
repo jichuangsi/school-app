@@ -1,9 +1,9 @@
 <template>
   <div class="assistant">
-    <img
+    <!-- <img
       src="../../assets/zsbj.png"
       alt=""
-    >
+    > -->
     <div class="back" @click="back">返回</div>
     <div class="text" v-if="type!='计时'">{{textname}}</div>
     <div class="box" v-if="type=='计时'">

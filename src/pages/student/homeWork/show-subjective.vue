@@ -563,24 +563,28 @@
                                 font-size: 18px;
                             }
                             .Answerstart {
-                                width: 128px;
-                                height: 38px;
-                                background: url('../../../assets/按钮.png') no-repeat;
-                                background-position: -149px -828px;
+                                width: 256px;
+                                height: 76px;
+                                background: url('../../../assets/按钮.png') no-repeat;//
+                                background-size: 2400px 6000px;
+                                background-position: -298px -1656px;
                             }
                             .Answerstart:active{
                                 background: url('../../../assets/按钮.png') no-repeat;
-                                background-position: -588px -828px;
+                                background-size: 2400px 6000px;
+                                background-position: -1176px -1656px;
                             }
                             .Answermodify {
-                                width: 128px;
-                                height: 38px;
-                                background: url('../../../assets/按钮.png') no-repeat;
-                                background-position: -149px -453px;
+                                width: 256px;
+                                height: 76px;
+                                background: url('../../../assets/按钮.png') no-repeat;//
+                                background-size: 2400px 6000px;
+                                background-position: -298px -906px;
                             }
                             .Answermodify:active{
                                 background: url('../../../assets/按钮.png') no-repeat;
-                                background-position: -588px -453px;
+                                background-size: 2400px 6000px;
+                                background-position: -1176px -906px;
                             }
                         }
                     }

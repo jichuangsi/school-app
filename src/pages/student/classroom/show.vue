@@ -48,6 +48,14 @@
       </div>
     </div>
     <loading v-if="loading" />
+        <div class="Responderbox" v-if="qdshow">
+            <div class="qdbox">
+                <div class="none" @click="qdshow = false">x</div>
+                <div class="text">是否抢答</div>
+                <div class="cancel" @click="qdshow = false">取消</div>
+                <div class="confirm" @click="qdconfirm">确认</div>
+            </div>
+        </div>
   </div>
 </template>
 
@@ -91,6 +99,7 @@ export default {
   },
   data() {
     return {
+      qdshow:false,
       attachmentsstatus:'',
       attachments:[],
       objectiveAnswerbtn:false,
@@ -213,6 +222,14 @@ export default {
     ...mapGetters(["isBoard", "isBlueTooth", "boardImg"])
   },
   methods: {
+    //抢答
+    qdconfirm(){
+      var timestamp=new Date().getTime()
+      raceAnswer(this.course,timestamp).then(res=>{
+              console.log(res)
+              this.qdshow = false
+        })
+    },
     Answerbtn(){
       this.AnswerShareshow = true;
     },
@@ -662,15 +679,16 @@ export default {
           }
         }
         if(classData.data.wsType === "RACE") {
-          MessageBox.confirm('是否抢答?').then(action => {
-            var id = JSON.parse(localStorage.getItem('user')).userId
-            var timestamp=new Date().getTime()
-            console.log(id)
-            raceAnswer(classData.data.courseId,timestamp).then(res=>{
-              console.log(res)
-            })
-            console.log(timestamp)
-          })
+          self.qdshow = true
+          // MessageBox.confirm('是否抢答?').then(action => {
+          //   var id = JSON.parse(localStorage.getItem('user')).userId
+          //   var timestamp=new Date().getTime()
+          //   console.log(id)
+          //   raceAnswer(classData.data.courseId,timestamp).then(res=>{
+          //     console.log(res)
+          //   })
+          //   console.log(timestamp)
+          // })
         }
       }
     },
@@ -902,17 +920,19 @@ export default {
           .objective_submit {
             position: absolute;
             right: 3.71rem;
-            width: 98px;
-            height: 38px;
-            background: url('../../../assets/按钮.png') no-repeat;
-            background-position: -164px -782px;
+            width: 196px;
+            height: 76px;
+            background: url('../../../assets/按钮.png') no-repeat;//
+            background-size: 2400px 6000px;
+            background-position: -328px -1564px;
             border-radius: 1.145rem;
             color: #9a84ff;
             font-size: 18px;
           }
           .objective_submit:active {
             background: url('../../../assets/按钮.png') no-repeat;
-            background-position: -603px -782px;
+            background-size: 2400px 6000px;
+            background-position: -1206px -1564px;
           }
         }
         .closeReply {
@@ -948,24 +968,28 @@ export default {
             font-size: 18px;
           }
           .Answerstart {
-            width: 128px;
-            height: 38px;
-            background: url('../../../assets/按钮.png') no-repeat;
-            background-position: -149px -828px;
+            width: 256px;
+            height: 76px;
+            background: url('../../../assets/按钮.png') no-repeat;//
+            background-size: 2400px 6000px;
+            background-position: -298px -1656px;
           }
           .Answerstart:active{
             background: url('../../../assets/按钮.png') no-repeat;
-            background-position: -588px -828px;
+            background-size: 2400px 6000px;
+            background-position: -1176px -1656px;
           }
           .Answermodify {
-            width: 128px;
-            height: 38px;
-            background: url('../../../assets/按钮.png') no-repeat;
-            background-position: -149px -453px;
+            width: 256px;
+            height: 76px;
+            background: url('../../../assets/按钮.png') no-repeat;//
+            background-size: 2400px 6000px;
+            background-position: -298px -906px;
           }
           .Answermodify:active{
             background: url('../../../assets/按钮.png') no-repeat;
-            background-position: -588px -453px;
+            background-size: 2400px 6000px;
+            background-position: -1176px -906px;
           }
         }
         .closeReply {
@@ -983,4 +1007,67 @@ export default {
     }
   }
 }
+
+        .Responderbox {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0px;
+            left: 0px;
+            background-color: rgba(0, 0, 0, 0.3);
+            z-index: 2007;
+            .qdbox {
+                width: 600px;
+                height: 200px;
+                background-color: #fff;
+                position: absolute;
+                left: 50%;
+                top: 40%;
+                transform: translate(-50%,-50%);
+            }
+            .none {
+                font-size: 30px;
+                float: right;
+                margin-right: 10px;
+            }
+            .text {
+                font-size: 24px;
+                text-align: center;
+                font-weight: 700;
+                margin: 50px 0;
+            }
+            .cancel {
+                position: absolute;
+                left: 0px;
+                bottom: 0px;
+                width: 50%;
+                height: 50px;
+                line-height: 50px;
+                text-align: center;
+                font-size: 22px;
+                border: 1px solid #999;
+            }
+            .confirm {
+                position: absolute;
+                right: 0px;
+                bottom: 0px;
+                width: 50%;
+                height: 50px;
+                line-height: 50px;
+                text-align: center;
+                font-size: 22px;
+                border: 1px solid #999;
+            }
+            .studentname {
+                width: 100%;
+                height: 50px;
+                line-height: 50px;
+                text-align: center;
+                font-size: 22px;
+                position: absolute;
+                bottom: -50px;
+                background-color: #fff;
+                border: 1px solid #999;
+            }
+        }
 </style>

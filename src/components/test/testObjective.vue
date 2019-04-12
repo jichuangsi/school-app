@@ -268,19 +268,21 @@ export default {
         //margin-top: 10px;
     }
     .submit {
-        width: 98px;
-        height: 38px;
+        width: 196px;
+        height: 76px;
         float: right;
-        background: url('../../assets/按钮.png') no-repeat;
-        background-position: -164px -782px;
+        background: url('../../assets/按钮.png') no-repeat;//
+        background-size: 2400px 6000px;
+        background-position: -328px -1564px;
         // background-color: #69B482;
     }
     .submit:active {
-        width: 98px;
-        height: 38px;
+        width: 196px;
+        height: 76px;
         float: right;
         background: url('../../assets/按钮.png') no-repeat;
-        background-position: -603px -782px;
+        background-size: 2400px 6000px;
+        background-position: -1206px -1564px;
         // background-color: #4a9460;
         // box-shadow: 0 2px 6px 3px #4a9460;
     }

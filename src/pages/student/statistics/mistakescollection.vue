@@ -354,6 +354,10 @@ export default {
       background-color: #ffffff;
         .fl {
             margin-left: 1rem;
+            width: 60%;
+            white-space: nowrap;
+            text-overflow:ellipsis;
+            overflow: hidden;
         }
         .fr {
             margin-right: 1rem;

@@ -24,7 +24,7 @@
                         <a v-for="(item,index) in classMsg.attachments" :key="index" @click.capture="downloadAttachment4App(item)">{{item.name}}，</a>
                     </div>
                 </div>
-                <div class="img" @click="zsbtn"><img src="../../../assets/zsbtn.png" alt=""></div>
+                <!-- <div class="img" @click="zsbtn"><img src="../../../assets/zsbtn.png" alt=""></div> -->
                 <div class="right started" @click.stop.passive="updateState"
                      v-if="classMsg.courseStatus === 'NOTSTART'">上课
                 </div>

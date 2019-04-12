@@ -417,19 +417,21 @@
                     margin-top: 10px;
                 }
                 .submit {
-                    width: 126px;
-                    height: 38px;
+                    width: 252px;
+                    height: 76px;
                     float: right;
-                    background: url('../../../assets/按钮.png') no-repeat;
-                    background-position: -135px -1491px;
+                    background: url('../../../assets/按钮.png') no-repeat;//
+                    background-size: 2400px 6000px;
+                    background-position: -270px -2982px;
                     // background-color: #69B482;
                 }
                 .submit:active {
-                    width: 126px;
-                    height: 38px;
+                    width: 252px;
+                    height: 76px;
                     float: right;
                     background: url('../../../assets/按钮.png') no-repeat;
-                    background-position: -578px -1491px;
+                    background-size: 2400px 6000px;
+                    background-position: -1156px -2982px;
                     // background-color: #4a9460;
                     // box-shadow: 0 2px 6px 3px #4a9460;
                 }
