@@ -563,28 +563,24 @@
                                 font-size: 18px;
                             }
                             .Answerstart {
-                                width: 256px;
-                                height: 76px;
+                                width: 154px;
+                                height: 46px;
                                 background: url('../../../assets/按钮.png') no-repeat;//
-                                background-size: 2400px 6000px;
-                                background-position: -298px -1656px;
+                                background-position: -135px -1321px;
                             }
                             .Answerstart:active{
                                 background: url('../../../assets/按钮.png') no-repeat;
-                                background-size: 2400px 6000px;
-                                background-position: -1176px -1656px;
+                                background-position: -592px -1321px;
                             }
                             .Answermodify {
-                                width: 256px;
-                                height: 76px;
+                                width: 154px;
+                                height: 46px;
                                 background: url('../../../assets/按钮.png') no-repeat;//
-                                background-size: 2400px 6000px;
-                                background-position: -298px -906px;
+                                background-position: -135px -623px;
                             }
                             .Answermodify:active{
                                 background: url('../../../assets/按钮.png') no-repeat;
-                                background-size: 2400px 6000px;
-                                background-position: -1176px -906px;
+                                background-position: -592px -623px;
                             }
                         }
                     }

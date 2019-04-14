@@ -314,18 +314,16 @@
             // }
             .submitAnswer {
               margin-right:15px;
-              width: 252px;
-              height: 96px;
+              width: 150px;
+              height: 56px;
               display: inline-block;
               float: right;
               background: url('../../../assets/按钮.png') no-repeat;//
-              background-size: 2400px 6000px;
-              background-position: -300px -576px;
+              background-position: -135px -314px;
             }
             .submitAnswer:active{
               background: url('../../../assets/按钮.png') no-repeat;
-              background-size: 2400px 6000px;
-              background-position: -1178px -576px;
+              background-position: -592px -314px;
             }
           }
           .title {

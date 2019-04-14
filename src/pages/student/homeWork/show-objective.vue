@@ -417,21 +417,16 @@
                     margin-top: 10px;
                 }
                 .submit {
-                    width: 252px;
-                    height: 76px;
+                    width: 154px;
+                    height: 46px;
                     float: right;
                     background: url('../../../assets/按钮.png') no-repeat;//
-                    background-size: 2400px 6000px;
-                    background-position: -270px -2982px;
+                    background-position: -135px -1915px;
                     // background-color: #69B482;
                 }
                 .submit:active {
-                    width: 252px;
-                    height: 76px;
-                    float: right;
                     background: url('../../../assets/按钮.png') no-repeat;
-                    background-size: 2400px 6000px;
-                    background-position: -1156px -2982px;
+                    background-position: -592px -1915px;
                     // background-color: #4a9460;
                     // box-shadow: 0 2px 6px 3px #4a9460;
                 }

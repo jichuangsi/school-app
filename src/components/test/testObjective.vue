@@ -23,7 +23,7 @@
         </div>
         <PopupPic :questionPic="objective.questionPic"/>
         <div class="clearfix">
-            <div class="right submit" @click.stop.passive="submit(objective.questionId)" v-if="!homeworkCompleted"></div>
+            <div class="right submit" @click.stop.passive="submit(objective.questionId)" v-if="!testCompleted"></div>
         </div>
         <div class="anwers" v-if="completed">
           此题答案为:<span v-html="objective.answer.split('|').join(',')"></span>
@@ -72,7 +72,7 @@ export default {
     computed: {
         //vuex 调用
         ...mapGetters([
-            'homeworkCompleted'
+            'testCompleted'
         ])
     },
     watch:{
@@ -268,21 +268,16 @@ export default {
         //margin-top: 10px;
     }
     .submit {
-        width: 196px;
-        height: 76px;
+        width: 118px;
+        height: 46px;
         float: right;
         background: url('../../assets/按钮.png') no-repeat;//
-        background-size: 2400px 6000px;
-        background-position: -328px -1564px;
+        background-position: -135px -1228px;
         // background-color: #69B482;
     }
     .submit:active {
-        width: 196px;
-        height: 76px;
-        float: right;
         background: url('../../assets/按钮.png') no-repeat;
-        background-size: 2400px 6000px;
-        background-position: -1206px -1564px;
+        background-position: -592px -1228px;
         // background-color: #4a9460;
         // box-shadow: 0 2px 6px 3px #4a9460;
     }

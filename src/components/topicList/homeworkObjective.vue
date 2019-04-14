@@ -114,6 +114,7 @@ export default {
         }
     },
   mounted() {
+      console.log(this.homeworkCompleted)
       /*if(this.objective.answerModelForStudent&&this.objective.answerModelForStudent.answerForObjective){
           if(this.objective.answer.length==1){
               this.pointIndex = this.reversion(this.objective.answerModelForStudent.answerForObjective);
@@ -268,21 +269,16 @@ export default {
         //margin-top: 10px;
     }
     .submit {
-        width: 196px;
-        height: 76px;
+        width: 118px;
+        height: 46px;
         float: right;
         background: url('../../assets/按钮.png') no-repeat;
-        background-size: 2400px 6000px;
-        background-position: -328px -1564px;
+        background-position: -135px -1228px;
         // background-color: #69B482;
     }
     .submit:active {
-        width: 196px;
-        height: 76px;
-        float: right;
         background: url('../../assets/按钮.png') no-repeat;
-        background-size: 2400px 6000px;
-        background-position: -1206px -1564px;
+        background-position: -592px -1228px;
         // background-color: #4a9460;
         // box-shadow: 0 2px 6px 3px #4a9460;
     }

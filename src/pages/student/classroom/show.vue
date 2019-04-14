@@ -262,6 +262,7 @@ export default {
             logging:true
             //backgroundColor: null
         }).then((canvas) => {
+          // console.log(canvas.toDataURL("image/png"))
             let dataURL = canvas.toDataURL("image/png").replace("data:image/png;base64,","");
             //console.log(dataURL)
 
@@ -335,7 +336,7 @@ export default {
             //backgroundColor: null
         }).then((canvas) => {
             let dataURL = canvas.toDataURL("image/png").replace("data:image/png;base64,","");
-            //console.log(dataURL)
+            // console.log(canvas.toDataURL("image/png"))
 
             self.subjectiveId = id;
             let answer = "";
@@ -920,19 +921,17 @@ export default {
           .objective_submit {
             position: absolute;
             right: 3.71rem;
-            width: 196px;
-            height: 76px;
+            width: 118px;
+            height: 46px;
             background: url('../../../assets/按钮.png') no-repeat;//
-            background-size: 2400px 6000px;
-            background-position: -328px -1564px;
+            background-position: -135px -1228px;
             border-radius: 1.145rem;
             color: #9a84ff;
             font-size: 18px;
           }
           .objective_submit:active {
             background: url('../../../assets/按钮.png') no-repeat;
-            background-size: 2400px 6000px;
-            background-position: -1206px -1564px;
+            background-position: -592px -1228px;
           }
         }
         .closeReply {
@@ -968,28 +967,24 @@ export default {
             font-size: 18px;
           }
           .Answerstart {
-            width: 256px;
-            height: 76px;
+            width: 154px;
+            height: 46px;
             background: url('../../../assets/按钮.png') no-repeat;//
-            background-size: 2400px 6000px;
-            background-position: -298px -1656px;
+            background-position: -135px -1321px;
           }
           .Answerstart:active{
             background: url('../../../assets/按钮.png') no-repeat;
-            background-size: 2400px 6000px;
-            background-position: -1176px -1656px;
+            background-position: -592px -1321px;
           }
           .Answermodify {
-            width: 256px;
-            height: 76px;
+            width: 154px;
+            height: 46px;
             background: url('../../../assets/按钮.png') no-repeat;//
-            background-size: 2400px 6000px;
-            background-position: -298px -906px;
+            background-position: -135px -623px;
           }
           .Answermodify:active{
             background: url('../../../assets/按钮.png') no-repeat;
-            background-size: 2400px 6000px;
-            background-position: -1176px -906px;
+            background-position: -592px -623px;
           }
         }
         .closeReply {
