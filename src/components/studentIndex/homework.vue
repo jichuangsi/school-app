@@ -43,7 +43,7 @@
                 homeworkState: true,
                 loading: true,                    //加载状态
                 pageShow: false,                  //内容状态
-                tips: "没有更多作业",              //加载完提示
+                tips: "没有更多习题",              //加载完提示
                 mescroll: null,
                 tabFired: false
             }

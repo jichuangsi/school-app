@@ -4,7 +4,7 @@
         <div class="objective_content">
             <div class="objectiveTitle">
                 <span class="icon"></span>
-                <span class="title">作业信息</span>
+                <span class="title">习题信息</span>
             </div>
             <div class="student_msg">
                 <div class="msg">

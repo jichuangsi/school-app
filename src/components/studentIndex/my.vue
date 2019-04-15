@@ -31,7 +31,7 @@
                     </router-link>
                     <router-link to="/studenthomework">
                         <li>
-                            <div class="left">作业详情</div>
+                            <div class="left">习题详情</div>
                             <div class="right">
                                 <i class="iconfont icon-icon-arrow-right2"></i>
                             </div>
