@@ -5,7 +5,7 @@
       </div>
         <div class="topic_warp">
             <div class="title">{{subjectiveTopic.title}}</div>
-            <div class="topic" v-html="subjectiveTopic.questionContent">
+            <div class="topic" v-html="subjectiveTopic.questionContent" :id="'tp'+subjectiveTopic.questionId">
                 {{subjectiveTopic.questionContent}}
             </div>
         </div>

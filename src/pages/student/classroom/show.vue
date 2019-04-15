@@ -56,6 +56,9 @@
                 <div class="confirm" @click="qdconfirm">确认</div>
             </div>
         </div>
+    <!--<div class="imgbox" v-if="imgboxshow">
+      <img :src="imgsrc" alt="">
+    </div>-->
   </div>
 </template>
 
@@ -99,6 +102,8 @@ export default {
   },
   data() {
     return {
+        /*imgboxshow:false,
+        imgsrc:'',*/
       qdshow:false,
       attachmentsstatus:'',
       attachments:[],
@@ -252,20 +257,29 @@ export default {
         }else{
             return;
         }
-        Indicator.open({
+        /*Indicator.open({
             text: "正在启动手写板...",
             spinnerType: "fading-circle"
-        });
+        });*/
         let self = this;
-        html2canvas(document.getElementById('qc'+id),{
+        document.getElementById('tp'+id).setAttribute('style', 'letter-spacing: 4px !important;padding-top: 8px !important');
+        html2canvas(document.getElementById('tp'+id),{
             useCORS: true,
-            logging:true
+            logging:false,
+            ignoreElements(element){
+                let type = element.type
+                if ( type && type === 'text' ) {
+                    console.log(element);
+                    return true;
+                }
+                return false;
+            }
             //backgroundColor: null
         }).then((canvas) => {
           // console.log(canvas.toDataURL("image/png"))
             let dataURL = canvas.toDataURL("image/png").replace("data:image/png;base64,","");
             //console.log(dataURL)
-
+            document.getElementById('tp'+id).setAttribute('style', 'letter-spacing:"";padding-top: ""');
             self.subjectiveId = id;
             window.HandwrittenBoard.isConnect(
                 function(res) {
@@ -273,7 +287,7 @@ export default {
                 },
                 function(res) {
                     console.log(res);
-                    Indicator.close();
+                    //Indicator.close();
                     switch (res.data.status) {
                         case 0:
                             if(!localStorage.getItem("bluetooth")) store.commit("SET_BLUETOOTH", true);
@@ -325,19 +339,32 @@ export default {
         }else{
             return;
         }
-        Indicator.open({
+        /*Indicator.open({
             text: "正在启动手写板...",
             spinnerType: "fading-circle"
-        });
+        });*/
         let self = this;
-        html2canvas(document.getElementById('qc'+id),{
+        document.getElementById('tp'+id).setAttribute('style', 'letter-spacing: 4px !important;padding-top: 8px !important');
+        html2canvas(document.getElementById('tp'+id),{
             useCORS: true,
-            logging:true
+            logging:false,
+            ignoreElements(element){
+                let type = element.type
+                if ( type && type === 'text' ) {
+                    console.log(element);
+                    return true;
+                }
+                return false;
+            }
             //backgroundColor: null
         }).then((canvas) => {
-            let dataURL = canvas.toDataURL("image/png").replace("data:image/png;base64,","");
             // console.log(canvas.toDataURL("image/png"))
-
+            let dataURL = canvas.toDataURL("image/png").replace("data:image/png;base64,","");
+            //console.log(dataURL)
+            /*let dataURL = canvas.toDataURL("image/png");
+            this.imgsrc = dataURL
+            this.imgboxshow = true*/
+            document.getElementById('tp'+id).setAttribute('style', 'letter-spacing:"";padding-top: ""');
             self.subjectiveId = id;
             let answer = "";
             for (let i = 0; i < this.objectiveAnswer.length; i++) {
@@ -351,7 +378,7 @@ export default {
                 },
                 function(res) {
                     console.log(res);
-                    Indicator.close();
+                    //Indicator.close();
                     switch (res.data.status) {
                         case 0:
                             if(!localStorage.getItem("bluetooth")) store.commit("SET_BLUETOOTH", true);
@@ -1065,4 +1092,12 @@ export default {
                 border: 1px solid #999;
             }
         }
+/*.imgbox {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 100px;
+  height: 0px;
+  z-index: 101;
+}*/
 </style>

@@ -14,7 +14,7 @@
                                 <div class="centertext">左右滑动切换题目</div>
                                 <div class="topic_warp" :id="'qc'+item.questionId">
                                     <div class="title">主观题-{{index+1}}</div>
-                                    <div class="topic" v-html="item.questionContent">
+                                    <div class="topic" :id="'tp'+item.questionId" v-html="item.questionContent">
                                         {{item.questionContent}}
                                     </div>
                                 </div>
@@ -295,18 +295,28 @@
                 }else{
                     return;
                 }
-                Indicator.open({
+               /* Indicator.open({
                     text: "正在启动手写板...",
                     spinnerType: "fading-circle"
-                });
+                });*/
                 let self = this;
-                html2canvas(document.getElementById('qc'+id),{
+                document.getElementById('tp'+id).setAttribute('style', 'letter-spacing: 4px !important;padding-top: 8px !important');
+                html2canvas(document.getElementById('tp'+id),{
                     useCORS: true,
-                    logging:true
+                    logging:false,
+                    ignoreElements(element){
+                        let type = element.type
+                        if ( type && type === 'text' ) {
+                            console.log(element);
+                            return true;
+                        }
+                        return false;
+                    }
                     //backgroundColor: null
                 }).then((canvas) => {
                     let dataURL = canvas.toDataURL("image/png").replace("data:image/png;base64,", "");
                     //console.log(dataURL)
+                    document.getElementById('tp'+id).setAttribute('style', 'letter-spacing:"";padding-top: ""');
                     self.subjectiveId = id;
                     window.HandwrittenBoard.isConnect(
                         function(res) {
@@ -314,7 +324,7 @@
                         },
                         function(res) {
                             console.log(res);
-                            Indicator.close();
+                            //Indicator.close();
                             switch (res.data.status) {
                                 case 0:
                                     store.commit("SET_BLUETOOTH", true);
@@ -342,19 +352,28 @@
                 }else{
                     return;
                 }
-                Indicator.open({
+                /*Indicator.open({
                     text: "正在启动手写板...",
                     spinnerType: "fading-circle"
-                });
+                });*/
                 let self = this;
-                html2canvas(document.getElementById('qc'+id),{
+                document.getElementById('tp'+id).setAttribute('style', 'letter-spacing: 4px !important;padding-top: 8px !important');
+                html2canvas(document.getElementById('tp'+id),{
                     useCORS: true,
-                    logging:true
+                    logging:false,
+                    ignoreElements(element){
+                        let type = element.type
+                        if ( type && type === 'text' ) {
+                            console.log(element);
+                            return true;
+                        }
+                        return false;
+                    }
                     //backgroundColor: null
                 }).then((canvas) => {
                     let dataURL = canvas.toDataURL("image/png").replace("data:image/png;base64,", "");
                     //console.log(dataURL)
-
+                    document.getElementById('tp'+id).setAttribute('style', 'letter-spacing:"";padding-top: ""');
                     self.subjectiveId = id;
                     let answer = "";
                     for (let i = 0; i < this.subjectiveAnswer.length; i++) {
@@ -368,7 +387,7 @@
                         },
                         function(res) {
                             console.log(res);
-                            Indicator.close();
+                            //Indicator.close();
                             switch (res.data.status) {
                                 case 0:
                                     store.commit("SET_BLUETOOTH", true);
