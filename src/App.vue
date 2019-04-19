@@ -62,6 +62,7 @@
                     ||this.$route.path=='/mistakescollection'
                     ||this.$route.path=='/myShow'
                     ||this.$route.path=='/testIndex'
+                    ||this.$route.path=='/Schedule'
                 ){
                     if(!(localStorage.getItem('token'))){
                          let route = this.$route.path
