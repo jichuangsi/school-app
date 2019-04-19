@@ -23,3 +23,12 @@ export function getQuestionSubjectResult(subjectname) {
         headers: {'accessToken': localStorage.getItem('token')}
     });
 }
+
+//课程表
+export function getStudentTimeTable(studentId) {
+    return axios({
+        method: 'GET',
+        url: `/PARENTSERVICE/studentInfo/getStudentTimeTable/${studentId}`,
+        headers: {'accessToken': localStorage.getItem('token')}
+    });
+}

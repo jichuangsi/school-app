@@ -53,6 +53,14 @@
                             </div>
                         </li>
                     </router-link>
+                    <router-link to="/Schedule">
+                        <li>
+                            <div class="left">课程表</div>
+                            <div class="right">
+                                <i class="iconfont icon-icon-arrow-right2"></i>
+                            </div>
+                        </li>
+                    </router-link>
                     <li @click="loginout">
                         <div class="left">退出登录</div>
                         <div class="right">

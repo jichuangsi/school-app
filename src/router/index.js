@@ -270,6 +270,14 @@ export default new Router({
                 keepAlive: false,
                 isBack: false
             }
+        }, {
+            path: '/Schedule',
+            name: 'Schedule',
+            component: () => import('@/pages/student/statistics/Schedule'), //学生端课程表
+            meta: {
+                keepAlive: false,
+                isBack: false
+            }
         }
     ]
 })
