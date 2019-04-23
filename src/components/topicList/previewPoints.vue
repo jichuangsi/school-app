@@ -50,6 +50,7 @@
             }
         },
         mounted() {
+            this.preview?this.title='预习要点':this.title=''
             console.log(this.attachmentsfile)+'这个数据'
             this.initialize();
         },

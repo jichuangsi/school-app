@@ -5,7 +5,7 @@
       <!--时间-->
       <div class="time">{{hours}}:{{minutes}}</div>
       <!--预习要点-->
-      <preview-points :preview="preview" :attachmentsfile="attachments" :attachmentsstatus="attachmentsstatus" v-if="preview" />
+      <preview-points :preview="preview" :attachmentsfile="attachments" :attachmentsstatus="attachmentsstatus" v-if="preview||attachments.length>0||attachmentsstatus" />
       <div class="class_topic_warp" v-for="(item,index) in showTopicList" :key="index">
         <!--客观题-->
         <div class="objective_warp" v-if="item.quesetionType==='objective'">
