@@ -3,7 +3,7 @@
       <div class="Collection" @click="Collection" v-if="objective.questionStatus == 'FINISH'">
         <img :src="Collectionsrc" alt="">
       </div>
-        <div class="title">{{objective.title}}</div>
+        <div class="title">{{objective.title}} ({{objective.questionTypeInCN}})</div>
         <div class="topic" v-html="objective.questionContent">
             {{objective.questionContent}}
         </div>

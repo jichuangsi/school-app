@@ -3,7 +3,7 @@
       <div class="Collection" @click="Collection">
         <img :src="Collectionsrc" alt="">
       </div>
-        <div class="title">客观题-{{index+1}}</div>
+        <div class="title">客观题-{{index+1}} ({{objective.questionTypeInCN}})</div>
         <div class="topic" v-html="objective.questionContent">
             {{objective.questionContent}}
         </div>
