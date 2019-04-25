@@ -3,7 +3,7 @@
       <div class="Collection" @click="Collection">
         <img :src="Collectionsrc" alt="">
       </div>
-        <div class="title">客观题-{{index+1}} ({{objective.questionTypeInCN}})</div>
+        <div class="title">客观题-{{index+1}} <span v-if="objective.questionTypeInCN">({{objective.questionTypeInCN}})</span></div>
         <div class="topic" v-html="objective.questionContent">
             {{objective.questionContent}}
         </div>
@@ -15,7 +15,7 @@
             <div class="text" v-html="item">{{item}}</div>
         </div>
         <div class="select clearfix" v-for="(item,index) in objective.options" :key="index" @click="selectsIndex(index,objective.questionId)" v-if="objective.answer.length>1">
-            <div class="round">
+            <div class="round complex">
                 <span class="point" v-if="answers.indexOf(index)>-1"></span>
             </div>
             <div class="option">{{conversion(index)}}.</div>
@@ -338,6 +338,12 @@ export default {
         height: 0.57rem;
         border-radius: 50%;
         background-color: rgba(154, 132, 255, 1);
+      }
+    }
+    .complex {
+      border-radius: 0%;
+      .point {
+        border-radius: 0%;
       }
     }
     .option {

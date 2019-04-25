@@ -4,7 +4,7 @@
         <img :src="Collectionsrc" alt="">
       </div>
         <div class="topic_warp">
-            <div class="title">{{subjectiveTopic.title}} ({{subjectiveTopic.questionTypeInCN}})</div>
+            <div class="title">{{subjectiveTopic.title}} <span v-if="subjectiveTopic.questionTypeInCN">({{subjectiveTopic.questionTypeInCN}})</span></div>
             <div class="topic" v-html="subjectiveTopic.questionContent" :id="'tp'+subjectiveTopic.questionId">
                 {{subjectiveTopic.questionContent}}
             </div>
