@@ -327,7 +327,7 @@
                             //Indicator.close();
                             switch (res.data.status) {
                                 case 0:
-                                    store.commit("SET_BLUETOOTH", true);
+                                    if(!localStorage.getItem("bluetooth")) store.commit("SET_BLUETOOTH", true);
                                     window.HandwrittenBoard.exploration();
                                     console.log("第一个");
                                     self.objectiveAnswerbtn = false;
@@ -390,7 +390,7 @@
                             //Indicator.close();
                             switch (res.data.status) {
                                 case 0:
-                                    store.commit("SET_BLUETOOTH", true);
+                                    if(!localStorage.getItem("bluetooth")) store.commit("SET_BLUETOOTH", true);
                                     window.HandwrittenBoard.exploration();
                                     console.log("第一个");
                                     self.objectiveAnswerbtn = false;
