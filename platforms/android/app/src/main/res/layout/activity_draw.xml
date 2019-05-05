@@ -25,7 +25,7 @@
             android:clickable="true"
             android:contentDescription="@string/title"
             android:focusable="true"
-            android:scaleType="fitCenter"
+            android:scaleType="centerInside"
             android:src="@drawable/default_question_content"
             />
 
@@ -142,7 +142,7 @@
         <Button
             android:id="@+id/btn_main_cancel"
             android:layout_width="70dp"
-            android:layout_height="35dp"
+            android:layout_height="40dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
@@ -156,7 +156,7 @@
         <Button
             android:id="@+id/iv_main_right"
             android:layout_width="70dp"
-            android:layout_height="35dp"
+            android:layout_height="40dp"
             android:layout_alignBaseline="@id/btn_main_cancel"
             android:layout_centerVertical="true"
             android:layout_toStartOf="@id/btn_main_cancel"
