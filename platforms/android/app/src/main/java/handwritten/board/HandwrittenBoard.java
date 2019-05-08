@@ -81,6 +81,16 @@ public class HandwrittenBoard extends CordovaPlugin implements IScanListener, ID
         }
         return null;
     }
+    protected BluetoothDevice getDeviceByName(String name) {
+        if (mBluetoothDevices != null) {
+            for (BluetoothDevice device : mBluetoothDevices) {
+                if (device.getName().equalsIgnoreCase(name)) {
+                    return device;
+                }
+            }
+        }
+        return null;
+    }
     public static  RyDrawingManager getRyDrawingManager(){
         return mRyDrawingManager;
     }
@@ -261,7 +271,9 @@ public class HandwrittenBoard extends CordovaPlugin implements IScanListener, ID
         }
         if (mBluetoothDevices != null && mBluetoothDevices.size() > 0) {
             try {
-                mRyDrawingManager.connectDevice(getDeviceByAddress(params.getString(0)));
+                //mRyDrawingManager.connectDevice(getDeviceByAddress(params.getString(0)));
+                mRyDrawingManager.connectDevice(getDeviceByName(params.getString(0)));
+                //mRyDrawingManager.connectDeviceByName(params.getString(0),30000);
             } catch (JSONException e) {
                 try {
                     mRyDrawingManager.connectDevice(mBluetoothDevices.get(0));
