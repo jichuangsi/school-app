@@ -657,7 +657,7 @@ export default {
         //   "/pubRaceQuestion/" + _this.course,
         //   function(response) {
         //     console.log(response)
-            
+
         //   },
         //   subHeader
         // );
@@ -728,7 +728,7 @@ export default {
       let stompClient = Stomp.over(socket);
       stompClient.heartbeat.outgoing = 400000; // client will send heartbeats every 40000ms
       stompClient.heartbeat.incoming = 0; // client does not want to receive heartbeats from the server
-      
+
       let _this = this;
       // 向服务器发起websocket连接并发送CONNECT帧
       stompClient.connect({
@@ -748,7 +748,7 @@ export default {
           //订阅消息
             stompClient.subscribe('/topic/publish/student/' + _this.course, function(response) {
               console.log(response)+'这是一段webstock'
-              let res = JSON.parse(response.body).data   
+              let res = JSON.parse(response.body).data
               if(res){
                 Toast('老师已共享附件')
                 _this.attachmentsstatus = res
@@ -899,7 +899,7 @@ export default {
     }
   }
   .awbtn {
-    left: 18rem !important; 
+    left: 18rem !important;
     img {
       width: 100%;
       height: 100%;

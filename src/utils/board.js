@@ -35,7 +35,8 @@ function onExploration(res) {
         if(localStorage.getItem("bluetooth")){
             let i = arr.findIndex(x => {
                 //console.log("key===" + x.key + ",val===" + x.val);
-                return x.val === localStorage.getItem("bluetooth");
+                //return x.val === localStorage.getItem("bluetooth");
+                return x.key === localStorage.getItem("bluetooth");
             });
             //console.log("position===" + i);
             if(i === -1){

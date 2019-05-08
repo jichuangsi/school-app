@@ -11,16 +11,16 @@
         <router-view v-if="!$route.meta.keepAlive"/>
         <!--</transition>-->
         <bluetooth/>
-        <popup-board/>
-        <Preview/>
+        <!--<popup-board/>
+        <Preview/>-->
     </div>
 </template>
 
 <script>
     import Bluetooth from './components/Bluetooth'
-    import PopupBoard from './components/PopupBoard'
+    //import PopupBoard from './components/PopupBoard'
     import {Toast} from 'mint-ui';
-    import Preview from '../src/components/board/Preview'
+    //import Preview from '../src/components/board/Preview'
     import initialize from '@/utils/board'
     import {mapGetters} from 'vuex'
     import store from '@/store'
@@ -36,8 +36,8 @@
         },
         components: {
             Bluetooth,
-            PopupBoard,
-            Preview
+            //PopupBoard,
+            //Preview
         },
         computed: {
             //vuex 调用

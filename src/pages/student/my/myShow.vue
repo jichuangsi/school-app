@@ -33,12 +33,13 @@
           <div class="title">提示</div>
           <div class="text">请输入蓝牙设备</div>
           <div class="int">
-            <input type="text" v-model="a1" v-focus @keyup="a1click">:
+            <input type="text" v-focus v-model="id" @keyup="setid">
+            <!-- <input type="text" v-model="a1" v-focus @keyup="a1click">:
             <input type="text" v-model="a2" ref="inputa2" @keyup="a2click">:
             <input type="text" v-model="a3" ref="inputa3" @keyup="a3click">:
             <input type="text" v-model="a4" ref="inputa4" @keyup="a4click">:
             <input type="text" v-model="a5" ref="inputa5" @keyup="a5click">:
-            <input type="text" v-model="a6" ref="inputa6" @keyup="a6click">
+            <input type="text" v-model="a6" ref="inputa6" @keyup="a6click"> -->
           </div>
           <div class="btn">
             <div class="cancel" @click.stop="setshow = false">取消</div>
@@ -107,6 +108,10 @@
 
 
       },
+      setid(){
+        this.id = this.id.toUpperCase()
+        //console.log(this.id)
+      },
       setclick() {
         this.setshow = true
         if(this.id) {
@@ -168,10 +173,13 @@
         }
       },
       confirm(){
-        this.id = this.a1.toUpperCase() +":"+ this.a2.toUpperCase() +":"+ this.a3.toUpperCase() +":"+ this.a4.toUpperCase() +":"+ this.a5.toUpperCase() +":"+ this.a6.toUpperCase()
+        // this.id = this.a1.toUpperCase() +":"+ this.a2.toUpperCase() +":"+ this.a3.toUpperCase() +":"+ this.a4.toUpperCase() +":"+ this.a5.toUpperCase() +":"+ this.a6.toUpperCase()
         this.setshow = false
-        console.log(this.id)
-        localStorage.setItem('bluetooth',this.id)
+        //console.log(this.id)
+          if(this.id!=localStorage.getItem("bluetooth")){
+              localStorage.setItem('bluetooth',this.id);
+              window.HandwrittenBoard.disconnect();
+          }
       }
     }
   }
@@ -308,6 +316,9 @@
           font-size: 22px;
           text-align: center;
           border: 1px solid #666;
+        }
+        input {
+          width: 100%;
         }
       }
       .btn {

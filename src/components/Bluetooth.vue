@@ -22,7 +22,7 @@
             <ul class="bluetooth-list">
                 <!--<li class="bluetooth-list-item" v-for="item of blueToothList2"-->
                 <li class="bluetooth-list-item" v-for="item of blueToothList"
-                    @click="connection(item.val)">
+                    @click="connection(item.key, item.val)">
                     <div class="item-left">
                         {{item.key}}
                     </div>
@@ -111,14 +111,17 @@
             }
         },
         methods: {
-            connection(boardID) {
-                store.commit('SET_BLUETOOTHVALUE', boardID);
+            connection(boardName, boardID) {
+                console.log(boardName);
+                //store.commit('SET_BLUETOOTHVALUE', boardID);
+                store.commit('SET_BLUETOOTHVALUE', boardName);
                 Indicator.open({
                     text: '连接手写板设备中...',
                     spinnerType: 'fading-circle'
                 });
                 setTimeout(function () {
-                    window.HandwrittenBoard.connect(boardID);
+                    //window.HandwrittenBoard.connect(boardID);
+                    window.HandwrittenBoard.connect(boardName);
                 },300);
                 console.log("我是蓝牙的val:"+this.bluetoothValue);
             },
