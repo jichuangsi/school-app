@@ -55,10 +55,10 @@
         </div>
         <div class="remind" v-html="item.parse" v-if="item.questionStatus == 'FINISH'">
         </div>
-          <div class="load"  v-show="!objectiveAnswer[index].answer" v-if="item.answerForStudent||item.answerForTeacher">
+          <div class="load"  v-show="showLoading(item.questionId)" v-if="item.answerForStudent||item.answerForTeacher">
               <div><span>loading...</span><i></i></div>
           </div>
-        <board :subjectiveAnswer="objectiveAnswer" :id="item.questionId"  v-show="!objectiveAnswer[index].answer" />
+        <board :subjectiveAnswer="objectiveAnswer" :id="item.questionId" v-show="!showLoading(item.questionId)"/>
 
       </div>
     </div>
@@ -94,6 +94,17 @@
             this.getFavorList();
         },
         methods: {
+            showLoading(id){
+                let i =this.objectiveAnswer.findIndex(o=>{
+                   return o.id === id;
+                });
+                //console.log(i)
+                if(i!=-1&&this.objectiveAnswer[i].answer){
+                    return false;
+                }else{
+                    return true;
+                }
+            },
             async getFavorList() {
                 let self = this;
                 try{
