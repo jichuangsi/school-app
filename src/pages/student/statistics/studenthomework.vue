@@ -46,7 +46,7 @@ export default {
   name: 'studenthomework',
   data () {
     return {
-      current: 1,
+      current: 0,
       nav: ['语文', '数学', '英语', '政治', '地理', '历史', '生物', '物理', '化学'],
       value: '语文',
       Total: '150',
