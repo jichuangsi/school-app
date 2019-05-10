@@ -5,11 +5,11 @@
     <div class="Schedulebox" v-if="statustext != '暂无数据'">
         <div class="heng">
             <div class="green">时间</div>
-            <div @click="str = '星期一'"><span>星期一</span><em class="red" :class="{heightclass:str == '星期一'}"></em></div>
-            <div @click="str = '星期二'"><span>星期二</span><em class="skyblue" :class="{heightclass:str == '星期二'}"></em></div>
-            <div @click="str = '星期三'"><span>星期三</span><em class="purple" :class="{heightclass:str == '星期三'}"></em></div>
-            <div @click="str = '星期四'"><span>星期四</span><em class="blue" :class="{heightclass:str == '星期四'}"></em></div>
-            <div @click="str = '星期五'"><span>星期五</span><em class="orange" :class="{heightclass:str == '星期五'}"></em></div>
+            <div @click="str = '周一'"><span>周一</span><em class="red" :class="{heightclass:str == '周一'}"></em></div>
+            <div @click="str = '周二'"><span>周二</span><em class="skyblue" :class="{heightclass:str == '周二'}"></em></div>
+            <div @click="str = '周三'"><span>周三</span><em class="purple" :class="{heightclass:str == '周三'}"></em></div>
+            <div @click="str = '周四'"><span>周四</span><em class="blue" :class="{heightclass:str == '周四'}"></em></div>
+            <div @click="str = '周五'"><span>周五</span><em class="orange" :class="{heightclass:str == '周五'}"></em></div>
         </div>
         <div class="heng" v-for="(item,index) in nav" :key="index">
             <div :class="{green:valindex == 0}" v-for="(val,valindex) in item" :key="valindex"><span>{{val}}</span></div>
@@ -45,7 +45,7 @@ export default {
   methods:{
   },
   mounted() {
-      this.str = "星期" + "日一二三四五六".charAt(new Date().getDay());
+      this.str = "周" + "日一二三四五六".charAt(new Date().getDay());
       let id = JSON.parse(localStorage.getItem('user')).userId
       let val = ['12:00','午休','午休','午休','午休','午休']
       getStudentTimeTable(id).then(res=>{
