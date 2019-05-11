@@ -45,6 +45,8 @@ export default {
   methods:{
   },
   mounted() {
+      $("html, body").scrollTop(0+"px");
+      //$('html,body').stop().animate({scrollTop: '0px'}, 1500);
       this.str = "周" + "日一二三四五六".charAt(new Date().getDay());
       let id = JSON.parse(localStorage.getItem('user')).userId
       let val = ['12:00','午休','午休','午休','午休','午休']
