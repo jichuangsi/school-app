@@ -39,29 +39,46 @@ export default {
       str: '',
       className:'',
       nav:[],
-      statustext:'暂无数据'
+      statustext:'暂无数据',
+        tabFired: false
     }
   },
   methods:{
+      getSchedule(){
+          let id = JSON.parse(localStorage.getItem('user')).userId
+          let val = ['12:00','午休','午休','午休','午休','午休']
+          getStudentTimeTable(id).then(res=>{
+              console.log(res)
+              if(res.data.code == '0010'){
+                  //   console.log(res.data.data.dataInfo.slice(1,9))
+                  this.className = res.data.data.className
+                  this.nav = res.data.data.dataInfo.slice(1,9)
+                  this.nav.splice(4,0,val);
+                  this.statustext = ''
+              }else {
+                  this.statustext = '暂无数据'
+              }
+          })
+      }
   },
   mounted() {
       $("html, body").scrollTop(0+"px");
       //$('html,body').stop().animate({scrollTop: '0px'}, 1500);
       this.str = "周" + "日一二三四五六".charAt(new Date().getDay());
-      let id = JSON.parse(localStorage.getItem('user')).userId
-      let val = ['12:00','午休','午休','午休','午休','午休']
-      getStudentTimeTable(id).then(res=>{
-          console.log(res)
-          if(res.data.code == '0010'){
-            //   console.log(res.data.data.dataInfo.slice(1,9))
-            this.className = res.data.data.className
-            this.nav = res.data.data.dataInfo.slice(1,9)
-            this.nav.splice(4,0,val);
-            this.statustext = ''
-          }else {
-              this.statustext = '暂无数据'
-          }
-      })
+      let _self = this;
+      let networkState = navigator.connection.type;
+      //console.log(networkState);
+      if (networkState === "unknown") {
+          document.addEventListener("online", function(){
+              //console.log(_self.tabFired);
+              if(!_self.tabFired){
+                  _self.getSchedule();
+                  _self.tabFired = true;
+              }
+          });
+      }else{
+          this.getSchedule();
+      }
   }
 }
 </script>
