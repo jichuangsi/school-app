@@ -1,33 +1,38 @@
 <template>
   <div class="Schedule">
     <Public-header :header="header"/>
-    <h3>{{className}}</h3>
-    <div class="Schedulebox" v-if="statustext != '暂无数据'">
-        <div class="heng">
-            <div class="green">时间</div>
-            <div @click="str = '周一'"><span>周一</span><em class="red" :class="{heightclass:str == '周一'}"></em></div>
-            <div @click="str = '周二'"><span>周二</span><em class="skyblue" :class="{heightclass:str == '周二'}"></em></div>
-            <div @click="str = '周三'"><span>周三</span><em class="purple" :class="{heightclass:str == '周三'}"></em></div>
-            <div @click="str = '周四'"><span>周四</span><em class="blue" :class="{heightclass:str == '周四'}"></em></div>
-            <div @click="str = '周五'"><span>周五</span><em class="orange" :class="{heightclass:str == '周五'}"></em></div>
+      <div v-if="pageShow">
+        <h3>{{className}}</h3>
+        <div class="Schedulebox" v-if="statustext != '暂无数据'">
+            <div class="heng">
+                <div class="green">时间</div>
+                <div @click="str = '周一'"><span>周一</span><em class="red" :class="{heightclass:str == '周一'}"></em></div>
+                <div @click="str = '周二'"><span>周二</span><em class="skyblue" :class="{heightclass:str == '周二'}"></em></div>
+                <div @click="str = '周三'"><span>周三</span><em class="purple" :class="{heightclass:str == '周三'}"></em></div>
+                <div @click="str = '周四'"><span>周四</span><em class="blue" :class="{heightclass:str == '周四'}"></em></div>
+                <div @click="str = '周五'"><span>周五</span><em class="orange" :class="{heightclass:str == '周五'}"></em></div>
+            </div>
+            <div class="heng" v-for="(item,index) in nav" :key="index">
+                <div :class="{green:valindex == 0}" v-for="(val,valindex) in item" :key="valindex"><span>{{val}}</span></div>
+            </div>
         </div>
-        <div class="heng" v-for="(item,index) in nav" :key="index">
-            <div :class="{green:valindex == 0}" v-for="(val,valindex) in item" :key="valindex"><span>{{val}}</span></div>
+        <div class="Scheduletext" v-if="statustext == '暂无数据'">
+            暂无数据
         </div>
-    </div>
-    <div class="Scheduletext" v-if="statustext == '暂无数据'">
-        暂无数据
-    </div>
+      </div>
+      <loading v-if="loading"/>
   </div>
 </template>
 
 <script>
-import PublicHeader from "../../../components/public/PublicHeader"
-import {getStudentTimeTable} from '@/api/student/statistics'
+import PublicHeader from "../../../components/public/PublicHeader";
+import {getStudentTimeTable} from '@/api/student/statistics';
+import Loading from '../../../components/public/Loading';
 export default {
   name: 'Schedule',
   components: {
-    PublicHeader
+      PublicHeader,
+      Loading
   },
   data () {
     return {
@@ -40,7 +45,9 @@ export default {
       className:'',
       nav:[],
       statustext:'暂无数据',
-        tabFired: false
+        tabFired: false,
+        loading: true,                               //页面加载状态
+        pageShow: false                            //页面内容显示
     }
   },
   methods:{
@@ -49,6 +56,8 @@ export default {
           let val = ['12:00','午休','午休','午休','午休','午休']
           getStudentTimeTable(id).then(res=>{
               console.log(res)
+              this.pageShow = true;
+              this.loading = false;
               if(res.data.code == '0010'){
                   //   console.log(res.data.data.dataInfo.slice(1,9))
                   this.className = res.data.data.className
