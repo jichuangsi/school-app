@@ -110,6 +110,7 @@ export default {
         let _this = this;
         cordova.getAppVersion.getVersionNumber().then(function (version) {
             _this.appVersion = version;
+            _this.$forceUpdate();
         });
     },
     loginout() {
