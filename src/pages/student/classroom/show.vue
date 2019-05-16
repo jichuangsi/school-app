@@ -674,6 +674,7 @@ export default {
         //发布题目
         if (classData.data.wsType === "QuestionForPublish") {
           this.addTopic(classData.data.questionId);
+          this.objectiveAnswer[this.objectiveAnswer.length-1].show = true
         }
         if (classData.data.wsType === "QuestionClose") {
           //终止答题
