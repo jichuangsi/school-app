@@ -303,23 +303,23 @@
                     spinnerType: "fading-circle"
                 });*/
                 let self = this;
-                document.getElementById('tp'+id).setAttribute('style', 'letter-spacing: 4px !important;padding-top: 8px !important');
+                //document.getElementById('tp'+id).setAttribute('style', 'letter-spacing: 4px !important;padding-top: 8px !important');
                 html2canvas(document.getElementById('tp'+id),{
                     useCORS: true,
                     logging:false,
-                    ignoreElements(element){
+                    /*ignoreElements(element){
                         let type = element.type
                         if ( type && type === 'text' ) {
                             console.log(element);
                             return true;
                         }
                         return false;
-                    }
+                    }*/
                     //backgroundColor: null
                 }).then((canvas) => {
                     let dataURL = canvas.toDataURL("image/png").replace("data:image/png;base64,", "");
                     //console.log(dataURL)
-                    document.getElementById('tp'+id).setAttribute('style', 'letter-spacing:"";padding-top: ""');
+                    //document.getElementById('tp'+id).setAttribute('style', 'letter-spacing:"";padding-top: ""');
                     self.subjectiveId = id;
                     window.HandwrittenBoard.isConnect(
                         function(res) {
@@ -360,23 +360,23 @@
                     spinnerType: "fading-circle"
                 });*/
                 let self = this;
-                document.getElementById('tp'+id).setAttribute('style', 'letter-spacing: 4px !important;padding-top: 8px !important');
+                //document.getElementById('tp'+id).setAttribute('style', 'letter-spacing: 4px !important;padding-top: 8px !important');
                 html2canvas(document.getElementById('tp'+id),{
                     useCORS: true,
                     logging:false,
-                    ignoreElements(element){
+                    /*ignoreElements(element){
                         let type = element.type
                         if ( type && type === 'text' ) {
                             console.log(element);
                             return true;
                         }
                         return false;
-                    }
+                    }*/
                     //backgroundColor: null
                 }).then((canvas) => {
                     let dataURL = canvas.toDataURL("image/png").replace("data:image/png;base64,", "");
                     //console.log(dataURL)
-                    document.getElementById('tp'+id).setAttribute('style', 'letter-spacing:"";padding-top: ""');
+                    //document.getElementById('tp'+id).setAttribute('style', 'letter-spacing:"";padding-top: ""');
                     self.subjectiveId = id;
                     let answer = "";
                     for (let i = 0; i < this.subjectiveAnswer.length; i++) {
