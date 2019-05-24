@@ -54,7 +54,7 @@ const app = {
         },
         IS_TNEW: (state, isTNew) => {
             state.isTNew = isTNew
-        },
+        }
     },
 
     actions: {}
