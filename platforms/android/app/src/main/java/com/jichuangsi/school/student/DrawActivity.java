@@ -1,25 +1,24 @@
 package com.jichuangsi.school.student;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
+import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -132,7 +131,6 @@ public class DrawActivity extends AppCompatActivity implements View.OnClickListe
             Bitmap bitmap = BitmapFactory.decodeByteArray(ac, 0, ac.length);
             drawView.setBackground(new BitmapDrawable(DrawActivity.this.getResources(), bitmap));
         }
-
         /*if (!TextUtils.isEmpty(img)) {
             try {
                 String base64 = ImageUtil.encodeBase64File(img);
@@ -221,9 +219,10 @@ public class DrawActivity extends AppCompatActivity implements View.OnClickListe
         } else if (v == ivColorRed) {
             setPaintColor(1);
         } else if (v == ivQuestionContent) {
-            CustomDialogFragment dialog = new CustomDialogFragment();
+            /*CustomDialogFragment dialog = new CustomDialogFragment();
             dialog.setContext(DrawActivity.this);
-            dialog.show(getSupportFragmentManager(), "dialog");
+            dialog.show(getSupportFragmentManager(), "dialog");*/
+            if(mView==null) creatFloatingImageview();
         }
     }
 
@@ -391,4 +390,104 @@ public class DrawActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /////////////////////创建悬浮窗口/////////////////////////////////////
+
+    private GestureDetector mGestureDetector;
+    private boolean isMove;//判断悬浮窗是否移动
+    private View mView;
+    private WindowManager mWM;
+
+    private class MyViewTouchListener implements View.OnTouchListener {
+        //开始触控的坐标，移动时的坐标（相对于屏幕左上角的坐标）
+        private int mTouchStartX,mTouchStartY,mTouchCurrentX,mTouchCurrentY;
+        //开始时的坐标和结束时的坐标（相对于自身控件的坐标）
+        private int mStartX,mStartY,mStopX,mStopY;
+
+        private WindowManager.LayoutParams params;
+        private WindowManager mWM;
+        private View mView;
+
+        public MyViewTouchListener(WindowManager mWM, WindowManager.LayoutParams params, View mView){
+            this.mWM = mWM;
+            this.params = params;
+            this.mView = mView;
+        }
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:    //捕获手指触摸按下动作
+                    isMove = false;
+                    mTouchStartX = (int)event.getRawX();
+                    mTouchStartY = (int)event.getRawY();
+                    mStartX = (int)event.getX();
+                    mStartY = (int)event.getY();
+                    break;
+                case MotionEvent.ACTION_MOVE:   //捕获手指触摸移动动作
+                    mTouchCurrentX = (int) event.getRawX();
+                    mTouchCurrentY = (int) event.getRawY();
+                    params.x += mTouchCurrentX - mTouchStartX;
+                    params.y += mTouchCurrentY - mTouchStartY;
+                    mWM.updateViewLayout(mView, params);
+                    mTouchStartX = mTouchCurrentX;
+                    mTouchStartY = mTouchCurrentY;
+                    break;
+                case MotionEvent.ACTION_UP:    //捕获手指触摸离开动作
+                    mStopX = (int)event.getX();
+                    mStopY = (int)event.getY();
+                    if(Math.abs(mStartX - mStopX) >= 1 || Math.abs(mStartY - mStopY) >= 1){
+                        //Toast.makeText(getApplicationContext(), "你点击了悬浮窗", Toast.LENGTH_SHORT).show();
+                        isMove = true;
+                    }
+                    break;
+            }
+            return mGestureDetector.onTouchEvent(event);
+        }
+    }
+
+    private void creatFloatingImageview(){
+        WindowManager.LayoutParams params;
+        //WindowManager mWM;
+        params = new WindowManager.LayoutParams();
+        params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        params.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        params.format = PixelFormat.TRANSLUCENT;
+        params.windowAnimations = R.style.Animation_CustomDialog;
+        // 悬浮窗类型，整个demo的关键点
+        params.type = WindowManager.LayoutParams.TYPE_TOAST;
+        params.gravity = Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL;
+        params.x = 0;
+        params.y = 0;
+        params.setTitle(getResources().getString(R.string.title));
+        params.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS;
+        mWM = getWindowManager();
+        LayoutInflater inflate = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mView = inflate.inflate(R.layout.activity_floating_imageview, null);
+
+        ImageView myImageView = mView.findViewById(R.id.float_image_view);
+        byte[] qc = mDbHelper.getB(new BlobContentHolder(Constants.BLOB_NAME1));
+        if(qc!=null){
+            Bitmap bitmap = BitmapFactory.decodeByteArray(qc, 0, qc.length);
+            myImageView.setImageBitmap(bitmap);
+        }
+        mView.setOnTouchListener(new MyViewTouchListener(mWM, params, mView));
+        mGestureDetector = new GestureDetector(this, new MyOnGestureListener());
+
+        mWM.addView(mView, params);
+    }
+
+    class MyOnGestureListener extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            if (!isMove) {
+                //Toast.makeText(getApplicationContext(), "你点击了悬浮窗", Toast.LENGTH_SHORT).show();
+                mWM.removeViewImmediate(mView);
+                mView = null;
+            }
+            return super.onSingleTapConfirmed(e);
+        }
+    }
+
+    /////////////////////创建悬浮窗口/////////////////////////////////////
 }
