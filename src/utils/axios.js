@@ -6,9 +6,9 @@ service.interceptors.request.use(function (config) {
 
     let networkState = navigator.connection.type;
     //console.log(networkState);
-    // if (networkState === Connection.NONE||networkState===Connection.UNKNOWN) {
-    //     throw '网络异常，不能连接到服务器！'
-    // }
+    if (networkState === Connection.NONE||networkState===Connection.UNKNOWN) {
+        throw '网络异常，不能连接到服务器！'
+    }
     if(config.url.indexOf(apiHost) == -1){
         config.url = apiHost.concat(config.url);
     }
