@@ -4,6 +4,7 @@ import axios from '../../utils/axios'
 //const host = 'http://api.jichuangsi.com/CLASSINTERACTION/';
 const apiUrl = '/COURSESERVICE/student/';
 const host = '/CLASSINTERACTION/';
+const service='/USERSERVICE/';
 
 //课程列表
 export function getList() {
@@ -13,7 +14,18 @@ export function getList() {
         //headers: {'accessToken': localStorage.getItem('token')}
     });
 }
-
+//修改密码
+export function updatePwd(userId,oldPwd,newPwd) {
+    return axios({
+        method: 'POST',
+        url: `${service}updateOtherPwd/${userId}`,
+        data: {
+            oldPwd,
+            newPwd
+        },
+        //headers: {'accessToken': localStorage.getItem('token')}
+    });
+}
 //历史课程列表
 export function getHistory(pageNum) {
     return axios({

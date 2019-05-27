@@ -28,6 +28,26 @@
         <div class="title">蓝牙设备</div>
         <div class="text">{{this.id}}</div>
       </div>
+      <div class="row" @click="setPwd">
+        <div class="title">修改密码</div>
+        <div class="text"></div>
+      </div>
+      <div class="set_box" v-if="setshowPwd" @click="setshowPwd = false">
+        <div class="setbox" @click.stop="setshowPwd = true">
+          <div class="title">提示</div>
+          <div class="text">修改密码</div>
+          <div class="intPwd">
+            <input type="password" placeholder="请输新密码" v-model.trim="oldPwd">
+          </div>
+          <div class="intPwd">
+            <input type="password" placeholder="确认新密码" v-model.trim="newPwd">
+          </div>
+          <div class="btn">
+            <div class="cancel" @click.stop="setshowPwd = false">取消</div>
+            <div class="confirm" @click.stop="update">确认</div>
+          </div>
+        </div>
+      </div>
       <div class="set_box" v-if="setshow" @click="setshow = false">
         <div class="setbox" @click.stop="setshow = true">
           <div class="title">提示</div>
@@ -39,7 +59,7 @@
             <input type="text" v-model="a3" ref="inputa3" @keyup="a3click">:
             <input type="text" v-model="a4" ref="inputa4" @keyup="a4click">:
             <input type="text" v-model="a5" ref="inputa5" @keyup="a5click">:
-            <input type="text" v-model="a6" ref="inputa6" @keyup="a6click"> -->
+            <input type="text" v-model="a6" ref="inputa6" @keyup="a6click">-->
           </div>
           <div class="btn">
             <div class="cancel" @click.stop="setshow = false">取消</div>
@@ -52,294 +72,357 @@
 </template>
 
 <script>
-  import PublicHeader from "../../../components/public/PublicHeader"
-  export default {
-    name: "myShow",
-    components: {
-      PublicHeader
-    },
-    data() {
-      return {
-        header: {                       //头部信息
-          title: "个人信息",
-          url: '/studentIndex'
-        },
-        userimg: '',
-        username:'韩梅梅',
-        user: {name:'',school:'',grade:'',primaryClass:''},
-        id:'', //蓝牙设备
-        setshow: false,
-        a1:'',
-        a2:'',
-        a3:'',
-        a4:'',
-        a5:'',
-        a6:''
-      }
-    },
-    directives: {
-      focus: {
-        // 指令的定义
-        inserted: function (el) {
-          el.focus()
-        }
-      }
-    },
-    mounted(){
-      this.getstudent()
-      this.id = localStorage.getItem("bluetooth")?localStorage.getItem("bluetooth"):''
-    },
-    methods:{
-      getstudent(){
-        let userInStorage = JSON.parse(localStorage.getItem('user'))
-        if(userInStorage){
-            this.user.name = userInStorage.userName;
-            if(userInStorage.roles&&userInStorage.roles.length>0){
-                this.user.school = userInStorage.roles[0].school.schoolName;
-                this.user.grade = userInStorage.roles[0].primaryGrade.gradeName;
-                this.user.primaryClass = userInStorage.roles[0].primaryClass.className;
-            }
-            if(userInStorage.userSex=="FEMALE"){
-                this.userimg = require('../../../assets/女学生.png')
-            }else{
-                this.userimg = require('../../../assets/男学生.png')
-            }
-        }
-
-
+import PublicHeader from "../../../components/public/PublicHeader";
+import { updatePwd } from "@/api/student/classroom";
+import { Toast } from "mint-ui";
+export default {
+  name: "myShow",
+  components: {
+    PublicHeader
+  },
+  data() {
+    return {
+      header: {
+        //头部信息
+        title: "个人信息",
+        url: "/studentIndex"
       },
-      setid(){
-        this.id = this.id.toUpperCase()
-        //console.log(this.id)
-      },
-      setclick() {
-        this.setshow = true
-        if(this.id) {
-          let arr = this.id.split(':')
-          this.a1 = arr[0]
-          this.a2 = arr[1]
-          this.a3 = arr[2]
-          this.a4 = arr[3]
-          this.a5 = arr[4]
-          this.a6 = arr[5]
+      userimg: "",
+      username: "韩梅梅",
+      user: { name: "", school: "", grade: "", primaryClass: "" },
+      id: "", //蓝牙设备
+      setshow: false,
+      setshowPwd: false,
+      oldPwd: "",
+      newPwd: "",
+      a1: "",
+      a2: "",
+      a3: "",
+      a4: "",
+      a5: "",
+      a6: ""
+    };
+  },
+  directives: {
+    focus: {
+      // 指令的定义
+      inserted: function(el) {
+        el.focus();
+      }
+    }
+  },
+  mounted() {
+    this.getstudent();
+    this.id = localStorage.getItem("bluetooth")
+      ? localStorage.getItem("bluetooth")
+      : "";
+  },
+  methods: {
+    getstudent() {
+      let userInStorage = JSON.parse(localStorage.getItem("user"));
+      console.log(userInStorage);
+      if (userInStorage) {
+        this.user.name = userInStorage.userName;
+        if (userInStorage.roles && userInStorage.roles.length > 0) {
+          this.user.school = userInStorage.roles[0].school.schoolName;
+          this.user.grade = userInStorage.roles[0].primaryGrade.gradeName;
+          this.user.primaryClass =
+            userInStorage.roles[0].primaryClass.className;
+        }
+        if (userInStorage.userSex == "FEMALE") {
+          this.userimg = require("../../../assets/女学生.png");
         } else {
-          this.a1 = ''
-          this.a2 = ''
-          this.a3 = ''
-          this.a4 = ''
-          this.a5 = ''
-          this.a6 = ''
+          this.userimg = require("../../../assets/男学生.png");
         }
-      },
-      a1click(){
-        this.a1.length>=2?this.a2show = true :this.a2show=false
-        if(this.a2show) {
-          this.a1=this.a1.substring(0,2)
-          this.$refs.inputa2.focus()
-        }
-      },
-      a2click(){
-        this.a2.length>=2?this.a3show = true:this.a3show=false
-        if(this.a3show) {
-          this.a2=this.a2.substring(0,2)
-          this.$refs.inputa3.focus()
-        }
-      },
-      a3click(){
-        this.a3.length>=2?this.a4show = true:this.a4show=false
-        if(this.a4show) {
-          this.a3=this.a3.substring(0,2)
-          this.$refs.inputa4.focus()
-        }
-      },
-      a4click(){
-        this.a4.length>=2?this.a5show = true:this.a5show=false
-        if(this.a5show) {
-          this.a4=this.a4.substring(0,2)
-          this.$refs.inputa5.focus()
-        }
-      },
-      a5click(){
-        this.a5.length>=2?this.a6show = true:this.a6show=false
-        if(this.a6show) {
-          this.a5=this.a5.substring(0,2)
-          this.$refs.inputa6.focus()
-        }
-      },
-      a6click(){
-        if(this.a6.length>=2){
-          this.a6=this.a6.substring(0,2)
-          this.$refs.inputa6.blur()
-        }
-      },
-      confirm(){
-        // this.id = this.a1.toUpperCase() +":"+ this.a2.toUpperCase() +":"+ this.a3.toUpperCase() +":"+ this.a4.toUpperCase() +":"+ this.a5.toUpperCase() +":"+ this.a6.toUpperCase()
-        this.setshow = false
-        //console.log(this.id)
-          if(this.id!=localStorage.getItem("bluetooth")){
-              localStorage.setItem('bluetooth',this.id);
-              window.HandwrittenBoard.disconnect();
+      }
+    },
+    setid() {
+      this.id = this.id.toUpperCase();
+      //console.log(this.id)
+    },
+    setclick() {
+      this.setshow = true;
+      if (this.id) {
+        let arr = this.id.split(":");
+        this.a1 = arr[0];
+        this.a2 = arr[1];
+        this.a3 = arr[2];
+        this.a4 = arr[3];
+        this.a5 = arr[4];
+        this.a6 = arr[5];
+      } else {
+        this.a1 = "";
+        this.a2 = "";
+        this.a3 = "";
+        this.a4 = "";
+        this.a5 = "";
+        this.a6 = "";
+      }
+    },
+    setPwd() {
+      this.setshowPwd = true;
+    },
+    update() {
+      //修改密码
+      this.setshowPwd = false;
+      let userInStorage = JSON.parse(localStorage.getItem("user"));
+      console.log(userInStorage);
+      if (this.oldPwd != "" && this.newPwd != "") {
+        if (this.oldPwd == this.newPwd) {
+          if (this.newPwd.length >= 6 && this.newPwd.length < 18) {
+            let userId = userInStorage.userId;
+            updatePwd(userId, this.oldPwd, this.newPwd).then(res => {
+              console.log(res);
+              if (res.data.code == "0010") {
+                Toast("修改成功");
+              } else {
+                Toast("修改失败");
+              }
+            });
+          } else {
+            Toast("密码长度为6~18位,数字字母混合");
           }
+        } else {
+          Toast("两次密码不一致");
+        }
+      } else {
+        Toast("密码不能为空");
+      }
+    },
+    a1click() {
+      this.a1.length >= 2 ? (this.a2show = true) : (this.a2show = false);
+      if (this.a2show) {
+        this.a1 = this.a1.substring(0, 2);
+        this.$refs.inputa2.focus();
+      }
+    },
+    a2click() {
+      this.a2.length >= 2 ? (this.a3show = true) : (this.a3show = false);
+      if (this.a3show) {
+        this.a2 = this.a2.substring(0, 2);
+        this.$refs.inputa3.focus();
+      }
+    },
+    a3click() {
+      this.a3.length >= 2 ? (this.a4show = true) : (this.a4show = false);
+      if (this.a4show) {
+        this.a3 = this.a3.substring(0, 2);
+        this.$refs.inputa4.focus();
+      }
+    },
+    a4click() {
+      this.a4.length >= 2 ? (this.a5show = true) : (this.a5show = false);
+      if (this.a5show) {
+        this.a4 = this.a4.substring(0, 2);
+        this.$refs.inputa5.focus();
+      }
+    },
+    a5click() {
+      this.a5.length >= 2 ? (this.a6show = true) : (this.a6show = false);
+      if (this.a6show) {
+        this.a5 = this.a5.substring(0, 2);
+        this.$refs.inputa6.focus();
+      }
+    },
+    a6click() {
+      if (this.a6.length >= 2) {
+        this.a6 = this.a6.substring(0, 2);
+        this.$refs.inputa6.blur();
+      }
+    },
+    confirm() {
+      // this.id = this.a1.toUpperCase() +":"+ this.a2.toUpperCase() +":"+ this.a3.toUpperCase() +":"+ this.a4.toUpperCase() +":"+ this.a5.toUpperCase() +":"+ this.a6.toUpperCase()
+      this.setshow = false;
+      //console.log(this.id)
+      if (this.id != localStorage.getItem("bluetooth")) {
+        localStorage.setItem("bluetooth", this.id);
+        window.HandwrittenBoard.disconnect();
       }
     }
   }
+};
 </script>
 
 <style lang="scss" scoped>
-  .myShow {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    .content {
+.myShow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  .content {
+    width: 100%;
+    padding-top: 3.14rem;
+    padding-left: 2.14rem;
+    background-color: white;
+    box-sizing: border-box;
+    .avatar {
       width: 100%;
-      padding-top: 3.14rem;
-      padding-left: 2.14rem;
-      background-color: white;
+      height: 13.21rem;
+      padding-right: 6.64rem;
       box-sizing: border-box;
-      .avatar {
-        width: 100%;
-        height: 13.21rem;
-        padding-right: 6.64rem;
-        box-sizing: border-box;
-        position: relative;
-        &:before {
-          content: "";
-          position: absolute;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          border-bottom: 1px solid rgba(222, 222, 222, 1);
-          -webkit-transform: scaleY(.5);
-          -webkit-transform-origin: 0 0;
-        }
-        .title {
-          line-height: 13.21rem;
-          float: left;
-          font-size: 28px;
-          color: rgba(97, 97, 97, 1);
-        }
-        .img_warp {
-          width: 8.93rem;
-          height: 8.93rem;
-          margin-top: 2.14rem;
-          float: right;
-          img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-          }
-        }
-        &:after {
-          content: " ";
-          display: inline-block;
-          height: 12.7px;
-          width: 12.7px;
-          border-width: 4px 4px 0 0;
-          border-color: rgba(137, 137, 137, 1);
-          border-style: solid;
-          -webkit-transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);
-          transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0) translateY(-50%);
-          position: absolute;
-          top: 50%;
-          right: 2.19rem;
-          margin-top: -4px;
+      position: relative;
+      &:before {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-bottom: 1px solid rgba(222, 222, 222, 1);
+        -webkit-transform: scaleY(0.5);
+        -webkit-transform-origin: 0 0;
+      }
+      .title {
+        line-height: 13.21rem;
+        float: left;
+        font-size: 28px;
+        color: rgba(97, 97, 97, 1);
+      }
+      .img_warp {
+        width: 8.93rem;
+        height: 8.93rem;
+        margin-top: 2.14rem;
+        float: right;
+        img {
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
         }
       }
-      .row {
-        height: 6.21rem;
-        line-height: 6.21rem;
-        padding-right: 6.64rem;
-        box-sizing: border-box;
-        position: relative;
-        &:before {
-          content: "";
-          position: absolute;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          border-bottom: 1px solid rgba(222, 222, 222, 1);
-          -webkit-transform: scaleY(.5);
-          -webkit-transform-origin: 0 0;
-        }
-        .title {
-          float: left;
-          font-size: 28px;
-        }
-        .text {
-          float: right;
-          font-size: 24px;
-          color: #A5A5A5;;
-        }
+      &:after {
+        content: " ";
+        display: inline-block;
+        height: 12.7px;
+        width: 12.7px;
+        border-width: 4px 4px 0 0;
+        border-color: rgba(137, 137, 137, 1);
+        border-style: solid;
+        -webkit-transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);
+        transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0) translateY(-50%);
+        position: absolute;
+        top: 50%;
+        right: 2.19rem;
+        margin-top: -4px;
       }
     }
-  }
-  .set_box {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    background-color: rgba(0, 0, 0, 0.3);
-    .setbox {
-      width: 85%;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      text-align: center;
-      background-color: #fff;
-      transform: translate(-50%,-50%);
+    .row {
+      height: 6.21rem;
+      line-height: 6.21rem;
+      padding-right: 6.64rem;
+      box-sizing: border-box;
+      position: relative;
+      &:before {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-bottom: 1px solid rgba(222, 222, 222, 1);
+        -webkit-transform: scaleY(0.5);
+        -webkit-transform-origin: 0 0;
+      }
       .title {
-        font-size: 24px;
-        color:#333;
-        font-weight: 700;
-        padding-top: 10px;
+        float: left;
+        font-size: 28px;
       }
       .text {
-        font-size: 22px;
-        color:#A5A5A5;
-        padding-top: 20px;
-      }
-      .int {
-        width: 100%;
-        padding: 40px 140px;
-        line-height: 40px;
-        font-size: 22px;
-        text-align: center;
-        display: flex;
-        justify-content: space-between;
-        input {
-          display: inline-block;
-          width: 10%;
-          height: 40px;
-          font-size: 22px;
-          text-align: center;
-          border: 1px solid #666;
-        }
-        input {
-          width: 100%;
-        }
-      }
-      .btn {
-        width: 100%;
-        font-size: 22px;
-        display: flex;
-        div {
-          flex: 1;
-          height: 40px;
-          line-height: 40px;
-          border: 1px solid #ddd;
-          border-bottom: none;
-        }
-        .cancel {
-          border-left: none;
-        }
-        .confirm {
-          color: #26a2ff;
-          border-right: none;
-        }
+        float: right;
+        font-size: 24px;
+        color: #a5a5a5;
       }
     }
   }
+}
+.set_box {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  background-color: rgba(0, 0, 0, 0.3);
+  .setbox {
+    width: 85%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    text-align: center;
+    background-color: #fff;
+    transform: translate(-50%, -50%);
+    .title {
+      font-size: 24px;
+      color: #333;
+      font-weight: 700;
+      padding-top: 10px;
+    }
+    .text {
+      font-size: 22px;
+      color: #a5a5a5;
+      padding-top: 20px;
+    }
+    .int {
+      width: 100%;
+      padding: 40px 140px;
+      line-height: 40px;
+      font-size: 22px;
+      text-align: center;
+      display: flex;
+      justify-content: space-between;
+      input {
+        display: inline-block;
+        width: 10%;
+        height: 40px;
+        font-size: 22px;
+        text-align: center;
+        border: 1px solid #666;
+      }
+      input {
+        width: 100%;
+      }
+    }
+    .intPwd {
+      width: 100%;
+      padding-top: 20px;
+      padding-left: 140px;
+      padding-right: 140px;
+      padding-bottom: 15px;
+      // padding: 20px 140px;
+      line-height: 40px;
+      font-size: 22px;
+      text-align: center;
+      display: flex;
+      justify-content: space-between;
+
+      input {
+        text-indent: 25px;
+        display: inline-block;
+        width: 10%;
+        height: 40px;
+        font-size: 20px;
+        border: 1px solid #666;
+      }
+      input {
+        width: 100%;
+      }
+    }
+    .btn {
+      width: 100%;
+      font-size: 22px;
+      display: flex;
+      div {
+        flex: 1;
+        height: 40px;
+        line-height: 40px;
+        border: 1px solid #ddd;
+        border-bottom: none;
+      }
+      .cancel {
+        border-left: none;
+      }
+      .confirm {
+        color: #26a2ff;
+        border-right: none;
+      }
+    }
+  }
+}
 </style>
