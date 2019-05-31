@@ -100,11 +100,18 @@ export default {
     getMy() {
         this.pageShow = true;
         this.loading = false;
-        let user = JSON.parse(localStorage.getItem('user'))
-      if(user.userSex=="FEMALE"){
-        this.userimg = require('../../assets/女学生.png')
-      }else{
-        this.userimg = require('../../assets/男学生.png')
+        var img = localStorage.getItem("HeadPortrait")
+        ? localStorage.getItem("HeadPortrait")
+        : "";
+      let user = JSON.parse(localStorage.getItem("user"));
+      if (img) {
+        this.userimg = "data:image/jpeg;base64," + img;
+      } else {
+        if (user.userSex == "FEMALE") {
+          this.userimg = require("../../assets/女学生.png");
+        } else {
+          this.userimg = require("../../assets/男学生.png");
+        }
       }
       this.username = user.userName;
         let _this = this;
@@ -114,6 +121,7 @@ export default {
         });
     },
     loginout() {
+      localStorage.removeItem("HeadPortrait");
       localStorage.removeItem('token');
       //localStorage.removeItem('user');
       store.commit('IS_CNEW', false);

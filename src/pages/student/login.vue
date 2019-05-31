@@ -27,7 +27,7 @@
 <script>
 import { login } from "@/api/login";
 import { Toast } from "mint-ui";
-
+import { getImg } from "@/api/student/classroom";
 export default {
   name: "login",
   data() {
@@ -76,12 +76,17 @@ export default {
         }
         try {
           let userInfo = await login(this.account, this.password);
-          console.log(userInfo)
+          if (userInfo.portrait != null) {
+            let a = await getImg(userInfo.portrait);
+          }
           if (this.$store.state.userroute) {
             this.$router.push({
               path: this.$store.state.userroute
             });
           } else {
+            if (userInfo.portrait != null) {
+              let a = await getImg(userInfo.portrait);
+            }
             if (userInfo) {
               this.flag = true;
               this.$router.push({
@@ -91,7 +96,7 @@ export default {
             }
           }
         } catch (e) {
-           this.flag = true;
+          this.flag = true;
           Toast({
             message: e,
             position: "middle",
