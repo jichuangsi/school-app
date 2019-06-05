@@ -24,8 +24,10 @@
                             <div class="homeworkInfo1">
                                 <div class="task_name">{{studentHomework.homeworkName}}
                                     <span class="task_status">({{tips()}})</span>
+                                    <div v-if="studentHomework.homeworkStatus == 'FINISH'||studentHomework.homeworkStatus=='COMPLETED'" class="fr">得分：<span>{{studentHomework.totalScore}}</span></div>
                                 </div>
                             </div>
+
                             <div class="homeworkInfo2">
                                 <div class="item">发布时间:{{time(studentHomework.homeworkPublishTime)}}</div>
                                 <div class="teacher">老师:{{studentHomework.teacherName}}</div>
@@ -176,6 +178,14 @@
                                     .task_status {
                                         font-size: 16px;
                                         color: rgba(136, 136, 136, 1);
+                                    }
+                                    .fr {
+                                        color: crimson;
+                                        font-size: 18px;
+                                        span {
+                                            font-style: italic;
+                                            text-decoration: underline; 
+                                        }
                                     }
                                 }
                             }

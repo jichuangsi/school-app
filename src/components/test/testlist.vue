@@ -24,6 +24,7 @@
                             <div class="testInfo1">
                                 <div class="task_name">{{studenttest.testName}}
                                     <span class="task_status">({{tips()}})</span>
+                                    <div v-if="studenttest.testStatus == 'FINISH'||studenttest.testStatus=='COMPLETED'" class="fr">得分：<span>{{studenttest.totalScore}}</span></div>
                                 </div>
                             </div>
                             <div class="testInfo2">
@@ -174,6 +175,14 @@
                                     .task_status {
                                         font-size: 16px;
                                         color: rgba(136, 136, 136, 1);
+                                    }
+                                    .fr {
+                                        color: crimson;
+                                        font-size: 18px;
+                                        span {
+                                            font-style: italic;
+                                            text-decoration: underline; 
+                                        }
                                     }
                                 }
                             }
