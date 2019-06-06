@@ -4,7 +4,7 @@
         <img :src="Collectionsrc" alt="">
       </div>
         <div class="topic_warp">
-            <div class="title">{{subjectiveTopic.title}} <span v-if="subjectiveTopic.questionTypeInCN">({{subjectiveTopic.questionTypeInCN}})</span></div>
+            <div class="title">{{subjectiveTopic.title}} <span v-if="subjectiveTopic.questionTypeInCN">({{subjectiveTopic.questionTypeInCN}})</span><span v-if="subjectiveTopic.questionPoint">({{subjectiveTopic.questionPoint}}分)</span><em v-if="subjectiveTopic.answerForStudent?subjectiveTopic.answerForStudent.result == 'PASS':''"> -- 得分：<span>{{subjectiveTopic.answerForStudent.subjectiveScore}}</span></em></div>
             <div class="topic" v-html="subjectiveTopic.questionContent" :id="'tp'+subjectiveTopic.questionId">
                 {{subjectiveTopic.questionContent}}
             </div>
@@ -170,6 +170,13 @@ export default {
       font-size: 24px;
       color: #69b482;
     padding-bottom: 0.57rem;
+    em {
+      span {
+        font-style: italic;
+        color: crimson;
+        text-decoration: underline;
+      }
+    }
     }
     .topic {
       color: #353535;

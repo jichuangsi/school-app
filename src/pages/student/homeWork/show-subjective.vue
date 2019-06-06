@@ -13,7 +13,7 @@
                                 </div>
                                 <div class="centertext">左右滑动切换题目</div>
                                 <div class="topic_warp" :id="'qc'+item.questionId">
-                                    <div class="title">主观题-{{index+1}} <span v-if="item.questionTypeInCN">({{item.questionTypeInCN}})</span></div>
+                                    <div class="title">主观题-{{index+1}} <span v-if="item.questionTypeInCN">({{item.questionTypeInCN}})</span><span v-if="item.questionPoint">({{item.questionPoint}}分)</span><em v-if="item.answerForStudent?item.answerForStudent.result == 'PASS':''"> -- 得分：<span>{{item.answerForStudent.subjectiveScore}}</span></em></div>
                                     <div class="topic" :id="'tp'+item.questionId" v-html="item.questionContent">
                                         {{item.questionContent}}
                                     </div>
@@ -238,6 +238,8 @@
         },
         methods: {
             getSubjectiveWork() {
+
+                console.log(this.homeworkSubjectiveQs)
                 this.headers.title = this.homeworkName;
                 for (let i = 0; i < this.homeworkSubjectiveQs.length; i++) {
                     this.subjectiveAnswer.push({id: this.homeworkSubjectiveQs[i].questionId, answer: '', show: false})
@@ -564,6 +566,13 @@
                                 .title {
                                     font-size: 24px;
                                     color: #69b482;
+                                    em {
+                                    span {
+                                        font-style: italic;
+                                        color: crimson;
+                                        text-decoration: underline;
+                                    }
+                                    }
                                 }
                                 .topic {
                                     color: #353535;
