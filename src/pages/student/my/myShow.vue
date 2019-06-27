@@ -49,6 +49,9 @@
         <div class="title">修改密码</div>
         <div class="text"></div>
       </div>
+      <div class="Tips">
+        客服电话：400-0068-093
+      </div>
       <div class="set_box" v-if="setshowPwd" @click="setshowPwd = false">
         <div class="setbox" @click.stop="setshowPwd = true">
           <div class="title">提示</div>
@@ -439,6 +442,10 @@ export default {
         font-size: 24px;
         color: #a5a5a5;
       }
+    }
+    .Tips {
+      padding: 1rem;
+      text-align: right;
     }
   }
 }
