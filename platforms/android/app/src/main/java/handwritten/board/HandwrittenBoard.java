@@ -2,7 +2,9 @@ package handwritten.board;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -32,6 +34,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static android.content.Context.ACTIVITY_SERVICE;
 
 
 public class HandwrittenBoard extends CordovaPlugin implements IScanListener, IDrawingServiceConnectionListener,
@@ -142,6 +146,21 @@ public class HandwrittenBoard extends CordovaPlugin implements IScanListener, ID
         }
     }
 
+    private static boolean isForeground(Context context, String className) {
+        if (context == null || TextUtils.isEmpty(className))
+            return false;
+        ActivityManager am = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> list = am.getRunningTasks(1);
+        boolean flag=false;
+        for (ActivityManager.RunningTaskInfo taskInfo : list) {
+            if (taskInfo.topActivity.getShortClassName().contains(className)) { // Activity已经启动了
+               flag = true;
+               break;
+            }
+        }
+        return flag;
+    }
+
     private boolean getBase64img(JSONArray params) {
         if (mCallbackContext != null) {
             try {
@@ -152,6 +171,8 @@ public class HandwrittenBoard extends CordovaPlugin implements IScanListener, ID
                                 .WRITE_EXTERNAL_STORAGE}, 100);
                     }
                 }*/
+                if(this.isForeground(cordova.getActivity(),"DrawActivity"))
+                    return true;
                 Intent intent = new Intent(cordova.getActivity(), Class.forName("com.jichuangsi.school.student" +
                         ".DrawActivity"));
                 String base64 = "";
@@ -348,8 +369,12 @@ public class HandwrittenBoard extends CordovaPlugin implements IScanListener, ID
             mRyDrawingManager.prepareDevice();//连接成功后要调用此方法初始化设备
         } else if (newState == Constant.ServiceConnectionState.STATE_DISCONNECTED) {
             mCallbackContext.sendPluginResult(result("connect", PluginResult.Status.ERROR, "設備已斷開連接"));
+        } else if (newState == Constant.ServiceConnectionState.STATE_CONNECTING) {
+            mCallbackContext.sendPluginResult(result("connect", PluginResult.Status.ERROR, "設備正在連接中"));
+        } else {
+            mCallbackContext.sendPluginResult(result("connect", PluginResult.Status.ERROR, "設備异常码：" + newState));
         }
-    }
+     }
 
     @Override
     public void onDrawingServiceConnectError(int state) {
