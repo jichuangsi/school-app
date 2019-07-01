@@ -53,7 +53,6 @@
     <loading v-if="loading" />
         <div class="Responderbox" v-if="qdshow">
             <div class="qdbox">
-                <div class="none" @click="qdshow = false">x</div>
                 <div class="text">是否抢答</div>
                 <div class="cancel" @click="qdshow = false">取消</div>
                 <div class="confirm" @click="qdconfirm">确认</div>
@@ -105,6 +104,7 @@ export default {
   },
   data() {
     return {
+      timeweb:'',
         /*imgboxshow:false,
         imgsrc:'',*/
         raceId:'',
@@ -225,12 +225,24 @@ export default {
     this.time();
     this.connect();
     this.connectfile()
+    this.setTime()
   },
   computed: {
     //vuex 调用
     ...mapGetters(["isBoard", "isBlueTooth", "boardImg"])
   },
   methods: {
+            setTime(){
+                let self = this
+                this.timeweb = setInterval(() => {
+                try {
+                self.stompClient.send("test");
+                } catch (err) {
+                console.log("断线了: " + err);
+                self.connect();
+                }
+                }, 20000);
+            },
     //抢答
     qdconfirm(){
       var timestamp=new Date().getTime()
@@ -672,7 +684,14 @@ export default {
         //   },
         //   subHeader
         // );
-      });
+      },
+        function errorCallBack(error) {
+          // 连接失败时（服务器响应 ERROR 帧）的回调方法
+          console.log("连接失败");
+          setTimeout(function(){
+            _this.connect()
+          })
+        });
     },
     //订阅课堂
     classData(response) {
@@ -772,6 +791,9 @@ export default {
         function errorCallBack(error) {
           // 连接失败时（服务器响应 ERROR 帧）的回调方法
           console.log("连接失败");
+          setTimeout(function(){
+            _this.connectfile()
+          })
         }
       );
     }
@@ -782,7 +804,11 @@ export default {
     }
     //取消订阅
     this.stompClient.unsubscribe("/topic/course/student/" + this.course);
-  }
+  },
+        destroyed: function () {
+            console.log('离开了')
+            clearInterval(this.timeweb)
+        }
 };
 </script>
 
@@ -1054,23 +1080,22 @@ export default {
             z-index: 2007;
             .qdbox {
                 width: 600px;
-                height: 200px;
-                background-color: #fff;
+                height: 295px;
+                background: url('../../../assets/tc.png') no-repeat;
+                background-position: -2px 0px;
+                background-color:transparent;
                 position: absolute;
                 left: 50%;
-                top: 40%;
+                top: 50%;
                 transform: translate(-50%,-50%);
             }
-            .none {
-                font-size: 30px;
-                float: right;
-                margin-right: 10px;
-            }
             .text {
-                font-size: 24px;
-                text-align: center;
+                font-size: 28px;
+                text-align: left;
                 font-weight: 700;
-                margin: 50px 0;
+                margin: 100px 0;
+                text-indent: 20px;
+                color: #333;
             }
             .cancel {
                 position: absolute;
@@ -1081,7 +1106,7 @@ export default {
                 line-height: 50px;
                 text-align: center;
                 font-size: 22px;
-                border: 1px solid #999;
+                color: #333;
             }
             .confirm {
                 position: absolute;
@@ -1092,7 +1117,7 @@ export default {
                 line-height: 50px;
                 text-align: center;
                 font-size: 22px;
-                border: 1px solid #999;
+                color: #333;
             }
             .studentname {
                 width: 100%;
