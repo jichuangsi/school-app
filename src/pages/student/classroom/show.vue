@@ -298,10 +298,14 @@ export default {
                             console.log("第一个");
                             self.objectiveAnswerbtn = false;
                             break;
+                        case 1:
+                            console.log("第二个");
+                            self.objectiveAnswerbtn = false;
+                            break;
                         case 2:
                             var q = {content:dataURL,pic:pic,base64img:""};
                             window.HandwrittenBoard.getBase64img(q);
-                            console.log("第二个");
+                            console.log("第三个");
                             self.objectiveAnswerbtn = false;
                             break;
                         default:
@@ -389,10 +393,14 @@ export default {
                             console.log("第一个");
                             self.objectiveAnswerbtn = false;
                             break;
+                        case 1:
+                            console.log("第二个");
+                            self.objectiveAnswerbtn = false;
+                            break;
                         case 2:
                             var q = {content:dataURL,pic:pic,base64img:answer};
                             window.HandwrittenBoard.getBase64img(q);
-                            console.log("第二个");
+                            console.log("第三个");
                             self.objectiveAnswerbtn = false;
                             break;
                         default:
