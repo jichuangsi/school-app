@@ -9,7 +9,8 @@ var HandwrittenBoard = {
     },
     exploration: function (timeout) {
         var permissions = cordova.plugins.permissions;
-        permissions.hasPermission(permissions.ACCESS_COARSE_LOCATION, function (status) {
+        //permissions.hasPermission(permissions.ACCESS_COARSE_LOCATION, function (status) {
+        permissions.checkPermission(permissions.ACCESS_COARSE_LOCATION, function (status) {
             if (status.hasPermission) {
                 cordova.exec(this.Handler, this.Handler, 'HandwrittenBoard', 'exploration', [parseInt(timeout)]);
             }
