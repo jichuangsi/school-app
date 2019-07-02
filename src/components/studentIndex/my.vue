@@ -76,6 +76,10 @@
             </div>
         </div>
         <loading v-if="loading" />
+        <div class="brightness" v-if="brightnessShow">
+            <i class="iconfont icon-icon-"></i>
+            <span>{{brightnessNumber}}</span>
+        </div>
     </div>
 </template>
 <script>
@@ -89,6 +93,8 @@ export default {
   },
   data() {
     return {
+      brightnessShow:false,
+      brightnessNumber:'',
       loading: true, //加载状态
       pageShow: false, //内容状态
       username: "韩梅梅",
@@ -142,8 +148,9 @@ export default {
                       console.log('右滑');
                       //this.$emit('change', 'right')
                   }
+                  this.brightnessShow = true
                   let brightness = cordova.plugins.brightness;
-                  //let self = this;
+                  let self = this;
                   brightness.getBrightness(function (r) {
                       console.log("get brightness success");
                       let res = parseFloat(r);
@@ -153,6 +160,8 @@ export default {
                       console.log("adjust:" + adjust);
                       if(adjust<0) adjust = 0;
                       if(adjust>1) adjust = 1;
+                      self.brightnessNumber = Math.round(adjust*100)+'%'
+                      console.log("brightnessNumber:" +self.brightnessNumber)
                       brightness.setBrightness(adjust, function () {
                           console.log("set brightness success");
                       }, function () {
@@ -169,6 +178,7 @@ export default {
       },
       touchEnd: function (ev) {
           ev = ev || event;
+          let self = this
           let slideWidth = this.$refs.slide.offsetWidth;//$refs 减少获取dom节点的消耗
           console.log("slideWidth:" + slideWidth);
           if (ev.changedTouches.length == 1) {
@@ -176,6 +186,9 @@ export default {
               console.log("endX:" + endX);
               this.disX = endX - this.startX;
               console.log("disX:" + this.disX);
+              setTimeout(function(){
+                  self.brightnessShow = false
+              },1000)
               // console.log(this.disX, 'this.disX')
               // console.log((slideWidth / 2), 'slideWidth/2');
               //this.translateX = 'translateX(0px)';
@@ -358,5 +371,27 @@ export default {
       }
     }
   }
+}
+.brightness {
+    position: fixed;
+    width: 150px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    background-color: #333333;
+    padding: 5px 10px;
+    border-radius:10px;
+    display: flex;
+    i {
+        color: #fff;
+        font-size: 38px;
+    }
+    span {
+        flex: 1;
+        text-align: center;
+        font-size: 18px;
+        line-height: 38px;
+        color: #fff;
+    }
 }
 </style>
