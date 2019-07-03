@@ -105,6 +105,7 @@ export default {
   data() {
     return {
       timeweb:'',
+      timeweb1:'',
         /*imgboxshow:false,
         imgsrc:'',*/
         raceId:'',
@@ -157,6 +158,7 @@ export default {
       minutes: 0,
       wsUrl: this.apiHost(), //'http://api.jichuangsi.com',
       stompClient: null,
+      stompClient1: null,
       subscription: null,
       token: localStorage.getItem("token")
     };
@@ -225,24 +227,36 @@ export default {
     this.time();
     this.connect();
     this.connectfile()
-    this.setTime()
+    //this.setTime();
+    //this.setTime1();
   },
   computed: {
     //vuex 调用
     ...mapGetters(["isBoard", "isBlueTooth", "boardImg"])
   },
   methods: {
-            setTime(){
-                let self = this
-                this.timeweb = setInterval(() => {
-                try {
-                self.stompClient.send("test");
-                } catch (err) {
-                console.log("断线了: " + err);
-                self.connect();
-                }
-                }, 20000);
-            },
+      setTime(){
+          let self = this
+          this.timeweb = setInterval(() => {
+              try {
+                  self.stompClient.send("test");
+              } catch (err) {
+                  console.log("断线了: " + err);
+                  self.connect();
+              }
+          }, 20000);
+      },
+      setTime1(){
+          let self = this
+          this.timeweb1 = setInterval(() => {
+              try {
+                  self.stompClient1.send("test1");
+              } catch (err) {
+                  console.log("断线了: " + err);
+                  self.connectfile();
+              }
+          }, 20000);
+      },
     //抢答
     qdconfirm(){
       var timestamp=new Date().getTime()
@@ -647,13 +661,14 @@ export default {
       let socket = new SockJS(this.wsUrl + "/websocket/course");
       this.stompClient = Stomp.over(socket); //一些老的浏览器不支持WebSocket的脚本或者使用别的名字。默认下，stomp.js会使用浏览器原生的WebSocket class去创建WebSocket。利用Stomp.over(ws)这个方法可以使用其他类型的WebSockets。这个方法得到一个满足WebSocket定义的对象
 
-      this.stompClient.heartbeat.outgoing = 400000; // client will send heartbeats every 40000ms
+      this.stompClient.heartbeat.outgoing = 0; // client will send heartbeats every 40000ms
       this.stompClient.heartbeat.incoming = 0; // client does not want to receive heartbeats from the server
       //连接时的请求头部信息
       let headers = {
         login: "mylogin",
         passcode: "mypasscode",
         // additional header
+        request: 'stompClient',
         userId: "curUserId",
         accessToken: this.token
       };
@@ -687,7 +702,7 @@ export default {
       },
         function errorCallBack(error) {
           // 连接失败时（服务器响应 ERROR 帧）的回调方法
-          console.log("连接失败");
+          console.log("课堂详情ws连接失败");
           setTimeout(function(){
             _this.connect()
           })
@@ -758,16 +773,17 @@ export default {
       let socket = new SockJS(this.wsUrl + "/websocket/course");
 
       // 获取 STOMP 子协议的客户端对象
-      let stompClient = Stomp.over(socket);
-      stompClient.heartbeat.outgoing = 400000; // client will send heartbeats every 40000ms
-      stompClient.heartbeat.incoming = 0; // client does not want to receive heartbeats from the server
+      this.stompClient1 = Stomp.over(socket);
+      this.stompClient1.heartbeat.outgoing = 0; // client will send heartbeats every 40000ms
+      this.stompClient1.heartbeat.incoming = 0; // client does not want to receive heartbeats from the server
 
       let _this = this;
       // 向服务器发起websocket连接并发送CONNECT帧
-      stompClient.connect({
+      this.stompClient1.connect({
           login: 'mylogin',
           passcode: 'mypasscode',
           // additional header
+          request: 'stompClient1',
           userId: 'curUserId',
           accessToken: _this.token
         },
@@ -779,7 +795,7 @@ export default {
             accessToken: _this.token
           }; //订阅时的头信息
           //订阅消息
-            stompClient.subscribe('/topic/publish/student/' + _this.course, function(response) {
+            _this.stompClient1.subscribe('/topic/publish/student/' + _this.course, function(response) {
               console.log(response)+'这是一段webstock'
               let res = JSON.parse(response.body).data
               if(res){
@@ -790,7 +806,7 @@ export default {
         },
         function errorCallBack(error) {
           // 连接失败时（服务器响应 ERROR 帧）的回调方法
-          console.log("连接失败");
+          console.log("共享附件ws连接失败");
           setTimeout(function(){
             _this.connectfile()
           })
@@ -799,15 +815,37 @@ export default {
     }
   },
   beforeDestroy() {
-    if (this.timer) {
+    /*if (this.timer) {
       clearInterval(this.timer); //在vue实例销毁钱，清除我们的定时器
-    }
+    }*/
     //取消订阅
-    this.stompClient.unsubscribe("/topic/course/student/" + this.course);
+      this.stompClient.unsubscribe("/topic/course/student/" + this.course);
+      this.stompClient1.unsubscribe("/topic/publish/student/" + this.course);
+      this.stompClient.disconnect(function disconnectCallback(){
+          console.log("连接断开：/topic/course/student/....")
+      },{
+          login: "mylogin",
+          passcode: "mypasscode",
+          // additional header
+          request: 'stompClient',
+          userId: "curUserId",
+          accessToken: this.token
+      });
+      this.stompClient1.disconnect(function disconnectCallback(){
+          console.log("连接断开：/topic/publish/student/....")
+      },{
+          login: "mylogin",
+          passcode: "mypasscode",
+          // additional header
+          request: 'stompClient1',
+          userId: "curUserId",
+          accessToken: this.token
+      });
   },
         destroyed: function () {
             console.log('离开了')
-            clearInterval(this.timeweb)
+            clearInterval(this.timeweb);
+            clearInterval(this.timeweb1)
         }
 };
 </script>
