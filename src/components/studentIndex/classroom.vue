@@ -10,7 +10,7 @@
             </div>
             <div class="tips" v-if="classNew"><span class="point"></span><span class="text">老师布置了新题目</span></div>
             <!--今天的课堂-->
-            
+
             <div
                     class="list"
                     :class="{nowClass:item.courseStatus === 'PROGRESS',newClass:newborder==1&&index==0}"
@@ -138,7 +138,7 @@
                 store.commit('IS_CNEW', false);
             }
             this.connect();
-            this.setTime()
+            //this.setTime()
         },
         methods: {
             setTime(){
@@ -317,8 +317,8 @@
                 let socket = new SockJS(this.wsUrl + '/websocket/course');
                 this.stompClient = Stomp.over(socket);//一些老的浏览器不支持WebSocket的脚本或者使用别的名字。默认下，stomp.js会使用浏览器原生的WebSocket class去创建WebSocket。利用Stomp.over(ws)这个方法可以使用其他类型的WebSockets。这个方法得到一个满足WebSocket定义的对象
 
-                this.stompClient.heartbeat.outgoing = 400000;  // client will send heartbeats every 40000ms
-                this.stompClient.heartbeat.incoming = 0;      // client does not want to receive heartbeats from the server
+                this.stompClient.heartbeat.outgoing = 0;  // client will send heartbeats every 40000ms
+                this.stompClient.heartbeat.incoming = 0;  // client does not want to receive heartbeats from the server
                 //连接时的请求头部信息
                 let headers = {
                     login: 'mylogin',
@@ -342,13 +342,13 @@
                         _this.classData(response);
                     }, subHeader);
                 },
-        function errorCallBack(error) {
-          // 连接失败时（服务器响应 ERROR 帧）的回调方法
-          console.log("连接失败");
-          setTimeout(function(){
-            _this.connect()
-          })
-        });
+                function errorCallBack(error) {
+                  // 连接失败时（服务器响应 ERROR 帧）的回调方法
+                  console.log("连接失败");
+                  setTimeout(function(){
+                    _this.connect()
+                  })
+                });
             },
             //上课提示回调
             classData(response) {
@@ -373,16 +373,35 @@
                         }
                     }
                 }
+            },
+            disconnectWS(){
+                //取消订阅
+                this.stompClient.unsubscribe('/topic/group/student/'+this.classId);
+                this.stompClient.disconnect(function disconnectCallback(){
+                    console.log("连接断开：/topic/group/student/....")
+                },{
+                    login: "mylogin",
+                    passcode: "mypasscode",
+                    // additional header
+                    request: 'stompClient',
+                    userId: "curUserId",
+                    accessToken: this.token
+                });
             }
+        },
+        deactivated(){
+            console.log('离开了')
+            this.disconnectWS();
+            clearInterval(this.timer);
         },
         beforeDestroy() {
             //取消订阅
-            this.stompClient.unsubscribe('/topic/group/student/'+this.classId);
-            clearInterval(this.timer)
+            /*this.stompClient.unsubscribe('/topic/group/student/'+this.classId);
+            clearInterval(this.timer)*/
         },
         destroyed: function () {
-            console.log('离开了')
-            clearInterval(this.timer)
+            /*console.log('离开了')
+            clearInterval(this.timer)*/
         }
     }
 </script>
