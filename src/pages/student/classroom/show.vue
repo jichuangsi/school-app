@@ -160,7 +160,9 @@ export default {
       stompClient: null,
       stompClient1: null,
       subscription: null,
-      token: localStorage.getItem("token")
+      token: localStorage.getItem("token"),
+      lockReconnect: false,
+      lockReconnect1: false
     };
   },
   watch: {
@@ -703,9 +705,12 @@ export default {
         function errorCallBack(error) {
           // 连接失败时（服务器响应 ERROR 帧）的回调方法
           console.log("课堂详情ws连接失败");
+          if (_this.lockReconnect) return;
+          _this.lockReconnect = true;
           setTimeout(function(){
-            _this.connect()
-          })
+            _this.connect();
+            _this.lockReconnect = false;
+          }, 10000)
         });
     },
     //订阅课堂
@@ -807,9 +812,12 @@ export default {
         function errorCallBack(error) {
           // 连接失败时（服务器响应 ERROR 帧）的回调方法
           console.log("共享附件ws连接失败");
+          if (_this.lockReconnect1) return;
+          _this.lockReconnect1 = true;
           setTimeout(function(){
-            _this.connectfile()
-          })
+            _this.connectfile();
+            _this.lockReconnect1 = false;
+          }, 10000)
         }
       );
     }
