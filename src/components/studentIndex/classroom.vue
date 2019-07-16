@@ -92,7 +92,8 @@
                 token: localStorage.getItem("token"),
                 classId: '',
                 mescroll: null,
-                tabFired: false
+                tabFired: false,
+                lockReconnect: false
             }
         },
         computed: {
@@ -145,10 +146,10 @@
                 let self = this
                 this.timer = setInterval(() => {
                 try {
-                self.stompClient.send("test");
+                    self.stompClient.send("test");
                 } catch (err) {
-                console.log("断线了: " + err);
-                self.connect();
+                    console.log("断线了: " + err);
+                    self.connect();
                 }
                 }, 20000);
             },
@@ -344,10 +345,17 @@
                 },
                 function errorCallBack(error) {
                   // 连接失败时（服务器响应 ERROR 帧）的回调方法
-                  console.log("连接失败");
+                  /*console.log("连接失败");
                   setTimeout(function(){
                     _this.connect()
-                  })
+                  })*/
+                    console.log("课堂列表ws连接失败");
+                    if (_this.lockReconnect) return;
+                    _this.lockReconnect = true;
+                    setTimeout(function () {     //没连接上会一直重连，设置延迟避免请求过多
+                        _this.connect();
+                        _this.lockReconnect = false;
+                    }, 10000);
                 });
             },
             //上课提示回调
@@ -387,12 +395,12 @@
                     userId: "curUserId",
                     accessToken: this.token
                 });
+                //clearInterval(this.timer)
             }
         },
         deactivated(){
             console.log('离开了')
             this.disconnectWS();
-            clearInterval(this.timer);
         },
         beforeDestroy() {
             //取消订阅
