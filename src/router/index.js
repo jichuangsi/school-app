@@ -66,6 +66,15 @@ export default new Router({
             }
         },
         {
+            path: '/Notice_Privacy',
+            name: 'Notice_Privacy',
+            component: () => import('@/pages/student/my/Notice_Privacy'), //学生端用户须知及隐私权限
+            meta: {
+                keepAlive: false,
+                isBack: false
+            }
+        },
+        {
             path: '/studentenquiry',
             name: 'studentenquiry',
             component: () => import('@/pages/student/statistics/studentenquiry'), //学生端我的成绩详情

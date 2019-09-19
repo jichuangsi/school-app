@@ -49,6 +49,10 @@
         <div class="title">修改密码</div>
         <div class="text"></div>
       </div>
+      <div class="row" @click="rulego">
+        <div class="title">用户须知及隐私权限</div>
+        <div class="text"></div>
+      </div>
       <div class="Tips">
         客服电话：400-0068-093
       </div>
@@ -141,6 +145,12 @@ export default {
       : "";
   },
   methods: {
+    rulego(){
+              this.$router.push({
+                    path: '@/pages/student/my/Notice_Privacy',
+                    name: 'Notice_Privacy'
+                })
+    },
     initialize() {
       let _this = this;
       document.addEventListener(
