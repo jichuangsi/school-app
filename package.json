@@ -12,7 +12,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "babel-plugin-component": "^1.1.1",
-    "cordova-android": "^7.1.2",
+    "cordova-android": "^11.0.0",
     "cordova-plugin-android-permissions": "^1.0.0",
     "cordova-plugin-bluetoothle": "^4.4.4",
     "cordova-plugin-screen-orientation": "^3.0.1",
